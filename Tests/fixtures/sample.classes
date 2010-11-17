@@ -53,3 +53,17 @@ class InvalidRemovedExample
 	 */
 	public function validMethod(stdClass $my) {}
 }
+
+class ComplexExample
+{
+	/**
+	 * Who needs a functions with such params?!
+	 *
+	 * @param DateTime  $date A date without time
+	 * @param stdClass  $obj
+	 * @param array		$ar
+	 * @param int $number
+	 * @param bool $boolean   Boolean params are hard to understand in calls!
+	 */
+	public function validMethod(DateTime $date, stdClass $obj, array $ar, $number, $boolean) {}
+}
