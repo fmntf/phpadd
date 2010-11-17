@@ -6,65 +6,45 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->markTestIncomplete();
-		$this->detector = new Unmasked_Detector;
-	}
-
-	public function testScansEverythingByDefault()
-	{
-		$level = $this->detector->getScanLevel();
-
-		$this->assertTrue($level['access']['protected']);
-		$this->assertTrue($level['access']['private']);
-
-		$expected = ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED | ReflectionMethod::IS_PRIVATE;
-		$this->assertEquals($expected, $level['scalar']);
-	}
-
-	public function testMayPreventProtectedScanning()
-	{
-		$this->detector->preventProtectedScanning();
-		$level = $this->detector->getScanLevel();
-
-		$this->assertFalse($level['access']['protected']);
-		$this->assertTrue($level['access']['private']);
-
-		$expected = ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PRIVATE;
-		$this->assertEquals($expected, $level['scalar']);
-	}
-
-	public function testMayPreventPrivateScanning()
-	{
-		$this->detector->preventPrivateScanning();
-		$level = $this->detector->getScanLevel();
-
-		$this->assertTrue($level['access']['protected']);
-		$this->assertFalse($level['access']['private']);
-
-		$expected = ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED;
-		$this->assertEquals($expected, $level['scalar']);
+		$this->detector = new Unmasked_Detector();
+		$this->detector->setFilter(true, true);
 	}
 
 	public function testDelegatesAnalysysToParser()
 	{
+		$filter = new PHPADD_Filter();
 		$detector = $this->getMockBuilder('PHPADD_Parser')
 						->disableOriginalConstructor()
 						->getMock();
 		$detector->expects($this->once())
 				->method('analyze')
-				->with(23)
+				->with($filter)
 				->will($this->returnValue('delegated'));
 
-		$this->assertEquals('delegated', $detector->analyze(23));
+		$this->assertEquals('delegated', $detector->analyze($filter));
+	}
+
+	public function testWillSkipCleanClasses()
+	{
+		$mess = $this->detector->getMess(__DIR__ . '/fixtures/clean');
+
+		$this->assertEquals(0, count($mess));
+	}
+
+	public function testWillReportDirtyClasses()
+	{
+		$mess = $this->detector->getMess(__DIR__ . '/fixtures/dirty');
+
+		$fileMess = $mess[__DIR__ . '/fixtures/dirty/simple.php'];
+
+		$this->assertEquals(2, count($fileMess));
+		$this->assertEquals('missing-param', $fileMess['InvalidMissingExample'][0]['detail'][0]['type']);
+		$this->assertEquals('unexpected-param', $fileMess['InvalidRemovedExample'][0]['detail'][0]['type']);
 	}
 }
 
 class Unmasked_Detector extends PHPADD_Detector
 {
-//	public function getScanLevel()
-//	{
-//		return parent::getScanLevel();
-//	}
 	public function analyze($param)
 	{
 		return parent::analyze($param);

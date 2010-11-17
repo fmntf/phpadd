@@ -32,7 +32,6 @@ class PHPADD_ClassFinder
 		$tokens = token_get_all(file_get_contents($fileName));
 		foreach ($tokens as $i => $token) {
 			if ($token[0] == T_CLASS) {
-				echo 'aa';
 				$classes[] = $this->getNextClass($tokens, $i);
 			}
 		}

@@ -1,20 +1,15 @@
 <?php
 
-require 'Parser.php';
+require_once 'ClassFinder.php';
+require_once 'Parser.php';
 
 class PHPADD_Detector
 {
-	protected $scanProtectedMethods = true;
-	protected $scanPrivateMethods = true;
+	protected $filter;
 
-	public function preventProtectedScanning()
+	public function setFilter($scanProtectedMethods, $scanPrivateMethods)
 	{
-		$this->scanProtectedMethods = false;
-	}
-
-	public function preventPrivateScanning()
-	{
-		$this->scanPrivateMethods = false;
+		$this->filter = new PHPADD_Filter($scanProtectedMethods, $scanPrivateMethods);
 	}
 
 	public function getMess($path)
@@ -35,15 +30,11 @@ class PHPADD_Detector
 		return $mess;
 	}
 
-	protected function createFilter()
-	{
-		return new PHPADD_Filter($this->scanProtectedMethods, $this->scanPrivateMethods);
-	}
 
 	private function analyze($className)
 	{
 		$parser = new PHPADD_Parser($className);
 
-		return $parser->analyze($this->getScalLevel());
+		return $parser->analyze($this->filter);
 	}
 }
