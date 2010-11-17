@@ -1,0 +1,11 @@
+<?php
+
+class Extension_Base
+{
+	public function a(stdClass $param) {}
+}
+
+class Extension_Extended extends Extension_Base
+{
+	public function b(DateTime $date) {}
+}

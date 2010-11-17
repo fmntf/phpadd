@@ -2,6 +2,7 @@
 
 require_once '../PHPADD/Parser.php';
 require_once 'fixtures/sample.classes';
+require_once 'fixtures/extension.classes';
 
 class ParserTest extends PHPUnit_Framework_TestCase
 {
@@ -95,6 +96,15 @@ class ParserTest extends PHPUnit_Framework_TestCase
 //			array('OneChangeExampleRemovedParameter', 'unexpected-param'),
 //			array('OneChangeExampleAddedParameter', 'missing-param'),
 		);
+	}
+
+	public function testIgnoresMethodsOfParentClasses()
+	{
+		$parser = new PHPADD_Parser('Extension_Extended');
+		$analysys = $parser->analyze($this->filter);
+
+		$this->assertEquals(1, count($analysys));
+		$this->assertEquals('b', $analysys[0]['method']);
 	}
 
 }

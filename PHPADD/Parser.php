@@ -38,6 +38,11 @@ class PHPADD_Parser
 		$mess = array();
 
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
+			/* @var $method ReflectionMethod */
+
+			if ($this->reflection->name !== $method->getDeclaringClass()->name) {
+				continue;
+			}
 
 			if ($this->isDocBlockMissing($method)) {
 				$mess[] = $this->getError('miss', $method);
