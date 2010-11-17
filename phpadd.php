@@ -28,9 +28,7 @@ if (strpos('@php_bin@', '@php_bin') === 0) {
     set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
 }
 
+require_once 'PHPADD/Cli.php';
 
-
-//
-//require 'PHPADD/TextUI/Command.php';
-//
-//PHPADD_TextUI_Command::main();
+$cli = new PHPADD_Cli();
+$cli->run();

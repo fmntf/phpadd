@@ -22,15 +22,31 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
+require_once 'Detector.php';
+
 class PHPADD_Cli
 {
-	public function blocksProtected()
+	private function blocksProtected()
 	{
 		return in_array('--skip-protected', $_SERVER['argv']);
 	}
 
-	public function blocksPrivate()
+	private function blocksPrivate()
 	{
 		return in_array('--skip-private', $_SERVER['argv']);
+	}
+
+	private function getPath()
+	{
+		$last = $_SERVER['argc'] - 1;
+		return $_SERVER['argv'][$last];
+	}
+
+	public function run()
+	{
+		$detector = new PHPADD_Detector();
+		$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
+
+		print_r($detector->getMess($this->getPath()));
 	}
 }
