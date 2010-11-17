@@ -23,11 +23,11 @@ class PHPADD_Detector
 
 		$finder = new PHPADD_ClassFinder($path);
 		foreach ($finder->getList() as $file => $classes) {
-			include $file;
+			require_once $file;
 			foreach ($classes as $class) {
-				$result = $this->analyze($class);
-				if ($result->hasMess()) {
-					$mess[$file][$class] = $result;
+				$classMess = $this->analyze($class);
+				if ($classMess) {
+					$mess[$file][$class] = $classMess;
 				}
 			}
 		}
@@ -35,19 +35,9 @@ class PHPADD_Detector
 		return $mess;
 	}
 
-	protected function getScanLevel()
+	protected function createFilter()
 	{
-		$level = ReflectionMethod::IS_PUBLIC;
-		if ($this->scanProtectedMethods) $level += ReflectionMethod::IS_PROTECTED;
-		if ($this->scanPrivateMethods) $level += ReflectionMethod::IS_PRIVATE;
-
-		return array(
-			'scalar' => $level,
-			'access' => array(
-				'protected' => $this->scanProtectedMethods,
-				'private' => $this->scanPrivateMethods
-			)
-		);
+		return new PHPADD_Filter($this->scanProtectedMethods, $this->scanPrivateMethods);
 	}
 
 	private function analyze($className)

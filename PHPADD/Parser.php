@@ -1,22 +1,61 @@
 <?php
 
+require_once 'Filter.php';
+
 class PHPADD_Parser
 {
+	private $reflection;
+
 	public function __construct($class)
 	{
 		$this->reflection = new ReflectionClass($class);
 	}
 
-	public function analyze($level)
+	public function analyze(PHPADD_Filter $filter)
 	{
-		foreach ($this->reflection->getMethods($level['scalar']) as $method) {
-			$comment = $method->getDocComment();
-//			if ($comment === false && $level['access'][])
+		$mess = array();
+		
+		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
+
+			if ($this->isDocBlockMissing($method, $filter)) {
+				$mess[] = $this->getError('miss', $method);
+			} else {
+				if (!$this->isDocBlockValid($method)) {
+					$mess[] = $this->getError('invalid', $method);
+				}
+			}
 		}
+
+		if ($mess === array()) {
+			return false;
+		}
+		return $mess;
 	}
 
-	public function getComment()
+	private function getError($type, ReflectionMethod $method)
 	{
+		return array(
+			'type' => $type,
+			'class' => $method->class,
+			'method' => $method->name
+		);
+	}
 
+	private function isDocBlockMissing(ReflectionMethod $method, PHPADD_Filter $filter)
+	{
+		$comment = $method->getDocComment();
+		if (!$comment) {
+			if ($filter->skipPrivate() && $method->isPrivate() ||
+				$filter->skipProtected() && $method->isProtected()) {
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public function isDocBlockValid(ReflectionMethod $method)
+	{
+		return false;
 	}
 }
