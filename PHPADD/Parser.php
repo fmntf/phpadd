@@ -92,6 +92,10 @@ class PHPADD_Parser
 			}
 		}
 
+		for ($unexpected = $index; $unexpected < count($annotations['param'])-1; $unexpected++) {
+			$errors[] = $this->createError('unexpected-param', $annotations['param'][$unexpected], null);
+		}
+
 		return $errors;
 	}
 
