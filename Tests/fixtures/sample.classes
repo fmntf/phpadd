@@ -39,7 +39,7 @@ class InvalidMissingExample
 	 * @param stdClass $my
 	 * @return string
 	 */
-	public function validMethod(stdClass $my, $name) {}
+	public function invalidMethod(stdClass $my, $name) {}
 }
 
 class InvalidRemovedExample
@@ -51,7 +51,7 @@ class InvalidRemovedExample
 	 * @param string $name
 	 * @return string
 	 */
-	public function validMethod(stdClass $my) {}
+	public function invalidMethod(stdClass $my) {}
 }
 
 class ComplexExample
@@ -79,7 +79,7 @@ class OneChangeExampleTypeChanged
 	 * @param int $number
 	 * @param bool $boolean   Boolean params are hard to understand in calls!
 	 */
-	public function validMethod(DateTime $date, stdClass $obj, stdClass $ar, $number, $boolean) {}
+	public function invalidMethod(DateTime $date, stdClass $obj, stdClass $ar, $number, $boolean) {}
 }
 
 class OneChangeExampleRemovedParameter
@@ -93,7 +93,7 @@ class OneChangeExampleRemovedParameter
 	 * @param int $number
 	 * @param bool $boolean   Boolean params are hard to understand in calls!
 	 */
-	public function validMethod(DateTime $date, stdClass $obj, $number, $boolean) {}
+	public function invalidMethod(DateTime $date, stdClass $obj, $number, $boolean) {}
 }
 
 class OneChangeExampleAddedParameter
@@ -106,5 +106,5 @@ class OneChangeExampleAddedParameter
 	 * @param int $number
 	 * @param bool $boolean   Boolean params are hard to understand in calls!
 	 */
-	public function validMethod(DateTime $date, stdClass $obj, stdClass $ar, $number, $boolean) {}
+	public function invalidMethod(DateTime $date, stdClass $obj, stdClass $ar, $number, $boolean) {}
 }
