@@ -36,14 +36,6 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('publicMethod', $analysys[0]['method']);
 	}
 
-	public function testSkipsValidDocBlocks()
-	{
-		$parser = new PHPADD_Parser('ValidExample');
-		$analysys = $parser->analyze($this->filter);
-
-		$this->assertEquals(0, count($analysys));
-	}
-
 	public function testDetectsMissingParametersInDocBlocks()
 	{
 		$parser = new PHPADD_Parser('InvalidMissingExample');
@@ -61,4 +53,24 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, count($analysys));
 		$this->assertEquals('unexpected-param', $analysys[0]['detail'][0]['type']);
 	}
+
+	/**
+	 * @dataProvider validClasses
+	 */
+	public function testSkipsValidDocBlocks($className)
+	{
+		$parser = new PHPADD_Parser($className);
+		$analysys = $parser->analyze($this->filter);
+
+		$this->assertEquals(0, count($analysys));
+	}
+	
+	public function validClasses()
+	{
+		return array(
+			array('ValidExample'),
+			array('ComplexExample'),
+		);
+	}
+
 }
