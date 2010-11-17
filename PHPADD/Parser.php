@@ -17,8 +17,10 @@ class PHPADD_Parser
 		
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 
-			if ($this->isDocBlockMissing($method, $filter)) {
-				$mess[] = $this->getError('miss', $method);
+			if ($this->isDocBlockMissing($method)) {
+				if (!$this->canDocBlockMiss($method, $filter)) {
+					$mess[] = $this->getError('miss', $method);
+				}
 			} else {
 				if (!$this->isDocBlockValid($method)) {
 					$mess[] = $this->getError('invalid', $method);
@@ -41,14 +43,15 @@ class PHPADD_Parser
 		);
 	}
 
-	private function isDocBlockMissing(ReflectionMethod $method, PHPADD_Filter $filter)
+	private function isDocBlockMissing(ReflectionMethod $method)
 	{
-		$comment = $method->getDocComment();
-		if (!$comment) {
-			if ($filter->skipPrivate() && $method->isPrivate() ||
-				$filter->skipProtected() && $method->isProtected()) {
-				return false;
-			}
+		return $method->getDocComment() === false;
+	}
+
+	private function canDocBlockMiss(ReflectionMethod $method, PHPADD_Filter $filter)
+	{
+		if ($filter->skipPrivate() && $method->isPrivate() ||
+			$filter->skipProtected() && $method->isProtected()) {
 			return true;
 		}
 		return false;
@@ -56,6 +59,10 @@ class PHPADD_Parser
 
 	public function isDocBlockValid(ReflectionMethod $method)
 	{
+//		$comment = $method->getDocComment();
+//
+//		var_dump('aa', $comment);
+
 		return false;
 	}
 }
