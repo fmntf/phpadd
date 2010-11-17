@@ -18,6 +18,15 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(3, count($analysys));
 	}
 
+	public function testIgnoresBlankSpaces()
+	{
+		$this->parser = new PHPADD_Parser('ValidWithSpacesExample');
+		$noProtectedFilter = new PHPADD_Filter();
+		$analysys = $this->parser->analyze($noProtectedFilter);
+
+		$this->assertEquals(0, count($analysys));
+	}
+
 	public function testAnalyzesOnlyPublicMethods()
 	{
 		$noProtectedFilter = new PHPADD_Filter(true, true);
