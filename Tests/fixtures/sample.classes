@@ -1,0 +1,55 @@
+<?php
+
+class Example
+{
+	public function publicMethod() {}
+	protected function protectedMethod() {}
+	private function privateMethod() {}
+}
+
+class ValidExample
+{
+	/**
+	 * Some description here
+	 *
+	 * @param stdClass $my
+	 * @param string $name
+	 * @return string
+	 */
+	public function validMethod(stdClass $my, $name) {}
+}
+
+class ValidWithSpacesExample
+{
+	/**
+	 * Some description here
+	 *
+	 * @param stdClass $my
+	 * @param string $name
+	 * @return string
+	 */
+	public function validMethod(stdClass $my, $name) {}
+}
+
+class InvalidMissingExample
+{
+	/**
+	 * Some description here
+	 *
+	 * @param stdClass $my
+	 * @return string
+	 */
+	public function validMethod(stdClass $my, $name) {}
+}
+
+class InvalidRemovedExample
+{
+	/**
+	 * Some description here
+	 *
+	 * @param stdClass $my
+	 * @param string $name
+	 * @return string
+	 */
+	public function validMethod(stdClass $my) {}
+}
