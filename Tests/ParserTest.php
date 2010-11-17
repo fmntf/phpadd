@@ -34,6 +34,16 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$analysys = $this->parser->analyze($filter);
 		$this->assertEquals(0, count($analysys));
 	}
+
+	public function testDetectsMissingParametersInDocBlocks()
+	{
+		$this->parser = new PHPADD_Parser('InvalidMissingExample');
+		$filter = new PHPADD_Filter();
+
+		$analysys = $this->parser->analyze($filter);
+		$this->assertEquals(1, count($analysys));
+		$this->assertEquals('missing-param', $analysys[0]['detail'][0]['type']);
+	}
 }
 
 class Example
@@ -55,7 +65,7 @@ class ValidExample
 	public function validMethod(stdClass $my, $name) {}
 }
 
-class InvalidExample
+class InvalidMissingExample
 {
 	/**
 	 * Some description here

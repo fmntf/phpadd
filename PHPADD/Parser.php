@@ -72,19 +72,22 @@ class PHPADD_Parser
 			$index = $parameter->getPosition();
 			$phpType = $parameter->getClass();
 			$phpName = '$' . $parameter->getName();
+
+			if (!isset($annotations['param'][$index])) {
+				$errors[] = $this->createError('missing-param', $parameter->__toString(), null);
+				continue;
+			}
 			
 			list($docType, $docName) = preg_split("/[\s]+/", $annotations['param'][$index]);
 
 			if ($phpType) {
 				$phpType = $phpType->getName();
 				if ($phpType != $docType) {
-					echo "$phpType != $docType\n";
 					$errors[] = $this->createError('type-mismatch', $docType, $phpType);
 				}
 			}
 
 			if ($docName != $phpName) {
-					echo "$docName != $phpName\n";
 				$errors[] = $this->createError('name-mismatch', $docName, $phpName);
 			}
 		}
