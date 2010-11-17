@@ -73,4 +73,25 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		);
 	}
 
+	/**
+	 * @dataProvider oneChangeClasses
+	 */
+	public function testFindsInvalidDocBlocks($className, $error)
+	{
+		$parser = new PHPADD_Parser($className);
+		$analysys = $parser->analyze($this->filter);
+
+		$this->assertEquals(1, count($analysys));
+		$this->assertEquals($error, $analysys[0]['detail'][0]['type']);
+	}
+
+	public function oneChangeClasses()
+	{
+		return array(
+			array('OneChangeExampleTypeChanged', 'type-mismatch'),
+			array('OneChangeExampleRemovedParameter', 'unexpected-param'),
+			array('OneChangeExampleAddedParameter', 'missing-param'),
+		);
+	}
+
 }
