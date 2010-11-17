@@ -1,10 +1,11 @@
 <?php
 
+require 'Parser.php';
+
 class PHPADD_Detector
 {
-	private $scanPublicMethods = true;
-	private $scanProtectedMethods = true;
-	private $scanPrivateMethods = true;
+	protected $scanProtectedMethods = true;
+	protected $scanPrivateMethods = true;
 
 	public function preventProtectedScanning()
 	{
@@ -20,7 +21,7 @@ class PHPADD_Detector
 	{
 		$mess = array();
 
-		$finder = new ClassFinder($path);
+		$finder = new PHPADD_ClassFinder($path);
 		foreach ($finder->getList() as $file => $classes) {
 			include $file;
 			foreach ($classes as $class) {
@@ -34,17 +35,15 @@ class PHPADD_Detector
 		return $mess;
 	}
 
-	private function getScanLevel()
+	protected function getScanLevel()
 	{
-		$level = 0;
-		if ($this->scanPublicMethods) $level += ReflectionMethod::IS_PUBLIC;
+		$level = ReflectionMethod::IS_PUBLIC;
 		if ($this->scanProtectedMethods) $level += ReflectionMethod::IS_PROTECTED;
 		if ($this->scanPrivateMethods) $level += ReflectionMethod::IS_PRIVATE;
 
 		return array(
 			'scalar' => $level,
 			'access' => array(
-				'public' => $this->scanPublicMethods,
 				'protected' => $this->scanProtectedMethods,
 				'private' => $this->scanPrivateMethods
 			)
@@ -53,7 +52,7 @@ class PHPADD_Detector
 
 	private function analyze($className)
 	{
-		$parser = new DocBlockParser($className);
+		$parser = new PHPADD_Parser($className);
 
 		return $parser->analyze($this->getScalLevel());
 	}
