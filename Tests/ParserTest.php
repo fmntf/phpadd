@@ -26,14 +26,13 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('publicMethod', $analysys[0]['method']);
 	}
 
-	public function _testGetsDocBlockParts()
+	public function testSkipsValidDocBlocks()
 	{
 		$this->parser = new PHPADD_Parser('ValidExample');
 		$filter = new PHPADD_Filter();
 
 		$analysys = $this->parser->analyze($filter);
-
-		var_dump($analysys);
+		$this->assertEquals(0, count($analysys));
 	}
 }
 
@@ -50,10 +49,10 @@ class ValidExample
 	 * Some description here
 	 * 
 	 * @param stdClass $my
-	 * @param string $string
+	 * @param string $name
 	 * @return string
 	 */
-	public function publicMethod(stdClass $my, $string)
+	public function validMethod(stdClass $my, $name)
 	{
 		return 'public';
 	}

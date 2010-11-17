@@ -22,25 +22,29 @@ class PHPADD_Parser
 					$mess[] = $this->getError('miss', $method);
 				}
 			} else {
-				if (!$this->isDocBlockValid($method)) {
-					$mess[] = $this->getError('invalid', $method);
+				$errors = $this->validateDocBlock($method);
+				if (count($errors) > 0) {
+					$mess[] = $this->getError('invalid', $method, $errors);
 				}
 			}
 		}
 
-		if ($mess === array()) {
-			return false;
-		}
 		return $mess;
 	}
 
-	private function getError($type, ReflectionMethod $method)
+	private function getError($type, ReflectionMethod $method, $detail = null)
 	{
-		return array(
+		$error = array(
 			'type' => $type,
 			'class' => $method->class,
 			'method' => $method->name
 		);
+
+		if ($detail !== null) {
+			$error['detail'] = $detail;
+		}
+
+		return $error;
 	}
 
 	private function isDocBlockMissing(ReflectionMethod $method)
@@ -57,12 +61,60 @@ class PHPADD_Parser
 		return false;
 	}
 
-	public function isDocBlockValid(ReflectionMethod $method)
+	public function validateDocBlock(ReflectionMethod $method)
 	{
-//		$comment = $method->getDocComment();
-//
-//		var_dump('aa', $comment);
+		$errors = array();
+		$annotations = $this->parseAnnotations($method->getDocComment());
 
-		return false;
+		foreach ($method->getParameters() as $parameter)
+		{
+			/* @var $parameter ReflectionParameter */
+			$index = $parameter->getPosition();
+			$phpType = $parameter->getClass();
+			$phpName = '$' . $parameter->getName();
+			
+			list($docType, $docName) = preg_split("/[\s]+/", $annotations['param'][$index]);
+
+			if ($phpType) {
+				$phpType = $phpType->getName();
+				if ($phpType != $docType) {
+					echo "$phpType != $docType\n";
+					$errors[] = $this->createError('type-mismatch', $docType, $phpType);
+				}
+			}
+
+			if ($docName != $phpName) {
+					echo "$docName != $phpName\n";
+				$errors[] = $this->createError('name-mismatch', $docName, $phpName);
+			}
+		}
+
+		return $errors;
 	}
+
+	private function createError($type, $doc, $php)
+	{
+		return array(
+			'type' => $type,
+			'docblock' => $doc,
+			'phpfile' => $php
+		);
+	}
+
+
+	private function parseAnnotations($docblock)
+	{
+		$annotations = array();
+
+		if (preg_match_all('/@(?P<name>[A-Za-z_-]+)(?:[ \t]+(?P<value>.*?))?[ \t]*\r?$/m', $docblock, $matches)) {
+			$numMatches = count($matches[0]);
+
+			for ($i = 0; $i < $numMatches; ++$i) {
+				$annotations[$matches['name'][$i]][] = $matches['value'][$i];
+			}
+		}
+
+		return $annotations;
+	}
+
 }
