@@ -1,6 +1,6 @@
 <?php
 
-include('../PHPADD/Parser.php');
+require_once '../PHPADD/Parser.php';
 
 class ParserTest extends PHPUnit_Framework_TestCase
 {

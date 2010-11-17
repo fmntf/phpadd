@@ -1,6 +1,6 @@
 <?php
 
-include('../PHPADD/Cli.php');
+require_once '../PHPADD/Cli.php';
 
 class CliTest extends PHPUnit_Framework_TestCase
 {
