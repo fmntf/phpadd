@@ -52,8 +52,16 @@ class ValidExample
 	 * @param string $name
 	 * @return string
 	 */
-	public function validMethod(stdClass $my, $name)
-	{
-		return 'public';
-	}
+	public function validMethod(stdClass $my, $name) {}
+}
+
+class InvalidExample
+{
+	/**
+	 * Some description here
+	 *
+	 * @param stdClass $my
+	 * @return string
+	 */
+	public function validMethod(stdClass $my, $name) {}
 }
