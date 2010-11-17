@@ -1,6 +1,6 @@
 <?php
 
-class ValidExample
+class Fixture_ValidExample
 {
 	/**
 	 * Some description here
@@ -12,7 +12,7 @@ class ValidExample
 	public function validMethod(stdClass $my, $name) {}
 }
 
-class ValidWithSpacesExample
+class Fixture_ValidWithSpacesExample
 {
 	/**
 	 * Some description here

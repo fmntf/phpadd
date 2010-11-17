@@ -1,6 +1,6 @@
 <?php
 
-class InvalidMissingExample
+class Fixture_InvalidMissingExample
 {
 	/**
 	 * Some description here
@@ -11,7 +11,7 @@ class InvalidMissingExample
 	public function invalidMethod(stdClass $my, $name) {}
 }
 
-class InvalidRemovedExample
+class Fixture_InvalidRemovedExample
 {
 	/**
 	 * Some description here

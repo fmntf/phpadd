@@ -54,7 +54,7 @@ class InvalidRemovedExample
 	public function invalidMethod(stdClass $my) {}
 }
 
-class ComplexExample
+class ValidComplexExample
 {
 	/**
 	 * Who needs a functions with such params?!
@@ -66,6 +66,16 @@ class ComplexExample
 	 * @param bool $boolean   Boolean params are hard to understand in calls!
 	 */
 	public function validMethod(DateTime $date, stdClass $obj, array $ar, $number, $boolean) {}
+}
+
+class ValidOnlyPublicExample
+{
+	/**
+	 * @param DateTime  $date A date without time
+	 */
+	public function validMethod(DateTime $date) {}
+
+	private function invalidMethod() {}
 }
 
 class OneChangeExampleTypeChanged
@@ -80,6 +90,20 @@ class OneChangeExampleTypeChanged
 	 * @param bool $boolean   Boolean params are hard to understand in calls!
 	 */
 	public function invalidMethod(DateTime $date, stdClass $obj, stdClass $ar, $number, $boolean) {}
+}
+
+class OneChangeExampleNameChanged
+{
+	/**
+	 * Who needs a functions with such params?!
+	 *
+	 * @param DateTime  $date A date without time
+	 * @param stdClass  $obj
+	 * @param array		$ar
+	 * @param int $number
+	 * @param bool $boolean   Boolean params are hard to understand in calls!
+	 */
+	public function invalidMethod(DateTime $date, stdClass $obj, array $array, $number, $boolean) {}
 }
 
 class OneChangeExampleRemovedParameter

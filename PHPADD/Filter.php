@@ -19,14 +19,4 @@ class PHPADD_Filter
 
 		return $level;
 	}
-
-	public function skipProtected()
-	{
-		return $this->skipProtected;
-	}
-
-	public function skipPrivate()
-	{
-		return $this->skipPrivate;
-	}
 }

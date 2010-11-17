@@ -60,7 +60,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testSkipsValidDocBlocks($className)
 	{
 		$parser = new PHPADD_Parser($className);
-		$analysys = $parser->analyze($this->filter);
+		$analysys = $parser->analyze(new PHPADD_Filter(true, true));
 
 		$this->assertEquals(0, count($analysys));
 	}
@@ -69,7 +69,8 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	{
 		return array(
 			array('ValidExample'),
-			array('ComplexExample'),
+			array('ValidComplexExample'),
+			array('ValidOnlyPublicExample'),
 		);
 	}
 
@@ -89,6 +90,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	{
 		return array(
 			array('OneChangeExampleTypeChanged', 'type-mismatch'),
+			array('OneChangeExampleNameChanged', 'name-mismatch'),
 			// won't fix in 1.0
 //			array('OneChangeExampleRemovedParameter', 'unexpected-param'),
 //			array('OneChangeExampleAddedParameter', 'missing-param'),

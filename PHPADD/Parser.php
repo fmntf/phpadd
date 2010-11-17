@@ -14,13 +14,11 @@ class PHPADD_Parser
 	public function analyze(PHPADD_Filter $filter)
 	{
 		$mess = array();
-		
+
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 
 			if ($this->isDocBlockMissing($method)) {
-				if (!$this->canDocBlockMiss($method, $filter)) {
-					$mess[] = $this->getError('miss', $method);
-				}
+				$mess[] = $this->getError('miss', $method);
 			} else {
 				$errors = $this->validateDocBlock($method);
 				if (count($errors) > 0) {
@@ -50,15 +48,6 @@ class PHPADD_Parser
 	private function isDocBlockMissing(ReflectionMethod $method)
 	{
 		return $method->getDocComment() === false;
-	}
-
-	private function canDocBlockMiss(ReflectionMethod $method, PHPADD_Filter $filter)
-	{
-		if ($filter->skipPrivate() && $method->isPrivate() ||
-			$filter->skipProtected() && $method->isProtected()) {
-			return true;
-		}
-		return false;
 	}
 
 	public function validateDocBlock(ReflectionMethod $method)

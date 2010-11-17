@@ -38,8 +38,8 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 		$fileMess = $mess[__DIR__ . '/fixtures/dirty/simple.php'];
 
 		$this->assertEquals(2, count($fileMess));
-		$this->assertEquals('missing-param', $fileMess['InvalidMissingExample'][0]['detail'][0]['type']);
-		$this->assertEquals('unexpected-param', $fileMess['InvalidRemovedExample'][0]['detail'][0]['type']);
+		$this->assertEquals('missing-param', $fileMess['Fixture_InvalidMissingExample'][0]['detail'][0]['type']);
+		$this->assertEquals('unexpected-param', $fileMess['Fixture_InvalidRemovedExample'][0]['detail'][0]['type']);
 	}
 }
 
