@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * phpadd - abandoned docblocks detector
@@ -26,20 +25,52 @@ require_once 'Detector.php';
 
 class PHPADD_Cli
 {
-	private function blocksProtected()
+	protected function blocksProtected()
 	{
 		return in_array('--skip-protected', $_SERVER['argv']);
 	}
 
-	private function blocksPrivate()
+	protected function blocksPrivate()
 	{
 		return in_array('--skip-private', $_SERVER['argv']);
+	}
+
+	protected function getBootstrap()
+	{
+		$hasBootstrap = array_search('--bootstrap', $_SERVER['argv']);
+		if ($hasBootstrap === false) {
+			return false;
+		}
+
+		return $_SERVER['argv'][$hasBootstrap + 1];
+	}
+
+	protected function getPublisher()
+	{
+		foreach ($_SERVER['argv'] as $i => $arg) {
+			$parts = explode('--publisher-', $arg);
+			if (isset($parts[1])) {
+				$publisher = ucfirst($parts[1]);
+				require_once "Publisher/$publisher.php";
+				$class = "PHPADD_Publisher_$publisher";
+
+				$arg = $_SERVER['argv'][$i+1];
+				return new $class($arg);
+			}
+		}
+
+		throw new InvalidArgumentException('Missing publisher.');
 	}
 
 	private function getPath()
 	{
 		$last = $_SERVER['argc'] - 1;
-		return $_SERVER['argv'][$last];
+		$dir = $_SERVER['argv'][$last];
+		if (!is_dir($dir)) {
+			throw new InvalidArgumentException('Invalid source directory.');
+		}
+
+		return $dir;
 	}
 
 	public function run()
@@ -47,6 +78,16 @@ class PHPADD_Cli
 		$detector = new PHPADD_Detector();
 		$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
 
-		print_r($detector->getMess($this->getPath()));
+		$bootstrap = $this->getBootstrap();
+		if ($bootstrap) {
+			if (is_file($bootstrap)) {
+				require_once $bootstrap;
+			} // else warn
+		}
+
+		$mess = $detector->getMess($this->getPath());
+
+		$publisher = $this->getPublisher();
+		$publisher->publish($mess);
 	}
 }

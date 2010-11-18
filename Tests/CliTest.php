@@ -6,7 +6,7 @@ class CliTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->cli = new PHPADD_Cli;
+		$this->cli = new Unmasked_PHPADD_Cli;
 	}
 
 	public function testScansEverythingByDefault()
@@ -33,5 +33,17 @@ class CliTest extends PHPUnit_Framework_TestCase
 
 		$this->assertFalse($this->cli->blocksPrivate());
 		$this->assertTrue($this->cli->blocksProtected());
+	}
+}
+
+class Unmasked_PHPADD_Cli extends PHPADD_Cli
+{
+	public function blocksPrivate()
+	{
+		return parent::blocksPrivate();
+	}
+	public function blocksProtected()
+	{
+		return parent::blocksProtected();
 	}
 }
