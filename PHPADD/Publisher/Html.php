@@ -63,7 +63,7 @@ class PHPADD_Publisher_Html
 					break;
 			}
 
-			$output .= "\t\t</ul>";
+			$output .= "\t\t</ul>\n";
 		}
 
 		return $output;
