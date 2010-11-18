@@ -77,53 +77,81 @@ class PHPADD_Parser
 		return $method->getDocComment() === false;
 	}
 
-	public function validateDocBlock(ReflectionMethod $method)
+	private function getPhpParams(ReflectionMethod $method)
 	{
-		$errors = array();
-		$annotations = $this->parseAnnotations($method->getDocComment());
+		$params = array();
 
 		foreach ($method->getParameters() as $parameter)
 		{
 			/* @var $parameter ReflectionParameter */
-			$index = $parameter->getPosition();
-			$phpType = $parameter->getClass();
-			$phpName = '$' . $parameter->getName();
+			$type = $parameter->getClass();
+			$name = '$' . $parameter->getName();
 
-			if (!isset($annotations['param'][$index])) {
-				$errors[] = $this->createError('missing-param', $parameter->__toString(), null);
-				continue;
-			}
-			
-			list($docType, $docName) = preg_split("/[\s]+/", $annotations['param'][$index]);
-
-			if ($phpType) {
-				$phpType = $phpType->getName();
-				if ($phpType != $docType) {
-					$errors[] = $this->createError('type-mismatch', $docType, $phpType);
-				}
+			if ($parameter->isArray()) {
+				$type = 'array';
 			}
 
-			if ($docName != $phpName) {
-				$errors[] = $this->createError('name-mismatch', $docName, $phpName);
+			if ($type) {
+				if ($type != 'array') $type = $type->getName();
+				$params[] = "$type $name";
+			} else {
+				$params[] = "$name";
+			}
+
+		}
+
+		return $params;
+	}
+
+	private function getDocBlockParams(ReflectionMethod $method)
+	{
+		$params = array();
+
+		$excluded = array('int', 'integer', 'float', 'double', 'bool', 'boolean', 'string');
+		$annotations = $this->parseAnnotations($method->getDocComment());
+
+		foreach ($annotations['param'] as $parameter)
+		{
+			list($type, $name) = preg_split("/[\s]+/", $parameter);
+
+			if (!in_array($type, $excluded)) {
+				$params[] = "$type $name";
+			} else {
+				$params[] = "$name";
 			}
 		}
 
-		for ($unexpected = $index; $unexpected < count($annotations['param'])-1; $unexpected++) {
-			$errors[] = $this->createError('unexpected-param', $annotations['param'][$unexpected], null);
+		return $params;
+	}
+
+
+	public function validateDocBlock(ReflectionMethod $method)
+	{
+		$errors = array();
+
+		$phpIssues = $this->getPhpParams($method);
+		$docIssues = $this->getDocBlockParams($method);
+
+		$missing = array_values(array_diff($phpIssues, $docIssues));
+		foreach ($missing as $param) {
+			$errors[] = $this->createError('missing-param', $param);
+		}
+
+		$unexpected = array_values(array_diff($docIssues, $phpIssues));
+		foreach ($unexpected as $param) {
+			$errors[] = $this->createError('unexpected-param', $param);
 		}
 
 		return $errors;
 	}
 
-	private function createError($type, $doc, $php)
+	private function createError($type, $name)
 	{
 		return array(
 			'type' => $type,
-			'docblock' => $doc,
-			'phpfile' => $php
+			'name' => $name
 		);
 	}
-
 
 	private function parseAnnotations($docblock)
 	{

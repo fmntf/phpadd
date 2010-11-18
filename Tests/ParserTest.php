@@ -15,7 +15,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	{
 		$parser = new PHPADD_Parser('Example');
 		$analysys = $parser->analyze($this->filter);
-		
+
 		$this->assertEquals(3, count($analysys));
 	}
 
@@ -32,7 +32,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser('Example');
 		$noProtectedFilter = new PHPADD_Filter(true, true);
 		$analysys = $parser->analyze($noProtectedFilter);
-		
+
 		$this->assertEquals(1, count($analysys));
 		$this->assertEquals('publicMethod', $analysys[0]['method']);
 	}
@@ -44,6 +44,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals(1, count($analysys));
 		$this->assertEquals('missing-param', $analysys[0]['detail'][0]['type']);
+		$this->assertEquals('$name', $analysys[0]['detail'][0]['name']);
 	}
 
 	public function testDetectsMissingParametersInPhp()
@@ -53,6 +54,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals(1, count($analysys));
 		$this->assertEquals('unexpected-param', $analysys[0]['detail'][0]['type']);
+		$this->assertEquals('$name', $analysys[0]['detail'][0]['name']);
 	}
 
 	/**
@@ -65,7 +67,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals(0, count($analysys));
 	}
-	
+
 	public function validClasses()
 	{
 		return array(
@@ -83,18 +85,22 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser($className);
 		$analysys = $parser->analyze($this->filter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals($error, $analysys[0]['detail'][0]['type']);
+		$count = array(
+			'changed' => 2,
+			'removed' => 1,
+			'added' => 1,
+		);
+
+		$this->assertEquals($count[$error], count($analysys[0]['detail']));
 	}
 
 	public function oneChangeClasses()
 	{
 		return array(
-			array('OneChangeExampleTypeChanged', 'type-mismatch'),
-			array('OneChangeExampleNameChanged', 'name-mismatch'),
-			// won't fix in 1.0
-//			array('OneChangeExampleRemovedParameter', 'unexpected-param'),
-//			array('OneChangeExampleAddedParameter', 'missing-param'),
+			array('OneChangeExampleTypeChanged', 'changed'),
+			array('OneChangeExampleNameChanged', 'changed'),
+			array('OneChangeExampleRemovedParameter', 'removed'),
+			array('OneChangeExampleAddedParameter', 'added'),
 		);
 	}
 
