@@ -61,7 +61,6 @@ class PHPADD_Parser
 	{
 		$error = array(
 			'type' => $type,
-			'class' => $method->class,
 			'method' => $method->name
 		);
 
@@ -105,17 +104,19 @@ class PHPADD_Parser
 	{
 		$params = array();
 
-		$excluded = array('int', 'integer', 'float', 'double', 'bool', 'boolean', 'string');
+		$excluded = array('int', 'integer', 'float', 'double', 'bool', 'boolean', 'string', 'mixed');
 		$annotations = $this->parseAnnotations($method->getDocComment());
 
-		foreach ($annotations['param'] as $parameter)
-		{
-			list($type, $name) = preg_split("/[\s]+/", $parameter);
+		if (isset($annotations['param'])) {
+			foreach ($annotations['param'] as $parameter)
+			{
+				list($type, $name) = preg_split("/[\s]+/", $parameter);
 
-			if (!in_array($type, $excluded)) {
-				$params[] = "$type $name";
-			} else {
-				$params[] = "$name";
+				if (!in_array($type, $excluded)) {
+					$params[] = "$type $name";
+				} else {
+					$params[] = "$name";
+				}
 			}
 		}
 
