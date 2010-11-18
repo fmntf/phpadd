@@ -75,19 +75,28 @@ class PHPADD_Cli
 
 	public function run()
 	{
-		$detector = new PHPADD_Detector();
-		$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
+		try {
+			$detector = new PHPADD_Detector();
+			$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
 
-		$bootstrap = $this->getBootstrap();
-		if ($bootstrap) {
-			if (is_file($bootstrap)) {
-				require_once $bootstrap;
-			} // else warn
+			$bootstrap = $this->getBootstrap();
+			if ($bootstrap) {
+				if (is_file($bootstrap)) {
+					require_once $bootstrap;
+				} // else warn
+			}
+
+			$mess = $detector->getMess($this->getPath());
+
+			$publisher = $this->getPublisher();
+			$publisher->publish($mess);
+		} catch (Exception $e) {
+			echo $e->getMessage();
+			echo "\nUsage: phpadd [options] --publish-html /path/to/output/file /directory/to/scan\n\n";
+			echo "Options: \n";
+			echo "   --skip-protected    skips the scanning of protected methods\n";
+			echo "   --skip-private      skips the scanning of private methods\n";
+			echo "   --bootstrap file    includes `file` before the scan\n";
 		}
-
-		$mess = $detector->getMess($this->getPath());
-
-		$publisher = $this->getPublisher();
-		$publisher->publish($mess);
 	}
 }
