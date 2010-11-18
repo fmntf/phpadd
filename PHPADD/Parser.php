@@ -84,20 +84,18 @@ class PHPADD_Parser
 		foreach ($method->getParameters() as $parameter)
 		{
 			/* @var $parameter ReflectionParameter */
-			$type = $parameter->getClass();
 			$name = '$' . $parameter->getName();
 
 			if ($parameter->isArray()) {
-				$type = 'array';
-			}
-
-			if ($type) {
-				if ($type != 'array') $type = $type->getName();
-				$params[] = "$type $name";
+				$params[] = "array $name";
 			} else {
-				$params[] = "$name";
+				$type = $parameter->getClass();
+				if ($type) {
+					$params[] = "{$type->getName()} $name";
+				} else {
+					$params[] = "$name";
+				}
 			}
-
 		}
 
 		return $params;
