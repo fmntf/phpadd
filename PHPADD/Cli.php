@@ -25,78 +25,103 @@ require_once 'Detector.php';
 
 class PHPADD_Cli
 {
+	private $skipProtected = false;
+	private $skipPrivate = false;
+	private $bootstrap = null;
+	private $publisher = null;
+	private $path = null;
+	
 	protected function blocksProtected()
 	{
-		return in_array('--skip-protected', $_SERVER['argv']);
+		return $this->skipProtected;
 	}
 
 	protected function blocksPrivate()
 	{
-		return in_array('--skip-private', $_SERVER['argv']);
+		return $this->skipPrivate;
 	}
 
-	protected function getBootstrap()
+	private function includeBootstrap()
 	{
-		$hasBootstrap = array_search('--bootstrap', $_SERVER['argv']);
-		if ($hasBootstrap === false) {
-			return false;
+		if ($this->bootstrap !== null) {
+			require_once $this->bootstrap;
 		}
-
-		return $_SERVER['argv'][$hasBootstrap + 1];
 	}
-
-	protected function getPublisher()
-	{
-		foreach ($_SERVER['argv'] as $i => $arg) {
-			$parts = explode('--publish-', $arg);
-			if (isset($parts[1])) {
-				$publisher = ucfirst($parts[1]);
-				require_once "Publisher/$publisher.php";
-				$class = "PHPADD_Publisher_$publisher";
-
-				$arg = $_SERVER['argv'][$i+1];
-				return new $class($arg);
-			}
-		}
-
-		throw new InvalidArgumentException('Missing publisher.');
-	}
-
-	private function getPath()
-	{
-		$last = $_SERVER['argc'] - 1;
-		$dir = $_SERVER['argv'][$last];
-		if (!is_dir($dir)) {
-			throw new InvalidArgumentException('Invalid source directory.');
-		}
-
-		return $dir;
-	}
-
+	
 	public function run()
 	{
 		try {
+			$this->parseParams();
+			$this->includeBootstrap();
+			
 			$detector = new PHPADD_Detector();
 			$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
-
-			$bootstrap = $this->getBootstrap();
-			if ($bootstrap) {
-				if (is_file($bootstrap)) {
-					require_once $bootstrap;
-				} // else warn
-			}
-
-			$mess = $detector->getMess($this->getPath());
-
-			$publisher = $this->getPublisher();
-			$publisher->publish($mess);
+			
+			$mess = $detector->getMess($this->path);
+			$this->publisher->publish($mess);
+			
 		} catch (Exception $e) {
-			echo $e->getMessage();
-			echo "\nUsage: phpadd [options] --publish-html /path/to/output/file /directory/to/scan\n\n";
-			echo "Options: \n";
-			echo "   --skip-protected    skips the scanning of protected methods\n";
-			echo "   --skip-private      skips the scanning of private methods\n";
-			echo "   --bootstrap file    includes `file` before the scan\n";
+			echo $e->getMessage() . PHP_EOL;
+			echo $this->usage();
 		}
 	}
+	
+	private function usage()
+	{
+		return
+			"Usage: phpadd [options] --publish-html /path/to/output/file /directory/to/scan" .
+			PHP_EOL . PHP_EOL .
+			"Options:" . PHP_EOL .
+			"   --skip-protected    skips the scanning of protected methods" . PHP_EOL .
+			"   --skip-private      skips the scanning of private methods" . PHP_EOL .
+			"   --bootstrap file    includes `file` before the scan" . PHP_EOL;
+	}
+	
+	private function parseParams()
+	{
+		for ($i = 1; $i < $_SERVER['argc'] -1; $i++) {
+			$param = $_SERVER['argv'][$i];
+			
+			switch ($param) {
+				case '--skip-protected':
+					$this->skipProtected = true;
+					break;
+				
+				case '--skip-private':
+					$this->skipPrivate = true;
+					break;
+				
+				case '--bootstrap':
+					$this->bootstrap = $_SERVER['argv'][++$i];
+					if (!is_file($this->bootstrap)) {
+						throw new InvalidArgumentException('Not a file: ' . $this->bootstrap);
+					}
+					break;
+				
+				case '--publish-html':
+					require_once "Publisher/Html.php";
+					$class = "PHPADD_Publisher_Html";
+					$outFile = $_SERVER['argv'][++$i];
+					$this->publisher = new $class($outFile);
+					break;
+				
+				default:
+					throw new InvalidArgumentException('Invalid argument: ' . $param);
+			}
+		}
+		
+		if ($this->publisher === null) {
+			throw new InvalidArgumentException('You must specify a publisher.');
+		}
+		
+		if (!isset($_SERVER['argv'][$i])) {
+			throw new InvalidArgumentException('You must specify source directory.');
+		}
+		
+		$this->path = $_SERVER['argv'][$i];
+		if (!is_dir($this->path)) {
+			throw new InvalidArgumentException('Not a directory: ' . $this->path);
+		}
+	}
+
 }
