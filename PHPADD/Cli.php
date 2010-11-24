@@ -48,7 +48,7 @@ class PHPADD_Cli
 	protected function getPublisher()
 	{
 		foreach ($_SERVER['argv'] as $i => $arg) {
-			$parts = explode('--publisher-', $arg);
+			$parts = explode('--publish-', $arg);
 			if (isset($parts[1])) {
 				$publisher = ucfirst($parts[1]);
 				require_once "Publisher/$publisher.php";
