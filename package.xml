@@ -40,6 +40,7 @@
     <file name="LICENSE" role="doc" />
     <file name="README.markdown" role="doc" />
     <file baseinstalldir="/" name="phpadd.php" role="script">
+     <tasks:replace from="/usr/bin/env php" to="php_bin" type="pear-config"/>
      <tasks:replace from="@php_bin@" to="php_bin" type="pear-config" />
     </file>
    </dir>
