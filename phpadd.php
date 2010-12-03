@@ -1,9 +1,6 @@
-#!/usr/bin/env php
 <?php
 /**
- * Basic TestCase to extend while writing tests.
- *
- * ExtDiamond - Easy testing for ExtJS
+ * phpadd - abandoned docblocks detector
  * Copyright (C) 2010 Francesco Montefoschi <francesco.monte@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify

@@ -13,10 +13,10 @@
   <email>francesco.monte@gmail.com</email>
   <active>yes</active>
  </lead>
- <date>2010-11-20</date>
+ <date>2010-12-03</date>
  <time>14:00:00</time>
  <version>
-  <release>1.0.0</release>
+  <release>1.0.1</release>
   <api>1.0.0</api>
  </version>
  <stability>
@@ -34,6 +34,7 @@
      <file baseinstalldir="/" name="ClassFinder.php" role="php" />
      <file baseinstalldir="/" name="Cli.php" role="php" />
      <file baseinstalldir="/" name="Detector.php" role="php" />
+     <file baseinstalldir="/" name="Filter.php" role="php" />
      <file baseinstalldir="/" name="Parser.php" role="php" />
     </dir>
     <file name="LICENSE" role="doc" />
