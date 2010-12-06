@@ -31,16 +31,16 @@ class PHPADD_Publisher_Html
 
 	public function publish(array $mess)
 	{
-		$output = '';
+		$output = $this->getHeader();
 
 		foreach ($mess as $file => $classes) {
-			$output .= "<h1>$file</h1>" . PHP_EOL;
 			foreach ($classes as $class => $methods) {
-				$output .= "\t<h2>$class</h2>" . PHP_EOL;
+				$output .= "\t<h1 title=\"Defined in: $file\">$class</h1>" . PHP_EOL;
 				$output .= $this->processMethods($methods);
 			}
 		}
 
+		$output .= $this->getFooter();
 		file_put_contents($this->output, $output);
 	}
 
@@ -50,15 +50,15 @@ class PHPADD_Publisher_Html
 		
 		foreach ($methods as $method)
 		{
-			$output .= "\t\t<h3>Method: " . $method['method'] . '</h3><ul>' . PHP_EOL;
+			$output .= "\t\t<h2>Method: " . $method['method'] . '</h2><ul>' . PHP_EOL;
 
 			switch ($method['type']) {
 				case 'miss':
-					$output .= "\t\t\t<p>Missing docblock</p>" . PHP_EOL;
+					$output .= "\t\t\t<li>Missing docblock</li>" . PHP_EOL;
 					break;
 				case 'invalid':
 					foreach ($method['detail'] as $issue) {
-						$output .= "\t\t\t<p>" . $this->getType($issue['type']) . ": - {$issue['name']}</p>" . PHP_EOL;
+						$output .= "\t\t\t<li>" . $this->getType($issue['type']) . ": - <code>{$issue['name']}</code></li>" . PHP_EOL;
 					}
 					break;
 			}
@@ -78,4 +78,41 @@ class PHPADD_Publisher_Html
 				return 'Unexpected parameter';
 		}
 	}
+
+	private function getHeader()
+	{
+		return '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>phpadd result</title>
+		<style type="text/css">
+			h1 {
+				font-size: 19px;
+				border-bottom: 1px solid #c0c0c0;
+				margin-top: 19px;
+			}
+			h2 {
+				font-size: 16px;
+				margin: 2px 0 0 9px;
+			}
+			ul {
+				list-style-type: circle;
+				font-size: 14px;
+				margin: 7px 0 13px 0;
+			}
+			code {
+				font-size: 13px;
+			}
+		</style>
+    </head>
+    <body>';
+	}
+
+	private function getFooter()
+	{
+		return '</body>
+</html>';
+	}
+
 }
