@@ -25,6 +25,8 @@ require_once 'Detector.php';
 
 class PHPADD_Cli
 {
+	const VERSION = '1.1.0';
+
 	private $skipProtected = false;
 	private $skipPrivate = false;
 	private $bootstrap = null;
