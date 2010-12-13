@@ -47,7 +47,11 @@ class PHPADD_Cli
 			require_once $this->bootstrap;
 		}
 	}
-	
+
+	/**
+	 * Parses the command line parms and starts the execution.
+	 * If something is wrong, the 'usage' message is displayed.
+	 */
 	public function run()
 	{
 		try {

@@ -29,11 +29,23 @@ class PHPADD_Detector
 {
 	protected $filter;
 
+	/**
+	 * Se the filter
+	 * 
+	 * @param bool $scanProtectedMethods
+	 * @param bool $scanPrivateMethods
+	 */
 	public function setFilter($scanProtectedMethods, $scanPrivateMethods)
 	{
 		$this->filter = new PHPADD_Filter($scanProtectedMethods, $scanPrivateMethods);
 	}
 
+	/**
+	 * Get the documentation mess in a path
+	 *
+	 * @param string $path
+	 * @return array
+	 */
 	public function getMess($path)
 	{
 		$mess = array();

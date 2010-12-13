@@ -33,6 +33,12 @@ class PHPADD_Parser
 		$this->reflection = new ReflectionClass($class);
 	}
 
+	/**
+	 * Analyzes the class with the given filtering level.
+	 *
+	 * @param PHPADD_Filter $filter
+	 * @return array Found mess
+	 */
 	public function analyze(PHPADD_Filter $filter)
 	{
 		$mess = array();
@@ -41,6 +47,7 @@ class PHPADD_Parser
 			/* @var $method ReflectionMethod */
 
 			if ($this->reflection->name !== $method->getDeclaringClass()->name) {
+				// is not in this class
 				continue;
 			}
 
@@ -123,7 +130,12 @@ class PHPADD_Parser
 		return $params;
 	}
 
-
+	/**
+	 * Check if the given method has the right docblock.
+	 *
+	 * @param ReflectionMethod $method
+	 * @return array Issues in the docblock
+	 */
 	public function validateDocBlock(ReflectionMethod $method)
 	{
 		$errors = array();

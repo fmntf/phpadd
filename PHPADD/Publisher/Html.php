@@ -29,6 +29,11 @@ class PHPADD_Publisher_Html
 		$this->output = $argument;
 	}
 
+	/**
+	 * Renders the mess in an HTML page.
+	 *
+	 * @param array $mess
+	 */
 	public function publish(array $mess)
 	{
 		$output = $this->getHeader();

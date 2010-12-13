@@ -33,6 +33,11 @@ class PHPADD_Filter
 		$this->skipPrivate = $skipPrivate;
 	}
 
+	/**
+	 * Prepares a mask to access class methods
+	 *
+	 * @return int
+	 */
 	public function getLevel()
 	{
 		$level = ReflectionMethod::IS_PUBLIC;
