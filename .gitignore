@@ -1,3 +1,4 @@
 nbproject
 bootstrapexample.php
-
+.idea
+Tests/phpunit.xml
