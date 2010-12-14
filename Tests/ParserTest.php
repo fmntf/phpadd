@@ -14,47 +14,47 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testAnalyzesAllMethods()
 	{
 		$parser = new PHPADD_Parser('Example');
-		$analysys = $parser->analyze($this->filter);
+		$analysis = $parser->analyze($this->filter);
 
-		$this->assertEquals(3, count($analysys));
+		$this->assertEquals(3, count($analysis));
 	}
 
 	public function testIgnoresBlankSpaces()
 	{
 		$parser = new PHPADD_Parser('ValidWithSpacesExample');
-		$analysys = $parser->analyze($this->filter);
+		$analysis = $parser->analyze($this->filter);
 
-		$this->assertEquals(0, count($analysys));
+		$this->assertEquals(0, count($analysis));
 	}
 
 	public function testAnalyzesOnlyPublicMethods()
 	{
 		$parser = new PHPADD_Parser('Example');
 		$noProtectedFilter = new PHPADD_Filter(true, true);
-		$analysys = $parser->analyze($noProtectedFilter);
+		$analysis = $parser->analyze($noProtectedFilter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('publicMethod', $analysys[0]['method']);
+		$this->assertEquals(1, count($analysis));
+		$this->assertEquals('publicMethod', $analysis[0]['method']);
 	}
 
 	public function testDetectsMissingParametersInDocBlocks()
 	{
 		$parser = new PHPADD_Parser('InvalidMissingExample');
-		$analysys = $parser->analyze($this->filter);
+		$analysis = $parser->analyze($this->filter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('missing-param', $analysys[0]['detail'][0]['type']);
-		$this->assertEquals('$name', $analysys[0]['detail'][0]['name']);
+		$this->assertEquals(1, count($analysis));
+		$this->assertEquals('missing-param', $analysis[0]['detail'][0]['type']);
+		$this->assertEquals('$name', $analysis[0]['detail'][0]['name']);
 	}
 
 	public function testDetectsMissingParametersInPhp()
 	{
 		$parser = new PHPADD_Parser('InvalidRemovedExample');
-		$analysys = $parser->analyze($this->filter);
+		$analysis = $parser->analyze($this->filter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('unexpected-param', $analysys[0]['detail'][0]['type']);
-		$this->assertEquals('$name', $analysys[0]['detail'][0]['name']);
+		$this->assertEquals(1, count($analysis));
+		$this->assertEquals('unexpected-param', $analysis[0]['detail'][0]['type']);
+		$this->assertEquals('$name', $analysis[0]['detail'][0]['name']);
 	}
 
 	/**
@@ -63,9 +63,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testSkipsValidDocBlocks($className)
 	{
 		$parser = new PHPADD_Parser($className);
-		$analysys = $parser->analyze(new PHPADD_Filter(true, true));
+		$analysis = $parser->analyze(new PHPADD_Filter(true, true));
 
-		$this->assertEquals(0, count($analysys));
+		$this->assertEquals(0, count($analysis));
 	}
 
 	public function validClasses()
@@ -83,7 +83,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testFindsInvalidDocBlocks($className, $error)
 	{
 		$parser = new PHPADD_Parser($className);
-		$analysys = $parser->analyze($this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		$count = array(
 			'changed' => 2,
@@ -91,7 +91,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 			'added' => 1,
 		);
 
-		$this->assertEquals($count[$error], count($analysys[0]['detail']));
+		$this->assertEquals($count[$error], count($analysis[0]['detail']));
 	}
 
 	public function oneChangeClasses()
@@ -107,10 +107,10 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testIgnoresMethodsOfParentClasses()
 	{
 		$parser = new PHPADD_Parser('Extension_Extended');
-		$analysys = $parser->analyze($this->filter);
+		$analysis = $parser->analyze($this->filter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('b', $analysys[0]['method']);
+		$this->assertEquals(1, count($analysis));
+		$this->assertEquals('b', $analysis[0]['method']);
 	}
 
 }
