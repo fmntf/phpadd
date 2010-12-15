@@ -52,4 +52,17 @@ class PHPADD_Result_Class
 	{
 		return $this->outdates;
 	}
+
+	public function getRegularBlocks()
+	{
+		return $this->regulars;
+	}
+
+	public function isClean()
+	{
+		$noMissings = count($this->missings) == 0;
+		$noOutdated = count($this->outdates) == 0;
+
+		return $noMissings && $noOutdated;
+	}
 }
