@@ -38,7 +38,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testAnalyzesOnlyPublicMethods()
 	{
 		$parser = new PHPADD_Parser('Example');
-		$noProtectedFilter = new PHPADD_Filter(true, true);
+		$noProtectedFilter = new PHPADD_Filter(false, false);
 		$analysys = $parser->analyze($noProtectedFilter);
 
 		$missing = $analysys->getMissingBlocks();
@@ -89,7 +89,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testSkipsValidDocBlocks($className)
 	{
 		$parser = new PHPADD_Parser($className);
-		$analysys = $parser->analyze(new PHPADD_Filter(true, true));
+		$analysys = $parser->analyze(new PHPADD_Filter(false, false));
 
 		$missing = $analysys->getMissingBlocks();
 		$outdated = $analysys->getOutdatedBlocks();

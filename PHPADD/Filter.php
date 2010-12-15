@@ -24,13 +24,13 @@
 
 class PHPADD_Filter
 {
-	private $skipProtected;
-	private $skipPrivate;
+	private $scanProtected;
+	private $scanPrivate;
 	
-	public function __construct($skipProtected = false, $skipPrivate = false)
+	public function __construct($scanProtected = true, $scanPrivate = true)
 	{
-		$this->skipProtected = $skipProtected;
-		$this->skipPrivate = $skipPrivate;
+		$this->scanProtected = $scanProtected;
+		$this->scanPrivate = $scanPrivate;
 	}
 
 	/**
@@ -41,8 +41,8 @@ class PHPADD_Filter
 	public function getLevel()
 	{
 		$level = ReflectionMethod::IS_PUBLIC;
-		if (!$this->skipProtected) $level += ReflectionMethod::IS_PROTECTED;
-		if (!$this->skipPrivate) $level += ReflectionMethod::IS_PRIVATE;
+		if ($this->scanProtected) $level += ReflectionMethod::IS_PROTECTED;
+		if ($this->scanPrivate) $level += ReflectionMethod::IS_PRIVATE;
 
 		return $level;
 	}
