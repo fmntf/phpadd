@@ -24,6 +24,12 @@
 
 class PHPADD_Stats
 {
+	/**
+	 * Compute stats from mess.
+	 * 
+	 * @param PHPADD_Result_Analysis $mess
+	 * @return array Contains files, methods, regular(-f), missing(-f) and outdated(-f) indexes.
+	 */
 	public function getStats(PHPADD_Result_Analysis $mess)
 	{
 		$fileNo = count($mess->getFiles());
@@ -48,11 +54,24 @@ class PHPADD_Stats
 		);
 	}
 
+	/**
+	 * Gets the percentage starting from absolute frequencies.
+	 *
+	 * @param int $partial
+	 * @param int $total
+	 * @return float
+	 */
 	private function getFrequency($partial, $total)
 	{
 		return number_format($partial / $total * 100, 1);
 	}
 
+	/**
+	 * Detects the number of regular, missing and outdated docblocks.
+	 *
+	 * @param array $results
+	 * @return array
+	 */
 	private function analyze(array $results)
 	{
 		$regularMethods = 0;
