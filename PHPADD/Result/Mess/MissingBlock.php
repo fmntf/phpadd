@@ -35,4 +35,9 @@ class PHPADD_Result_Mess_MissingBlock
 	{
 		return $this->methodName;
 	}
+
+	public function toList()
+	{
+		return array('Missing docblock');
+	}
 }

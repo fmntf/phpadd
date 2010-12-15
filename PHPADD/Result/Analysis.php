@@ -41,4 +41,9 @@ class PHPADD_Result_Analysis
 	{
 		return $this->results;
 	}
+
+	public function getFiles()
+	{
+		return $this->files;
+	}
 }

@@ -37,8 +37,30 @@ class PHPADD_Result_Mess_OutdatedBlock
 	{
 		return $this->methodName;
 	}
+
 	public function getDetail()
 	{
 		return $this->detail;
+	}
+
+	public function toList()
+	{
+		$list = array();
+
+		foreach ($this->detail as $issue) {
+			$list[] =  $this->getType($issue['type']) . ": - <code>{$issue['name']}</code>";
+		}
+
+		return $list;
+	}
+
+	private function getType($symbolic)
+	{
+		switch ($symbolic) {
+			case 'missing-param':
+				return 'Missing parameter';
+			case 'unexpected-param':
+				return 'Unexpected parameter';
+		}
 	}
 }
