@@ -16,7 +16,11 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser('Example');
 		$analysys = $parser->analyze($this->filter);
 
-		$this->assertEquals(3, count($analysys));
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
+
+		$this->assertEquals(3, count($missing));
+		$this->assertEquals(0, count($outdated));
 	}
 
 	public function testIgnoresBlankSpaces()
@@ -24,7 +28,11 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser('ValidWithSpacesExample');
 		$analysys = $parser->analyze($this->filter);
 
-		$this->assertEquals(0, count($analysys));
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
+
+		$this->assertEquals(0, count($missing));
+		$this->assertEquals(0, count($outdated));
 	}
 
 	public function testAnalyzesOnlyPublicMethods()
@@ -33,8 +41,12 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$noProtectedFilter = new PHPADD_Filter(true, true);
 		$analysys = $parser->analyze($noProtectedFilter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('publicMethod', $analysys[0]['method']);
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
+
+		$this->assertEquals(1, count($missing));
+		$this->assertEquals(0, count($outdated));
+		$this->assertEquals('publicMethod', $missing[0]->getName());
 	}
 
 	public function testDetectsMissingParametersInDocBlocks()
@@ -42,9 +54,16 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser('InvalidMissingExample');
 		$analysys = $parser->analyze($this->filter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('missing-param', $analysys[0]['detail'][0]['type']);
-		$this->assertEquals('$name', $analysys[0]['detail'][0]['name']);
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
+
+		$this->assertEquals(0, count($missing));
+		$this->assertEquals(1, count($outdated));
+		$detail = $outdated[0]->getDetail();
+
+		$this->assertEquals(1, count($detail));
+		$this->assertEquals('missing-param', $detail[0]['type']);
+		$this->assertEquals('$name', $detail[0]['name']);
 	}
 
 	public function testDetectsMissingParametersInPhp()
@@ -52,9 +71,16 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser('InvalidRemovedExample');
 		$analysys = $parser->analyze($this->filter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('unexpected-param', $analysys[0]['detail'][0]['type']);
-		$this->assertEquals('$name', $analysys[0]['detail'][0]['name']);
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
+
+		$this->assertEquals(0, count($missing));
+		$this->assertEquals(1, count($outdated));
+		$detail = $outdated[0]->getDetail();
+
+		$this->assertEquals(1, count($detail));
+		$this->assertEquals('unexpected-param', $detail[0]['type']);
+		$this->assertEquals('$name', $detail[0]['name']);
 	}
 
 	/**
@@ -65,7 +91,11 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser($className);
 		$analysys = $parser->analyze(new PHPADD_Filter(true, true));
 
-		$this->assertEquals(0, count($analysys));
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
+
+		$this->assertEquals(0, count($missing));
+		$this->assertEquals(0, count($outdated));
 	}
 
 	public function validClasses()
@@ -85,13 +115,25 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser($className);
 		$analysys = $parser->analyze($this->filter);
 
-		$count = array(
-			'changed' => 2,
-			'removed' => 1,
-			'added' => 1,
-		);
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
 
-		$this->assertEquals($count[$error], count($analysys[0]['detail']));
+		$this->assertEquals(0, count($missing));
+
+		switch ($error) {
+			case 'changed':
+				$this->assertEquals(1, count($outdated));
+				$this->assertEquals(2, count($outdated[0]->getDetail()));
+				break;
+			case 'removed':
+				$this->assertEquals(1, count($outdated));
+				$this->assertEquals(1, count($outdated[0]->getDetail()));
+				break;
+			case 'added':
+				$this->assertEquals(1, count($outdated));
+				$this->assertEquals(1, count($outdated[0]->getDetail()));
+				break;
+		}
 	}
 
 	public function oneChangeClasses()
@@ -109,8 +151,12 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_Parser('Extension_Extended');
 		$analysys = $parser->analyze($this->filter);
 
-		$this->assertEquals(1, count($analysys));
-		$this->assertEquals('b', $analysys[0]['method']);
+		$missing = $analysys->getMissingBlocks();
+		$outdated = $analysys->getOutdatedBlocks();
+
+		$this->assertEquals(1, count($missing));
+		$this->assertEquals(0, count($outdated));
+		$this->assertEquals('b', $missing[0]->getName());
 	}
 
 }

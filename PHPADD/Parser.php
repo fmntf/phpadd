@@ -23,6 +23,9 @@
  */
 
 require_once 'Filter.php';
+require_once 'Result/Class.php';
+require_once 'Result/Mess/MissingBlock.php';
+require_once 'Result/Mess/OutdatedBlock.php';
 
 class PHPADD_Parser
 {
@@ -37,11 +40,11 @@ class PHPADD_Parser
 	 * Analyzes the class with the given filtering level.
 	 *
 	 * @param PHPADD_Filter $filter
-	 * @return array Found mess
+	 * @return PHPADD_Result_Class Found mess
 	 */
 	public function analyze(PHPADD_Filter $filter)
 	{
-		$mess = array();
+		$mess = new PHPADD_Result_Class();
 
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 			/* @var $method ReflectionMethod */
@@ -52,11 +55,13 @@ class PHPADD_Parser
 			}
 
 			if ($this->isDocBlockMissing($method)) {
-				$mess[] = $this->getError('miss', $method);
+				$mess->addMissing($this->createMissing($method));
 			} else {
 				$errors = $this->validateDocBlock($method);
 				if (count($errors) > 0) {
-					$mess[] = $this->getError('invalid', $method, $errors);
+					$mess->addOutdated($this->createOutdated($method, $errors));
+				} else {
+					$mess->countRegular($method);
 				}
 			}
 		}
@@ -64,18 +69,14 @@ class PHPADD_Parser
 		return $mess;
 	}
 
-	private function getError($type, ReflectionMethod $method, $detail = null)
+	private function createMissing(ReflectionMethod $method)
 	{
-		$error = array(
-			'type' => $type,
-			'method' => $method->name
-		);
+		return new PHPADD_Result_Mess_MissingBlock($method->name);
+	}
 
-		if ($detail !== null) {
-			$error['detail'] = $detail;
-		}
-
-		return $error;
+	private function createOutdated(ReflectionMethod $method, $detail)
+	{
+		return new PHPADD_Result_Mess_OutdatedBlock($method->name, $detail);
 	}
 
 	private function isDocBlockMissing(ReflectionMethod $method)
