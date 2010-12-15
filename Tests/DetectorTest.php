@@ -10,7 +10,7 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 		$this->detector->setFilter(true, true);
 	}
 
-	public function testDelegatesAnalysysToParser()
+	public function testDelegatesanalysisToParser()
 	{
 		$filter = new PHPADD_Filter();
 		$detector = $this->getMockBuilder('PHPADD_Parser')
