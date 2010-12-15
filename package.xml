@@ -67,13 +67,21 @@
 	</dependencies>
 
 	<phprelease>
+		<installconditions>
+			<os>
+				<name>windows</name>
+			</os>
+		</installconditions>
 		<filelist>
 			<install as="phpadd" name="phpadd.php" />
+			<install as="phpadd.bat" name="phpadd.bat" />
 		</filelist>
 	</phprelease>
+	
 	<phprelease>
 		<filelist>
 			<install as="phpadd" name="phpadd.php" />
+			<ignore name="phpadd.bat" />
 		</filelist>
 	</phprelease>
 
