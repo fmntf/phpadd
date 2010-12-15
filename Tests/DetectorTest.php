@@ -27,19 +27,47 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 	public function testWillSkipCleanClasses()
 	{
 		$mess = $this->detector->getMess(__DIR__ . '/fixtures/clean');
+		$results = $mess->getResults();
 
-		$this->assertEquals(0, count($mess));
+		foreach ($results as $class => $result) {
+			$this->assertTrue($result->isClean());
+		}
 	}
 
 	public function testWillReportDirtyClasses()
 	{
 		$mess = $this->detector->getMess(__DIR__ . '/fixtures/dirty');
+		$results = $mess->getResults();
 
-		$fileMess = $mess[__DIR__ . '/fixtures/dirty/simple.php'];
+		$missingParam = $results['Fixture_InvalidMissingExample'];
+		$removedParam = $results['Fixture_InvalidRemovedExample'];
 
-		$this->assertEquals(2, count($fileMess));
-		$this->assertEquals('missing-param', $fileMess['Fixture_InvalidMissingExample'][0]['detail'][0]['type']);
-		$this->assertEquals('unexpected-param', $fileMess['Fixture_InvalidRemovedExample'][0]['detail'][0]['type']);
+		// nothing regular
+		$this->assertEquals(0, $missingParam->getRegularBlocks());
+		$this->assertEquals(0, $removedParam->getRegularBlocks());
+
+		// nothing without docblock
+		$this->assertEquals(0, count($missingParam->getMissingBlocks()));
+		$this->assertEquals(0, count($removedParam->getMissingBlocks()));
+
+		//just one warning
+		$this->assertEquals(1, count($missingParam->getOutdatedBlocks()));
+		$this->assertEquals(1, count($removedParam->getOutdatedBlocks()));
+
+		$missingParamOutdates = $missingParam->getOutdatedBlocks();
+		$removedParamOutdates = $removedParam->getOutdatedBlocks();
+
+		$this->assertEquals(1, count($missingParamOutdates));
+		$this->assertEquals(1, count($removedParamOutdates));
+
+		$missingParamDetail = $missingParamOutdates[0]->getDetail();
+		$removedParamDetail = $removedParamOutdates[0]->getDetail();
+
+		$this->assertEquals(1, count($missingParamOutdates));
+		$this->assertEquals(1, count($removedParamOutdates));
+
+		$this->assertEquals('missing-param', $missingParamDetail[0]['type']);
+		$this->assertEquals('unexpected-param', $removedParamDetail[0]['type']);
 	}
 }
 

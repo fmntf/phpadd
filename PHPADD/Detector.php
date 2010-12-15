@@ -24,13 +24,14 @@
 
 require_once 'ClassFinder.php';
 require_once 'Parser.php';
+require_once 'Result/Analysis.php';
 
 class PHPADD_Detector
 {
 	protected $filter;
 
 	/**
-	 * Se the filter
+	 * Set the filter
 	 * 
 	 * @param bool $scanProtectedMethods
 	 * @param bool $scanPrivateMethods
@@ -44,26 +45,23 @@ class PHPADD_Detector
 	 * Get the documentation mess in a path
 	 *
 	 * @param string $path
-	 * @return array
+	 * @return PHPADD_Result_Analysis
 	 */
 	public function getMess($path)
 	{
-		$mess = array();
+		$mess = new PHPADD_Result_Analysis();
 
 		$finder = new PHPADD_ClassFinder($path);
 		foreach ($finder->getList() as $file => $classes) {
+			$mess->includingFile($file);
 			require_once $file;
 			foreach ($classes as $class) {
-				$classMess = $this->analyze($class);
-				if ($classMess) {
-					$mess[$file][$class] = $classMess;
-				}
+				$mess->addClassResult($class, $this->analyze($class));
 			}
 		}
 
 		return $mess;
 	}
-
 
 	private function analyze($className)
 	{
