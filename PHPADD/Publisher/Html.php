@@ -24,64 +24,53 @@
 
 class PHPADD_Publisher_Html
 {
+	private $destination;
+
 	public function __construct($argument)
 	{
-		$this->output = $argument;
+		$this->destination = $argument;
 	}
 
 	/**
 	 * Renders the mess in an HTML page.
 	 *
-	 * @param array $mess
+	 * @param PHPADD_Result_Analysis $mess
 	 */
-	public function publish(array $mess)
+	public function publish(PHPADD_Result_Analysis $mess)
+	{
+		$output = $this->getHtmlPage($mess);
+		file_put_contents($this->destination, $output);
+	}
+
+	private function getHtmlPage(PHPADD_Result_Analysis $mess)
 	{
 		$output = $this->getHeader();
+		$output .= $this->getStats($mess);
 
-		foreach ($mess as $file => $classes) {
-			foreach ($classes as $class => $methods) {
-				$output .= "\t<h1 title=\"Defined in: $file\">$class</h1>" . PHP_EOL;
+		foreach ($mess->getResults() as $class => $methods) {
+			if (!$methods->isClean()) {
+				$output .= "\t<h1>$class</h1>" . PHP_EOL;
 				$output .= $this->processMethods($methods);
 			}
 		}
 
 		$output .= $this->getFooter();
-		file_put_contents($this->output, $output);
+		return $output;
 	}
 
-	private function processMethods($methods)
+	private function processMethods(PHPADD_Result_Class $methods)
 	{
 		$output = '';
+		$issues = array_merge($methods->getMissingBlocks(), $methods->getOutdatedBlocks());
 		
-		foreach ($methods as $method)
+		foreach ($issues as $method)
 		{
-			$output .= "\t\t<h2>Method: " . $method['method'] . '</h2><ul>' . PHP_EOL;
-
-			switch ($method['type']) {
-				case 'miss':
-					$output .= "\t\t\t<li>Missing docblock</li>" . PHP_EOL;
-					break;
-				case 'invalid':
-					foreach ($method['detail'] as $issue) {
-						$output .= "\t\t\t<li>" . $this->getType($issue['type']) . ": - <code>{$issue['name']}</code></li>" . PHP_EOL;
-					}
-					break;
-			}
-
+			$output .= "\t\t<h2>Method: " . $method->getName() . '</h2><ul>' . PHP_EOL;
+			$output .= '<li>' . implode('</li><li>', $method->toList()) . '</li>';
 			$output .= "\t\t</ul>\n";
 		}
 
 		return $output;
-	}
-
-	private function getType($symbolic)
-	{
-		switch ($symbolic) {
-			case 'missing-param':
-				return 'Missing parameter';
-			case 'unexpected-param':
-				return 'Unexpected parameter';
-		}
 	}
 
 	private function getHeader()
@@ -118,6 +107,10 @@ class PHPADD_Publisher_Html
 	{
 		return '</body>
 </html>';
+	}
+
+	private function getStats(PHPADD_Result_Analysis $mess)
+	{
 	}
 
 }
