@@ -22,28 +22,47 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Filter
+class PHPADD_Result_Class
 {
-	private $scanProtected;
-	private $scanPrivate;
-	
-	public function __construct($scanProtected = true, $scanPrivate = true)
+	private $regulars = 0;
+	private $missings = array();
+	private $outdates = array();
+
+	public function countRegular()
 	{
-		$this->scanProtected = $scanProtected;
-		$this->scanPrivate = $scanPrivate;
+		$this->regulars++;
 	}
 
-	/**
-	 * Prepares a mask to access class methods
-	 *
-	 * @return int
-	 */
-	public function getLevel()
+	public function addMissing(PHPADD_Result_Mess_MissingBlock $mess)
 	{
-		$level = ReflectionMethod::IS_PUBLIC;
-		if ($this->scanProtected) $level += ReflectionMethod::IS_PROTECTED;
-		if ($this->scanPrivate) $level += ReflectionMethod::IS_PRIVATE;
+		$this->missings[] = $mess;
+	}
 
-		return $level;
+	public function addOutdated(PHPADD_Result_Mess_OutdatedBlock $mess)
+	{
+		$this->outdates[] = $mess;
+	}
+
+	public function getMissingBlocks()
+	{
+		return $this->missings;
+	}
+
+	public function getOutdatedBlocks()
+	{
+		return $this->outdates;
+	}
+
+	public function getRegularBlocks()
+	{
+		return $this->regulars;
+	}
+
+	public function isClean()
+	{
+		$noMissings = count($this->missings) == 0;
+		$noOutdated = count($this->outdates) == 0;
+
+		return $noMissings && $noOutdated;
 	}
 }

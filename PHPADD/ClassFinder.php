@@ -34,6 +34,11 @@ class PHPADD_ClassFinder
 		$this->excludes = $excludes;
 	}
 
+	/**
+	 * Get the classes in the files of the given path.
+	 *
+	 * @return array
+	 */
 	public function getList()
 	{
 		$directory = new RecursiveDirectoryIterator($this->path);

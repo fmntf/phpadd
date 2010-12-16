@@ -24,45 +24,15 @@
 
 abstract class PHPADD_Publisher_Abstract
 {
-	protected $filename;
+	protected $destination;
 	
 	public function __construct($argument)
 	{
 		if ($argument == "-") {
 			$argument = "php://stdout";
 		}
-		$this->filename = $argument;
+		$this->destination = $argument;
 	}
 
-	public function publish(array $mess)
-	{
-		$output = $this->getHeader();
-
-		foreach ($mess as $file => $classes) {
-			foreach ($classes as $class => $methods) {
-				$output .= $this->processMethods($file, $class, $methods);
-			}
-		}
-
-		$output .= $this->getFooter();
-		$this->output($output);
-	}
-
-	protected function getType($symbolic)
-	{
-		switch ($symbolic) {
-			case 'missing-param':
-				return 'Missing parameter';
-			case 'unexpected-param':
-				return 'Unexpected parameter';
-		}
-	}
-	
-	abstract protected function processMethods($file, $class, $methods);
-
-	abstract protected function getHeader();
-
-	abstract protected function getFooter();
-
-	abstract protected function output($output);
+	abstract public function publish(PHPADD_Result_Analysis $mess);	
 }

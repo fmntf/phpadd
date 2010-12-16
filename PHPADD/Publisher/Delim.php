@@ -24,54 +24,31 @@
 
 class PHPADD_Publisher_Delim extends PHPADD_Publisher_Abstract
 {
-	public function publish(array $mess)
+	public function publish(PHPADD_Result_Analysis $mess)
 	{
-		$output = $this->getHeader();
-
-		foreach ($mess as $file => $classes) {
-			foreach ($classes as $class => $methods) {
-				$output .= $this->processMethods($file, $class, $methods);
+		$output = "";
+		
+		foreach ($mess->getResults() as $class => $methods) {
+			if (!$methods->isClean()) {
+				$output .= $this->processMethods($class, $methods);
 			}
 		}
 
-		$output .= $this->getFooter();
-		$this->output($output);
+		file_put_contents($this->destination, $output);
 	}
 
-	protected function output($output) {
-		echo $output;
-	}
-
-	protected function processMethods($file, $class, $methods)
+	protected function processMethods($class, PHPADD_Result_Class $methods)
 	{
 		$output = "";
 
-		foreach ($methods as $method)
-		{
-			switch ($method['type']) {
-				case 'miss':
-					$output .= sprintf ("%s\t%s\t%s\t%s\n", $file, $class, $method['method'], 'Missing docblock');
-					break;
-				case 'invalid':
-					foreach ($method['detail'] as $issue) {
-						$output .= sprintf ("%s\t%s\t%s\t%s\t%s\n", $file, $class, $method['method'], $this->getType($issue['type']), $issue['name']);
-					}
-					break;
+		$issues = array_merge($methods->getMissingBlocks(), $methods->getOutdatedBlocks());
+		foreach ($issues as $method) {
+			foreach ($method->getDetail() as $detail) {
+				$output .= sprintf ("%s\t%s\t%s\t%s\n", $class, $method->getName(), $detail['type'], $detail['name']);
 			}
 		}
 
-
 		return $output;
-	}
-
-	protected function getHeader()
-	{
-		return "";
-	}
-
-	protected function getFooter()
-	{
-		return "";
 	}
 
 }

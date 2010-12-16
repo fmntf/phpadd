@@ -22,9 +22,12 @@
  */
 
 require_once 'Detector.php';
+require_once 'Stats.php';
 
 class PHPADD_Cli
 {
+	const VERSION = '1.1.0';
+
 	private $skipProtected = false;
 	private $skipPrivate = false;
 	private $bootstrap = null;
@@ -48,7 +51,11 @@ class PHPADD_Cli
 			require_once $this->bootstrap;
 		}
 	}
-	
+
+	/**
+	 * Parses the command line parms and starts the execution.
+	 * If something is wrong, the 'usage' message is displayed.
+	 */
 	public function run()
 	{
 		try {
@@ -132,7 +139,7 @@ class PHPADD_Cli
 					require_once "Publisher/Delim.php";
 					$class = "PHPADD_Publisher_Delim";
 					$outFile = $_SERVER['argv'][++$i];
-					$this->publishers[] = new $class("");
+					$this->publishers[] = new $class($outFile);
 					break;
 
 

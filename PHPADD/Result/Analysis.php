@@ -22,28 +22,28 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Filter
+class PHPADD_Result_Analysis
 {
-	private $scanProtected;
-	private $scanPrivate;
-	
-	public function __construct($scanProtected = true, $scanPrivate = true)
+	private $files = array();
+	private $results = array();
+
+	public function includingFile($file)
 	{
-		$this->scanProtected = $scanProtected;
-		$this->scanPrivate = $scanPrivate;
+		$this->files[] = $file;
 	}
 
-	/**
-	 * Prepares a mask to access class methods
-	 *
-	 * @return int
-	 */
-	public function getLevel()
+	public function addClassResult($class, PHPADD_Result_Class $mess)
 	{
-		$level = ReflectionMethod::IS_PUBLIC;
-		if ($this->scanProtected) $level += ReflectionMethod::IS_PROTECTED;
-		if ($this->scanPrivate) $level += ReflectionMethod::IS_PRIVATE;
+		$this->results[$class] = $mess;
+	}
 
-		return $level;
+	public function getResults()
+	{
+		return $this->results;
+	}
+
+	public function getFiles()
+	{
+		return $this->files;
 	}
 }

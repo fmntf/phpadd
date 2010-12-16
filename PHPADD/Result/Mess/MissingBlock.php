@@ -22,28 +22,22 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Filter
+class PHPADD_Result_Mess_MissingBlock
 {
-	private $scanProtected;
-	private $scanPrivate;
-	
-	public function __construct($scanProtected = true, $scanPrivate = true)
+	private $methodName;
+
+	public function __construct($methodName)
 	{
-		$this->scanProtected = $scanProtected;
-		$this->scanPrivate = $scanPrivate;
+		$this->methodName = $methodName;
 	}
 
-	/**
-	 * Prepares a mask to access class methods
-	 *
-	 * @return int
-	 */
-	public function getLevel()
+	public function getName()
 	{
-		$level = ReflectionMethod::IS_PUBLIC;
-		if ($this->scanProtected) $level += ReflectionMethod::IS_PROTECTED;
-		if ($this->scanPrivate) $level += ReflectionMethod::IS_PRIVATE;
+		return $this->methodName;
+	}
 
-		return $level;
+	public function toList()
+	{
+		return array('Missing docblock');
 	}
 }

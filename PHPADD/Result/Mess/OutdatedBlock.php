@@ -22,28 +22,45 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Filter
+class PHPADD_Result_Mess_OutdatedBlock
 {
-	private $scanProtected;
-	private $scanPrivate;
-	
-	public function __construct($scanProtected = true, $scanPrivate = true)
+	private $methodName;
+	private $detail;
+
+	public function __construct($methodName, array $detail)
 	{
-		$this->scanProtected = $scanProtected;
-		$this->scanPrivate = $scanPrivate;
+		$this->methodName = $methodName;
+		$this->detail = $detail;
 	}
 
-	/**
-	 * Prepares a mask to access class methods
-	 *
-	 * @return int
-	 */
-	public function getLevel()
+	public function getName()
 	{
-		$level = ReflectionMethod::IS_PUBLIC;
-		if ($this->scanProtected) $level += ReflectionMethod::IS_PROTECTED;
-		if ($this->scanPrivate) $level += ReflectionMethod::IS_PRIVATE;
+		return $this->methodName;
+	}
 
-		return $level;
+	public function getDetail()
+	{
+		return $this->detail;
+	}
+
+	public function toList()
+	{
+		$list = array();
+
+		foreach ($this->detail as $issue) {
+			$list[] =  $this->getType($issue['type']) . ": - <code>{$issue['name']}</code>";
+		}
+
+		return $list;
+	}
+
+	private function getType($symbolic)
+	{
+		switch ($symbolic) {
+			case 'missing-param':
+				return 'Missing parameter';
+			case 'unexpected-param':
+				return 'Unexpected parameter';
+		}
 	}
 }
