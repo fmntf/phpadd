@@ -18,45 +18,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package phpadd
- * @author  Francesco Montefoschi
+ * @author  Joshua Thijssen
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
+class PHPAdd_Excludefilter extends FilterIterator {
+	protected $_excludes = array();
 
-require_once 'ClassFinder.php';
-require_once 'Parser.php';
-
-class PHPADD_Detector
-{
-	protected $filter;
-
-	public function setFilter($scanProtectedMethods, $scanPrivateMethods)
-	{
-		$this->filter = new PHPADD_Filter($scanProtectedMethods, $scanPrivateMethods);
+	public function setExcludes(Array $excludes) {
+		$this->_excludes = $excludes;
 	}
 
-	public function getMess($path, Array $excludes = array())
-	{
-		$mess = array();
-
-		$finder = new PHPADD_ClassFinder($path, $excludes);
-		foreach ($finder->getList() as $file => $classes) {
-			require_once $file;
-			foreach ($classes as $class) {
-				$classMess = $this->analyze($class);
-				if ($classMess) {
-					$mess[$file][$class] = $classMess;
-				}
+	public function accept() {
+		foreach ($this->_excludes as $exclude) {
+			if (fnmatch($exclude, $this->current())) {
+				return false;
 			}
 		}
-
-		return $mess;
-	}
-
-
-	private function analyze($className)
-	{
-		$parser = new PHPADD_Parser($className);
-
-		return $parser->analyze($this->filter);
+		return true;
 	}
 }
