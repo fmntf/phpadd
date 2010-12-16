@@ -28,7 +28,7 @@ class PHPADD_Cli
 	private $skipProtected = false;
 	private $skipPrivate = false;
 	private $bootstrap = null;
-	private $publisher = null;
+	private $publishers = null;
 	private $path = null;
 	
 	protected function blocksProtected()
@@ -58,7 +58,9 @@ class PHPADD_Cli
 			$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
 			
 			$mess = $detector->getMess($this->path);
-			$this->publisher->publish($mess);
+			foreach ($this->publishers as $publisher) {
+				$publisher->publish($mess);
+			}
 			
 		} catch (Exception $e) {
 			echo $e->getMessage() . PHP_EOL;
@@ -69,16 +71,25 @@ class PHPADD_Cli
 	private function usage()
 	{
 		return
-			"Usage: phpadd [options] --publish-html /path/to/output/file /directory/to/scan" .
+			"Usage: phpadd [options] /directory/to/scan" .
 			PHP_EOL . PHP_EOL .
 			"Options:" . PHP_EOL .
 			"   --skip-protected    skips the scanning of protected methods" . PHP_EOL .
 			"   --skip-private      skips the scanning of private methods" . PHP_EOL .
-			"   --bootstrap file    includes `file` before the scan" . PHP_EOL;
+			"   --bootstrap file    includes `file` before the scan" . PHP_EOL .
+			PHP_EOL .
+			"At least one publisher must be given: ". PHP_EOL .
+			"   --publish-html <file>     HTML output" . PHP_EOL .
+			"   --publish-xml  <file>     XML output" . PHP_EOL .
+			"   --publish-delim <file>    Tab delimited output" . PHP_EOL;
+
+
 	}
 	
 	private function parseParams()
 	{
+		require_once "Publisher/Abstract.php";
+		
 		for ($i = 1; $i < $_SERVER['argc'] -1; $i++) {
 			$param = $_SERVER['argv'][$i];
 			
@@ -102,16 +113,31 @@ class PHPADD_Cli
 					require_once "Publisher/Html.php";
 					$class = "PHPADD_Publisher_Html";
 					$outFile = $_SERVER['argv'][++$i];
-					$this->publisher = new $class($outFile);
+					$this->publishers[] = new $class($outFile);
 					break;
-				
+
+				case '--publish-xml':
+					require_once "Publisher/Xml.php";
+					$class = "PHPADD_Publisher_Xml";
+					$outFile = $_SERVER['argv'][++$i];
+					$this->publishers[] = new $class($outFile);
+					break;
+
+				case '--publish-delim':
+					require_once "Publisher/Delim.php";
+					$class = "PHPADD_Publisher_Delim";
+					$outFile = $_SERVER['argv'][++$i];
+					$this->publishers[] = new $class("");
+					break;
+
+
 				default:
 					throw new InvalidArgumentException('Invalid argument: ' . $param);
 			}
 		}
 		
-		if ($this->publisher === null) {
-			throw new InvalidArgumentException('You must specify a publisher.');
+		if (count($this->publishers) == 0) {
+			throw new InvalidArgumentException('You must specify at least 1 publisher.');
 		}
 		
 		if (!isset($_SERVER['argv'][$i])) {
