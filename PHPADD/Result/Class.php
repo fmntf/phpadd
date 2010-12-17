@@ -27,14 +27,18 @@ class PHPADD_Result_Class
 	private $regulars = 0;
 	private $missings = array();
 	private $outdates = array();
-	private $classname;
+	private $reflection;
 
-	function __construct($classname) {
-		$this->classname = $classname;
+	function __construct(ReflectionClass $reflection) {
+		$this->reflection = $reflection;
 	}
 
 	public function getName() {
-		return $this->classname;
+		return $this->reflection->getName();
+	}
+
+	public function getStartline() {
+		return $this->reflection->getStartLine();
 	}
 
 	public function countRegular()

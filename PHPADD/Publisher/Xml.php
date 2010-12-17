@@ -44,21 +44,29 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 			$file_element = $this->createXMLElement('file', $attributes);
 
 			foreach ($file->getClasses() as $class) {
-				$attributes = array ("name" => $class->getName());
+				$attributes = array ();
+				$attributes['name'] = $class->getName();
+				$attributes['line'] = $class->getStartline();
 				$class_element = $this->createXMLElement('class', $attributes);
 
-				foreach ($class->getMethods() as $methods) {
+				foreach ($class->getMethods() as $method) {
 					$attributes = array ("name" => $class->getName());
 					$method_element = $this->createXMLElement('method', $attributes);
 
-					foreach ($methods->getDetail() as $detail) {
+					if ($method instanceof PHPADD_Result_Mess_MissingBlock) {
 						$attributes = array ();
-						$attributes['type'] = $detail['type'];
-						$attributes['name'] = $detail['name'];
+						$attributes['type'] = 'missing-docblock';
 						$detail = $this->createXMLElement('detail', $attributes);
 						$method_element->appendChild($detail);
+					} else {
+						foreach ($method->getDetail() as $detail) {
+							$attributes = array ();
+							$attributes['type'] = $detail['type'];
+							$attributes['name'] = $detail['name'];
+							$detail = $this->createXMLElement('detail', $attributes);
+							$method_element->appendChild($detail);
+						}
 					}
-
 					$class_element->appendChild($method_element);
 				}
 

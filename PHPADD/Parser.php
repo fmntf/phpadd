@@ -45,7 +45,8 @@ class PHPADD_Parser
 	 */
 	public function analyze($classname, PHPADD_Filter $filter)
 	{
-		$mess = new PHPADD_Result_Class($classname);
+
+		$mess = new PHPADD_Result_Class($this->reflection);
 
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 			/* @var $method ReflectionMethod */

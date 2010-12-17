@@ -46,7 +46,7 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 			foreach ($file->getClasses() as $class) {
 				if ($class->isClean()) continue;
 
-				$output .= "\t\t<h2>".$class->getName()."</h2>" . PHP_EOL;
+				$output .= "\t\t<h2>".$class->getName().":".$class->getStartline()."</h2>" . PHP_EOL;
 
 				foreach ($class->getMethods() as $method) {
 					$output .= "\t\t\t<h3>Method: " . $method->getName() . "</h3>\t\t\t<ul>" . PHP_EOL;

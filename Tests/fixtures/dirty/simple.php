@@ -22,3 +22,21 @@ class Fixture_InvalidRemovedExample
 	 */
 	public function invalidMethod(stdClass $my) {}
 }
+
+class Fixture_InvalidMultiExample
+{
+	/**
+	 * Some description here
+	 *
+	 * @param StdClass $my
+	 * @param string $name
+	 * @param mixed $nonexisting
+	 * @return string
+	 */
+	public function invalidMethod(stdClass $my) {}
+}
+
+class Fixture_NodobBLock
+{
+	public function invalidMethod(stdClass $my) {}
+}
