@@ -54,11 +54,15 @@ class PHPADD_Detector
 
 		$finder = new PHPADD_ClassFinder($path, $excludes);
 		foreach ($finder->getList() as $file => $classes) {
-			$mess->includingFile($file);
+			$result = new PHPADD_Result_File($file);
+
+			// $mess->includingFile($file);
 			require_once $file;
 			foreach ($classes as $class) {
-				$mess->addClassResult($class, $this->analyze($class));
+				$result->addClassResult($this->analyze($class));
 			}
+
+			$mess->addFileResult($result);
 		}
 
 		return $mess;
@@ -68,6 +72,6 @@ class PHPADD_Detector
 	{
 		$parser = new PHPADD_Parser($className);
 
-		return $parser->analyze($this->filter);
+		return $parser->analyze($className, $this->filter);
 	}
 }

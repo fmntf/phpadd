@@ -22,23 +22,30 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Publisher_Delim extends PHPADD_Publisher_Abstract
+class PHPADD_Result_File
 {
-	public function publish(PHPADD_Result_Analysis $mess)
-	{
-		$output = "";
-		
-		foreach ($mess->getFiles() as $file) {
-			foreach ($file->getClasses() as $class) {
-				foreach ($class->getMethods() as $method) {
-					foreach ($method->getDetail() as $detail) {
-						$output .= sprintf ("%s\t%s\t%s\t%s\t%s\n", $file->getName(), $class->getName(), $method->getName(), $detail['type'], $detail['name']);
-					}
-				}
-			}
-		}
+	protected $classes = array();
+	protected $filename;
 
-		file_put_contents($this->destination, $output);
+	public function __construct($filename) {
+		$this->filename = $filename;
+	}
+
+	public function getName() {
+		return $this->filename;
+	}
+
+	public function getCount() {
+		return count($this->classes);
+	}
+
+	public function getClasses() {
+		return $this->classes;
+	}
+	
+	public function addClassResult(PHPADD_Result_Class $mess)
+	{
+		$this->classes[] = $mess;
 	}
 
 }

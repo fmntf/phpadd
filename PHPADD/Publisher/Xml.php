@@ -34,17 +34,51 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 
 	public function publish(PHPADD_Result_Analysis $mess)
 	{
-		foreach ($mess->getResults() as $class => $methods) {
-			$attributes = array ("name" => $class);
-			$class_element = $this->createXMLElement('class', $attributes);
 
-			if (!$methods->isClean()) {
-				$element = $this->processMethods($class, $methods);
-				$class_element->appendChild($element);
+//		foreach ($mess->getFiles() as $file) {
+//			foreach ($file->getClasses() as $class) {
+//				foreach ($class->getBlocks() as $block) {
+//					foreach ($block->getDetail() as $detail) {
+		foreach ($mess->getFiles() as $file) {
+			$attributes = array ("name" => $file->getName());
+			$file_element = $this->createXMLElement('file', $attributes);
+
+			foreach ($file->getClasses() as $class) {
+				$attributes = array ("name" => $class->getName());
+				$class_element = $this->createXMLElement('class', $attributes);
+
+				foreach ($class->getMethods() as $methods) {
+					$attributes = array ("name" => $class->getName());
+					$method_element = $this->createXMLElement('method', $attributes);
+
+					foreach ($methods->getDetail() as $detail) {
+						$attributes = array ();
+						$attributes['type'] = $detail['type'];
+						$attributes['name'] = $detail['name'];
+						$detail = $this->createXMLElement('detail', $attributes);
+						$method_element->appendChild($detail);
+					}
+
+					$class_element->appendChild($method_element);
+				}
+
+				$file_element->appendChild($class_element);
 			}
-
-			$this->_dom->appendChild($class_element);
+			$this->_dom->appendChild($file_element);
 		}
+
+
+//		foreach ($mess->getResults() as $class => $methods) {
+//			$attributes = array ("name" => $class);
+//			$class_element = $this->createXMLElement('class', $attributes);
+//
+//			if (!$methods->isClean()) {
+//				$element = $this->processMethods($class, $methods);
+//				$class_element->appendChild($element);
+//			}
+//
+//			$this->_dom->appendChild($class_element);
+//		}
 
 		$this->_dom->formatOutput = true;
 		$this->_dom->save($this->destination);

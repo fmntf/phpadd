@@ -32,9 +32,9 @@ class PHPADD_Stats
 	 */
 	public function getStats(PHPADD_Result_Analysis $mess)
 	{
-		$fileNo = count($mess->getFiles());
+		$fileNo = $mess->getCount();
 
-		list ($total, $regular, $missing, $outdated) = $this->analyze($mess->getResults());
+		list ($total, $regular, $missing, $outdated) = $this->analyze($mess);
 		$regularFreq = $this->getFrequency($regular, $total);
 		$missingFreq = $this->getFrequency($missing, $total);
 		$outdatedFreq = $this->getFrequency($outdated, $total);
@@ -72,16 +72,18 @@ class PHPADD_Stats
 	 * @param array $results
 	 * @return array
 	 */
-	private function analyze(array $results)
+	private function analyze(PHPADD_Result_Analysis $mess)
 	{
 		$regularMethods = 0;
 		$missingMethods = 0;
 		$outdatedMethods = 0;
 
-		foreach ($results as $class => $methods) {
-			$regularMethods += $methods->getRegularBlocks();
-			$missingMethods += count($methods->getMissingBlocks());
-			$outdatedMethods += count($methods->getOutdatedBlocks());
+		foreach ($mess->getFiles() as $file) {
+			foreach ($file->getClasses() as $class) {
+				$regularMethods += $class->getRegularBlocks();
+				$missingMethods += count($class->getMissingBlocks());
+				$outdatedMethods += count($class->getOutdatedBlocks());
+			}
 		}
 
 		$total = $regularMethods + $missingMethods + $outdatedMethods;

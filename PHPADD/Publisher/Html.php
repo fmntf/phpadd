@@ -40,29 +40,23 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 		$output = $this->getHeader();
 		$output .= $this->getStats($mess);
 
-		foreach ($mess->getResults() as $class => $methods) {
-			if (!$methods->isClean()) {
-				$output .= "\t<h1>$class</h1>" . PHP_EOL;
-				$output .= $this->processMethods($methods);
+		foreach ($mess->getFiles() as $file) {
+			$output .= "\t<h1>".$file->getName()."</h1>" . PHP_EOL;
+
+			foreach ($file->getClasses() as $class) {
+				if ($class->isClean()) continue;
+
+				$output .= "\t\t<h2>".$class->getName()."</h2>" . PHP_EOL;
+
+				foreach ($class->getMethods() as $method) {
+					$output .= "\t\t\t<h3>Method: " . $method->getName() . "</h3>\t\t\t<ul>" . PHP_EOL;
+					$output .= "\t\t\t\t<li>" . implode('</li><li>', $method->toList()) . '</li>' . PHP_EOL;
+					$output .= "\t\t\t</ul>\n";
+				}
 			}
 		}
 
 		$output .= $this->getFooter();
-		return $output;
-	}
-
-	private function processMethods(PHPADD_Result_Class $methods)
-	{
-		$output = '';
-		$issues = array_merge($methods->getMissingBlocks(), $methods->getOutdatedBlocks());
-
-		foreach ($issues as $method)
-		{
-			$output .= "\t\t<h2>Method: " . $method->getName() . '</h2><ul>' . PHP_EOL;
-			$output .= "\t\t\t<li>" . implode('</li><li>', $method->toList()) . '</li>' . PHP_EOL;
-			$output .= "\t\t</ul>\n";
-		}
-
 		return $output;
 	}
 
@@ -82,6 +76,10 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 			h2 {
 				font-size: 16px;
 				margin: 2px 0 0 9px;
+			}
+			h3 {
+				font-size: 13px;
+				margin: 8px 0 0 22px;
 			}
 			ul {
 				list-style-type: circle;

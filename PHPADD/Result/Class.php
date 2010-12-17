@@ -27,6 +27,15 @@ class PHPADD_Result_Class
 	private $regulars = 0;
 	private $missings = array();
 	private $outdates = array();
+	private $classname;
+
+	function __construct($classname) {
+		$this->classname = $classname;
+	}
+
+	public function getName() {
+		return $this->classname;
+	}
 
 	public function countRegular()
 	{
@@ -41,6 +50,10 @@ class PHPADD_Result_Class
 	public function addOutdated(PHPADD_Result_Mess_OutdatedBlock $mess)
 	{
 		$this->outdates[] = $mess;
+	}
+
+	public function getMethods() {
+		return array_merge ($this->missings, $this->outdates);
 	}
 
 	public function getMissingBlocks()

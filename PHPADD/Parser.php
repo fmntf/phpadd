@@ -23,6 +23,7 @@
  */
 
 require_once 'Filter.php';
+require_once 'Result/File.php';
 require_once 'Result/Class.php';
 require_once 'Result/Mess/MissingBlock.php';
 require_once 'Result/Mess/OutdatedBlock.php';
@@ -42,9 +43,9 @@ class PHPADD_Parser
 	 * @param PHPADD_Filter $filter
 	 * @return PHPADD_Result_Class Found mess
 	 */
-	public function analyze(PHPADD_Filter $filter)
+	public function analyze($classname, PHPADD_Filter $filter)
 	{
-		$mess = new PHPADD_Result_Class();
+		$mess = new PHPADD_Result_Class($classname);
 
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 			/* @var $method ReflectionMethod */

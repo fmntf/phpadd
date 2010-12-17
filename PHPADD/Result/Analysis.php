@@ -24,26 +24,20 @@
 
 class PHPADD_Result_Analysis
 {
-	private $files = array();
-	private $results = array();
+	protected $files = array();
+	protected $position;
 
-	public function includingFile($file)
+	public function addFileResult(PHPADD_Result_File $mess)
 	{
-		$this->files[] = $file;
+		$this->files[] = $mess;
 	}
 
-	public function addClassResult($class, PHPADD_Result_Class $mess)
-	{
-		$this->results[$class] = $mess;
+	public function getCount() {
+		return count($this->files);
 	}
 
-	public function getResults()
-	{
-		return $this->results;
-	}
-
-	public function getFiles()
-	{
+	public function getFiles() {
 		return $this->files;
 	}
+
 }
