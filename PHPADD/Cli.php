@@ -21,9 +21,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-require_once 'Detector.php';
-require_once 'Stats.php';
-
 class PHPADD_Cli
 {
 	const VERSION = '1.1.0';
@@ -95,8 +92,6 @@ class PHPADD_Cli
 
 	private function parseParams()
 	{
-		require_once "Publisher/Abstract.php";
-		
 		for ($i = 1; $i < $_SERVER['argc'] -1; $i++) {
 			$param = $_SERVER['argv'][$i];
 			
@@ -122,21 +117,18 @@ class PHPADD_Cli
 					break;
 				
 				case '--publish-html':
-					require_once "Publisher/Html.php";
 					$class = "PHPADD_Publisher_Html";
 					$outFile = $_SERVER['argv'][++$i];
 					$this->publishers[] = new $class($outFile);
 					break;
 
 				case '--publish-xml':
-					require_once "Publisher/Xml.php";
 					$class = "PHPADD_Publisher_Xml";
 					$outFile = $_SERVER['argv'][++$i];
 					$this->publishers[] = new $class($outFile);
 					break;
 
 				case '--publish-delim':
-					require_once "Publisher/Delim.php";
 					$class = "PHPADD_Publisher_Delim";
 					$outFile = $_SERVER['argv'][++$i];
 					$this->publishers[] = new $class($outFile);

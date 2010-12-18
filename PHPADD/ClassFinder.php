@@ -21,7 +21,6 @@
  * @author  Francesco Montefoschi
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
-require_once 'Excludefilter.php';
 
 class PHPADD_ClassFinder
 {
@@ -43,7 +42,7 @@ class PHPADD_ClassFinder
 	{
 		$directory = new RecursiveDirectoryIterator($this->path);
 		$iterator = new RecursiveIteratorIterator($directory);
-		$allfiles = new PHPAdd_Excludefilter($iterator);
+		$allfiles = new PHPADD_Excludefilter($iterator);
 		$allfiles->setExcludes($this->excludes);
 		$files = new RegexIterator($allfiles, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
 

@@ -26,7 +26,13 @@ if (strpos('@php_bin@', '@php_bin') === 0) {
     set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
 }
 
-require_once 'PHPADD/Cli.php';
+spl_autoload_register("autoloader");
 
 $cli = new PHPADD_Cli();
 $cli->run();
+
+
+function autoloader($class) {
+	$path = str_replace('_', '/', $class).'.php';
+	require_once($path);
+}

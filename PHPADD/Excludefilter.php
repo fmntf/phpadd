@@ -21,7 +21,8 @@
  * @author  Joshua Thijssen
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
-class PHPAdd_Excludefilter extends FilterIterator {
+
+class PHPADD_Excludefilter extends FilterIterator {
 	protected $_excludes = array();
 
 	public function setExcludes(Array $excludes) {

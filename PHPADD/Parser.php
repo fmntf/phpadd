@@ -22,13 +22,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-require_once 'Filter.php';
-require_once 'Result/File.php';
-require_once 'Result/Class.php';
-require_once 'Result/Mess/Abstract.php';
-require_once 'Result/Mess/MissingBlock.php';
-require_once 'Result/Mess/OutdatedBlock.php';
-
 class PHPADD_Parser
 {
 	private $reflection;

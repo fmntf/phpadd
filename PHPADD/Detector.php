@@ -22,10 +22,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-require_once 'ClassFinder.php';
-require_once 'Parser.php';
-require_once 'Result/Analysis.php';
-
 class PHPADD_Detector
 {
 	protected $filter;
