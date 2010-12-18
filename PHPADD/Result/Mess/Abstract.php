@@ -18,19 +18,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * @package phpadd
- * @author  Francesco Montefoschi
+ * @author  Joshua Thijssen
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Result_Mess_MissingBlock extends PHPADD_Result_Mess_Abstract
-{
+abstract class PHPADD_Result_Mess_Abstract {
+	protected $methodName;
+	protected $detail;
 
-	public function getdetail() {
-		return array();
-	}
-	
-	public function toList()
+	public function __construct($methodName, array $detail)
 	{
-		return array('Missing docblock');
+		$this->methodName = $methodName;
+		$this->detail = $detail;
 	}
+
+	public function getName()
+	{
+		return $this->methodName;
+	}
+
+	public function getDetail()
+	{
+		return $this->detail;
+	}
+
+	abstract public function toList();
 }

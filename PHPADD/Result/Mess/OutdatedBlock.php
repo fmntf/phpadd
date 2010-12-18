@@ -22,32 +22,14 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Result_Mess_OutdatedBlock
+class PHPADD_Result_Mess_OutdatedBlock extends PHPADD_Result_Mess_Abstract
 {
-	private $methodName;
-	private $detail;
-
-	public function __construct($methodName, array $detail)
-	{
-		$this->methodName = $methodName;
-		$this->detail = $detail;
-	}
-
-	public function getName()
-	{
-		return $this->methodName;
-	}
-
-	public function getDetail()
-	{
-		return $this->detail;
-	}
 
 	public function toList()
 	{
 		$list = array();
 
-		foreach ($this->detail as $issue) {
+		foreach ($this->getDetail() as $issue) {
 			$list[] =  $this->getType($issue['type']) . ": - <code>{$issue['name']}</code>";
 		}
 

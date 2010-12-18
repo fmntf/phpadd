@@ -25,6 +25,7 @@
 require_once 'Filter.php';
 require_once 'Result/File.php';
 require_once 'Result/Class.php';
+require_once 'Result/Mess/Abstract.php';
 require_once 'Result/Mess/MissingBlock.php';
 require_once 'Result/Mess/OutdatedBlock.php';
 
@@ -73,7 +74,7 @@ class PHPADD_Parser
 
 	private function createMissing(ReflectionMethod $method)
 	{
-		return new PHPADD_Result_Mess_MissingBlock($method->name);
+		return new PHPADD_Result_Mess_MissingBlock($method->name, array());
 	}
 
 	private function createOutdated(ReflectionMethod $method, $detail)
