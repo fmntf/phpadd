@@ -45,14 +45,13 @@ class PHPADD_Detector
 	 * Get the documentation mess in a path
 	 *
 	 * @param string $path
-	 * @param array Exclude patterns
 	 * @return PHPADD_Result_Analysis
 	 */
-	public function getMess($path, Array $excludes = array())
+	public function getMess($path)
 	{
 		$mess = new PHPADD_Result_Analysis();
 
-		$finder = new PHPADD_ClassFinder($path, $excludes);
+		$finder = new PHPADD_ClassFinder($path);
 		foreach ($finder->getList() as $file => $classes) {
 			$result = new PHPADD_Result_File($file);
 

@@ -33,7 +33,6 @@ class PHPADD_Cli
 	private $bootstrap = null;
 	private $publishers = null;
 	private $path = null;
-	private $excludes = array();
 	
 	protected function blocksProtected()
 	{
@@ -65,7 +64,7 @@ class PHPADD_Cli
 			$detector = new PHPADD_Detector();
 			$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
 			
-			$mess = $detector->getMess($this->path, $this->excludes);
+			$mess = $detector->getMess($this->path);
 			foreach ($this->publishers as $publisher) {
 				$publisher->publish($mess);
 			}
@@ -85,14 +84,15 @@ class PHPADD_Cli
 			"   --skip-protected    skips the scanning of protected methods" . PHP_EOL .
 			"   --skip-private      skips the scanning of private methods" . PHP_EOL .
 			"   --bootstrap file    includes `file` before the scan" . PHP_EOL .
-			"   --exclude pattern   excludes files matching `pattern` from scanning" . PHP_EOL .
 			PHP_EOL .
 			"At least one publisher must be given: ". PHP_EOL .
-			"   --publish-html file     HTML output" . PHP_EOL .
-			"   --publish-xml  file     XML output" . PHP_EOL .
-			"   --publish-delim file    Tab delimited output" . PHP_EOL;
-	}
+			"   --publish-html <file>     HTML output" . PHP_EOL .
+			"   --publish-xml  <file>     XML output" . PHP_EOL .
+			"   --publish-delim <file>    Tab delimited output" . PHP_EOL;
 
+
+	}
+	
 	private function parseParams()
 	{
 		require_once "Publisher/Abstract.php";
@@ -114,11 +114,6 @@ class PHPADD_Cli
 					if (!is_file($this->bootstrap)) {
 						throw new InvalidArgumentException('Not a file: ' . $this->bootstrap);
 					}
-					break;
-
-				case '--exclude':
-					$pattern = $_SERVER['argv'][++$i];
-					$this->excludes[] = $pattern;
 					break;
 				
 				case '--publish-html':
