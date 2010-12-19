@@ -1,7 +1,5 @@
 <?php
 
-require_once '../PHPADD/Detector.php';
-
 class ExcludefilterTest extends PHPUnit_Framework_TestCase
 {
 	// Simple data provider where it will provide 2 arrays at the time.
@@ -94,7 +92,7 @@ class ExcludefilterTest extends PHPUnit_Framework_TestCase
 
 }
 
-class Mock_Excludefilter extends PHPAdd_Excludefilter {
+class Mock_Excludefilter extends PHPADD_Excludefilter {
 	function __construct() {
 	}
 
