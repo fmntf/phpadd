@@ -34,11 +34,6 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 
 	public function publish(PHPADD_Result_Analysis $mess)
 	{
-
-//		foreach ($mess->getFiles() as $file) {
-//			foreach ($file->getClasses() as $class) {
-//				foreach ($class->getBlocks() as $block) {
-//					foreach ($block->getDetail() as $detail) {
 		foreach ($mess->getFiles() as $file) {
 			$attributes = array ("name" => $file->getName());
 			$file_element = $this->createXMLElement('file', $attributes);
@@ -50,7 +45,12 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 				$class_element = $this->createXMLElement('class', $attributes);
 
 				foreach ($class->getMethods() as $method) {
-					$attributes = array ("name" => $class->getName());
+					$attributes = array ();
+					$attributes['name'] = $method->getName();
+					$attributes['line'] = $method->getStartline();
+					if ($method->hasDocBlock()) {
+						$attributes['docblockline'] = $method->getDocBlockStartLine();
+					}
 					$method_element = $this->createXMLElement('method', $attributes);
 
 					if ($method instanceof PHPADD_Result_Mess_MissingBlock) {
@@ -69,24 +69,10 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 					}
 					$class_element->appendChild($method_element);
 				}
-
 				$file_element->appendChild($class_element);
 			}
 			$this->_dom->appendChild($file_element);
 		}
-
-
-//		foreach ($mess->getResults() as $class => $methods) {
-//			$attributes = array ("name" => $class);
-//			$class_element = $this->createXMLElement('class', $attributes);
-//
-//			if (!$methods->isClean()) {
-//				$element = $this->processMethods($class, $methods);
-//				$class_element->appendChild($element);
-//			}
-//
-//			$this->_dom->appendChild($class_element);
-//		}
 
 		$this->_dom->formatOutput = true;
 		$this->_dom->save($this->destination);

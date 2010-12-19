@@ -32,10 +32,14 @@ class PHPADD_Publisher_Delim extends PHPADD_Publisher_Abstract
 			foreach ($file->getClasses() as $class) {
 				foreach ($class->getMethods() as $method) {
 					if ($method instanceof PHPADD_Result_Mess_MissingBlock) {
-						$output .= sprintf ("%s\t%s:%d\t%s\t%s\n", $file->getName(), $class->getName(), $class->getStartline(), $method->getName(), 'Missing block');
+						$output .= sprintf ("%s\t%s:%d\t%s:%d\t%s\n",
+							$file->getName(), $class->getName(), $class->getStartline(),
+							$method->getName(),  $method->getStartline(), 'Missing block');
 					} else {
 						foreach ($method->getDetail() as $detail) {
-							$output .= sprintf ("%s\t%s:%d\t%s\t%s\t%s\n", $file->getName(), $class->getName(), $class->getStartline(), $method->getName(), $detail['type'], $detail['name']);
+							$output .= sprintf ("%s\t%s:%d\t%s:%d\t%s\t%s\n",
+								$file->getName(), $class->getName(), $class->getStartline(),
+								$method->getName(), $method->getStartline(), $detail['type'], $detail['name']);
 						}
 					}
 				}

@@ -67,12 +67,12 @@ class PHPADD_Parser
 
 	private function createMissing(ReflectionMethod $method)
 	{
-		return new PHPADD_Result_Mess_MissingBlock($method->name, array());
+		return new PHPADD_Result_Mess_MissingBlock($method, array());
 	}
 
 	private function createOutdated(ReflectionMethod $method, $detail)
 	{
-		return new PHPADD_Result_Mess_OutdatedBlock($method->name, $detail);
+		return new PHPADD_Result_Mess_OutdatedBlock($method, $detail);
 	}
 
 	private function isDocBlockMissing(ReflectionMethod $method)

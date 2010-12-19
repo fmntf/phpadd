@@ -23,18 +23,41 @@
  */
 
 abstract class PHPADD_Result_Mess_Abstract {
-	protected $methodName;
 	protected $detail;
+	protected $reflection;
 
-	public function __construct($methodName, array $detail)
+	public function __construct(ReflectionMethod $reflection, array $detail)
 	{
-		$this->methodName = $methodName;
+		$this->reflection = $reflection;
 		$this->detail = $detail;
 	}
 
 	public function getName()
 	{
-		return $this->methodName;
+		return $this->reflection->getName();
+	}
+
+	public function hasDocBlock() {
+		$docBlock = $this->reflection->getDocComment();
+		return (! empty ($docBlock));
+	}
+
+	public function getDocBlockStartLine() {
+		/*
+		 * @TODO: the start line for docblocks can be incorrect
+		 * This is a very rude check of getting the start line for docblocks.
+		 * It doesn't work if there are any additional spaces between the docblock
+		 * and the actual function define.
+		 */
+		$docBlock = $this->reflection->getDocComment();
+		if (empty ($docBlock)) return 0;
+		
+		$lc = substr_count($docBlock, "\n");
+		return $this->reflection->getStartLine() - $lc - 1;
+	}
+
+	public function getStartLine() {
+		return $this->reflection->getStartLine();
 	}
 
 	public function getDetail()
