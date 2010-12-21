@@ -62,8 +62,8 @@ class PHPADD_Cli
 			$this->parseParams();
 			$this->includeBootstrap();
 			
-			$detector = new PHPADD_Detector();
-			$detector->setFilter(!$this->blocksProtected(), !$this->blocksPrivate());
+			$filter = new PHPADD_Filter(!$this->blocksProtected(), !$this->blocksPrivate());
+			$detector = new PHPADD_Detector($filter);
 			
 			$mess = $detector->getMess($this->path);
 			foreach ($this->publishers as $publisher) {

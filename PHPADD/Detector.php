@@ -30,15 +30,9 @@ class PHPADD_Detector
 {
 	protected $filter;
 
-	/**
-	 * Set the filter
-	 * 
-	 * @param bool $scanProtectedMethods
-	 * @param bool $scanPrivateMethods
-	 */
-	public function setFilter($scanProtectedMethods, $scanPrivateMethods)
+	public function __construct(PHPADD_Filter $filter)
 	{
-		$this->filter = new PHPADD_Filter($scanProtectedMethods, $scanPrivateMethods);
+		$this->filter = $filter;
 	}
 
 	/**

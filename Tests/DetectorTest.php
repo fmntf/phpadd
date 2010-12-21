@@ -6,8 +6,8 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->detector = new Unmasked_Detector();
-		$this->detector->setFilter(true, true);
+		$filter = new PHPADD_Filter(true, true);
+		$this->detector = new Unmasked_Detector($filter);
 	}
 
 	public function testDelegatesanalysisToParser()
