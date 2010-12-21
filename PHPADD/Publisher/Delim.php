@@ -28,7 +28,7 @@ class PHPADD_Publisher_Delim extends PHPADD_Publisher_Abstract
 	{
 		$output = "";
 		
-		foreach ($mess->getFiles() as $file) {
+		foreach ($mess->getDirtyFiles() as $file) {
 			foreach ($file->getClasses() as $class) {
 				foreach ($class->getMethods() as $method) {
 					if ($method instanceof PHPADD_Result_Mess_MissingBlock) {

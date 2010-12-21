@@ -40,11 +40,10 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 		$output = $this->getHeader();
 		$output .= $this->getStats($mess);
 
-		foreach ($mess->getFiles() as $file) {
+		foreach ($mess->getDirtyFiles() as $file) {
 			$output .= "\t<h1>".$file->getName()."</h1>" . PHP_EOL;
 
 			foreach ($file->getClasses() as $class) {
-				if ($class->isClean()) continue;
 
 				$output .= "\t\t<h2>".$class->getName().":".$class->getStartline()."</h2>" . PHP_EOL;
 

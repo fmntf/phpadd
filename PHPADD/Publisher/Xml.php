@@ -34,12 +34,7 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 
 	public function publish(PHPADD_Result_Analysis $mess)
 	{
-
-//		foreach ($mess->getFiles() as $file) {
-//			foreach ($file->getClasses() as $class) {
-//				foreach ($class->getBlocks() as $block) {
-//					foreach ($block->getDetail() as $detail) {
-		foreach ($mess->getFiles() as $file) {
+		foreach ($mess->getDirtyFiles() as $file) {
 			$attributes = array ("name" => $file->getName());
 			$file_element = $this->createXMLElement('file', $attributes);
 

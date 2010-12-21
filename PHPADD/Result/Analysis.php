@@ -36,9 +36,35 @@ class PHPADD_Result_Analysis
 		return count($this->files);
 	}
 
+	/**
+	 * Gets all scanned files
+	 * @return array
+	 */
 	public function getFiles()
 	{
 		return $this->files;
 	}
 
+	/**
+	 * Gets only scanned files with issues
+	 * @return array
+	 */
+	public function getDirtyFiles()
+	{
+		$files = array();
+
+		foreach ($this->files as $file) {
+			$clean = true;
+			foreach ($file->getClasses() as $class => $result) {
+				if (!$result->isClean()) {
+					$clean = false;
+				}
+			}
+			if (!$clean) {
+				$files[] = $file;
+			}
+		}
+
+		return $files;
+	}
 }
