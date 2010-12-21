@@ -28,9 +28,6 @@ abstract class PHPADD_Publisher_Abstract
 	
 	public function __construct($argument)
 	{
-		if ($argument == "-") {
-			$argument = "php://stdout";
-		}
 		$this->destination = $argument;
 	}
 
