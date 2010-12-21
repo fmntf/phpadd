@@ -57,7 +57,7 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 		$missingParam = $classes['Fixture_InvalidMissingExample'];
 		$removedParam = $classes['Fixture_InvalidRemovedExample'];
 		$multi = $classes['Fixture_InvalidMultiExample'];
-		$noblock = $classes['Fixture_NodobBLock']; // @todo
+		$noblock = $classes['Fixture_NoDocBlock'];
 
 		// nothing regular
 		$this->assertEquals(0, $missingParam->getRegularBlocks());

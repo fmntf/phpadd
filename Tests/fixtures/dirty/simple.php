@@ -36,7 +36,7 @@ class Fixture_InvalidMultiExample
 	public function invalidMethod(stdClass $my) {}
 }
 
-class Fixture_NodobBLock
+class Fixture_NoDocBlock
 {
 	public function invalidMethod(stdClass $my) {}
 }
