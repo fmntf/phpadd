@@ -29,15 +29,18 @@ class PHPADD_Result_Class
 	private $outdates = array();
 	private $reflection;
 
-	function __construct(ReflectionClass $reflection) {
+	function __construct(ReflectionClass $reflection)
+	{
 		$this->reflection = $reflection;
 	}
 
-	public function getName() {
+	public function getName()
+	{
 		return $this->reflection->getName();
 	}
 
-	public function getStartline() {
+	public function getStartline()
+	{
 		return $this->reflection->getStartLine();
 	}
 
@@ -56,8 +59,9 @@ class PHPADD_Result_Class
 		$this->outdates[] = $mess;
 	}
 
-	public function getMethods() {
-		return array_merge ($this->missings, $this->outdates);
+	public function getMethods()
+	{
+		return array_merge($this->missings, $this->outdates);
 	}
 
 	public function getMissingBlocks()

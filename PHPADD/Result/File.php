@@ -31,21 +31,24 @@ class PHPADD_Result_File
 		$this->filename = $filename;
 	}
 
-	public function getName() {
+	public function getName()
+	{
 		return $this->filename;
 	}
 
-	public function getCount() {
+	public function getCount()
+	{
 		return count($this->classes);
 	}
 
-	public function getClasses() {
+	public function getClasses()
+	{
 		return $this->classes;
 	}
 	
-	public function addClassResult(PHPADD_Result_Class $mess)
+	public function addClassResult($className, PHPADD_Result_Class $mess)
 	{
-		$this->classes[] = $mess;
+		$this->classes[$className] = $mess;
 	}
 
 }

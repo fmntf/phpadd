@@ -22,7 +22,8 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-abstract class PHPADD_Result_Mess_Abstract {
+abstract class PHPADD_Result_Mess_Abstract
+{
 	protected $methodName;
 	protected $detail;
 

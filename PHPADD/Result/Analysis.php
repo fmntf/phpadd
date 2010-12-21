@@ -25,18 +25,19 @@
 class PHPADD_Result_Analysis
 {
 	protected $files = array();
-	protected $position;
 
 	public function addFileResult(PHPADD_Result_File $mess)
 	{
 		$this->files[] = $mess;
 	}
 
-	public function getCount() {
+	public function getCount()
+	{
 		return count($this->files);
 	}
 
-	public function getFiles() {
+	public function getFiles()
+	{
 		return $this->files;
 	}
 
