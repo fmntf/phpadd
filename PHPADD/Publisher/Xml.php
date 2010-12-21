@@ -24,12 +24,13 @@
 
 class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 {
-	protected $_dom;
-	protected $_class_element;
+	protected $dom;
+	protected $classElement;
 
-	public function __construct ($argument) {
+	public function __construct($argument)
+	{
 		parent::__construct($argument);
-		$this->_dom = new DomDocument('1.0');
+		$this->dom = new DomDocument('1.0');
 	}
 
 	public function publish(PHPADD_Result_Analysis $mess)
@@ -67,24 +68,11 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 
 				$file_element->appendChild($class_element);
 			}
-			$this->_dom->appendChild($file_element);
+			$this->dom->appendChild($file_element);
 		}
 
-
-//		foreach ($mess->getResults() as $class => $methods) {
-//			$attributes = array ("name" => $class);
-//			$class_element = $this->createXMLElement('class', $attributes);
-//
-//			if (!$methods->isClean()) {
-//				$element = $this->processMethods($class, $methods);
-//				$class_element->appendChild($element);
-//			}
-//
-//			$this->_dom->appendChild($class_element);
-//		}
-
-		$this->_dom->formatOutput = true;
-		$this->_dom->save($this->destination);
+		$this->dom->formatOutput = true;
+		$this->dom->save($this->destination);
 	}
 
 	protected function processMethods($class, PHPADD_Result_Class $methods)
@@ -95,7 +83,7 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 			$attributes = array ("name" => $method->getName());
 			$method_element = $this->createXMLElement('method', $attributes);
 
-			$details_element = $this->_dom->createElement('details');
+			$details_element = $this->dom->createElement('details');
 			foreach ($method->getDetail() as $detail) {
 				$attributes = array ();
 				$attributes['type'] = $detail['type'];
@@ -109,11 +97,12 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 		return $method_element;
 	}
 
-	protected function createXMLElement($name, $attributes) {
-		$element = $this->_dom->createElement($name);
+	protected function createXMLElement($name, $attributes)
+	{
+		$element = $this->dom->createElement($name);
 		foreach ($attributes as $key => $value) {
-			$attr_element = $this->_dom->createAttribute($key);
-			$attr_element->appendChild($this->_dom->createTextNode($value));
+			$attr_element = $this->dom->createAttribute($key);
+			$attr_element->appendChild($this->dom->createTextNode($value));
 
 			$element->appendChild($attr_element);
 		}
