@@ -21,6 +21,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
+require_once 'Publisher/Abstract.php';
 require_once 'Detector.php';
 require_once 'Stats.php';
 
@@ -31,7 +32,7 @@ class PHPADD_Cli
 	private $skipProtected = false;
 	private $skipPrivate = false;
 	private $bootstrap = null;
-	private $publishers = null;
+	private $publishers = array();
 	private $path = null;
 	
 	protected function blocksProtected()
@@ -95,7 +96,7 @@ class PHPADD_Cli
 	
 	private function parseParams()
 	{
-		require_once "Publisher/Abstract.php";
+		
 		
 		for ($i = 1; $i < $_SERVER['argc'] -1; $i++) {
 			$param = $_SERVER['argv'][$i];
@@ -118,23 +119,17 @@ class PHPADD_Cli
 				
 				case '--publish-html':
 					require_once "Publisher/Html.php";
-					$class = "PHPADD_Publisher_Html";
-					$outFile = $_SERVER['argv'][++$i];
-					$this->publishers[] = new $class($outFile);
+					$this->addPublisher('Html', $_SERVER['argv'][++$i]);
 					break;
 
 				case '--publish-xml':
 					require_once "Publisher/Xml.php";
-					$class = "PHPADD_Publisher_Xml";
-					$outFile = $_SERVER['argv'][++$i];
-					$this->publishers[] = new $class($outFile);
+					$this->addPublisher('Xml', $_SERVER['argv'][++$i]);
 					break;
 
 				case '--publish-delim':
 					require_once "Publisher/Delim.php";
-					$class = "PHPADD_Publisher_Delim";
-					$outFile = $_SERVER['argv'][++$i];
-					$this->publishers[] = new $class($outFile);
+					$this->addPublisher('Delim', $_SERVER['argv'][++$i]);
 					break;
 
 
@@ -155,6 +150,16 @@ class PHPADD_Cli
 		if (!is_dir($this->path)) {
 			throw new InvalidArgumentException('Not a directory: ' . $this->path);
 		}
+	}
+
+	private function addPublisher($name, $outputFile)
+	{
+		$class = "PHPADD_Publisher_" . $name;
+		if ($outputFile == "-") {
+			$outputFile = "php://stdout";
+		}
+
+		$this->publishers[] = new $class($outputFile);
 	}
 
 }
