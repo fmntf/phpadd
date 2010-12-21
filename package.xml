@@ -13,11 +13,11 @@
 		<active>yes</active>
 	</lead>
 
-	<date>2010-12-06</date>
+	<date>2010-12-23</date>
 	<time>14:00:00</time>
 	<version>
-		<release>1.0.2</release>
-		<api>1.0.0</api>
+		<release>1.1.0</release>
+		<api>1.1.0</api>
 	</version>
 	<stability>
 		<release>stable</release>
@@ -31,13 +31,27 @@
 		<dir name="/">
 			<dir name="PHPADD">
 				<dir name="Publisher">
+					<file baseinstalldir="/" name="Abstract.php" role="php" />
+					<file baseinstalldir="/" name="Delim.php" role="php" />
 					<file baseinstalldir="/" name="Html.php" role="php" />
+					<file baseinstalldir="/" name="Xml.php" role="php" />
+				</dir>
+				<dir name="Result">
+					<dir name="Mess">
+						<file baseinstalldir="/" name="Abstract.php" role="php" />
+						<file baseinstalldir="/" name="MissingBlock.php" role="php" />
+						<file baseinstalldir="/" name="OutdatedBlock.php" role="php" />
+					</dir>
+					<file baseinstalldir="/" name="Analysis.php" role="php" />
+					<file baseinstalldir="/" name="Class.php" role="php" />
+					<file baseinstalldir="/" name="File.php" role="php" />
 				</dir>
 				<file baseinstalldir="/" name="ClassFinder.php" role="php" />
 				<file baseinstalldir="/" name="Cli.php" role="php" />
 				<file baseinstalldir="/" name="Detector.php" role="php" />
 				<file baseinstalldir="/" name="Filter.php" role="php" />
 				<file baseinstalldir="/" name="Parser.php" role="php" />
+				<file baseinstalldir="/" name="Stats.php" role="php" />
 			</dir>
 			<file name="LICENSE" role="doc" />
 			<file name="README.markdown" role="doc" />
