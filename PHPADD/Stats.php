@@ -69,7 +69,7 @@ class PHPADD_Stats
 	/**
 	 * Detects the number of regular, missing and outdated docblocks.
 	 *
-	 * @param array $results
+	 * @param PHPADD_Result_Analysis $mess
 	 * @return array
 	 */
 	private function analyze(PHPADD_Result_Analysis $mess)
