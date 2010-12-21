@@ -49,10 +49,9 @@ class PHPADD_Detector
 		foreach ($finder->getList() as $file => $classes) {
 			$result = new PHPADD_Result_File($file);
 
-			// $mess->includingFile($file);
 			require_once $file;
 			foreach ($classes as $class) {
-				$result->addClassResult($this->analyze($class));
+				$result->addClassResult($class, $this->analyze($class));
 			}
 
 			$mess->addFileResult($result);
