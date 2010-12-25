@@ -49,7 +49,7 @@ class PHPADD_Stats
 			'missing' => $missing,
 			'missing-f' => $missingFreq,
 
-			'outdated' => $outdatedFreq,
+			'outdated' => $outdated,
 			'outdated-f' => $outdatedFreq,
 		);
 	}
