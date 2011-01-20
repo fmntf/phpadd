@@ -90,6 +90,7 @@ class PHPADD_Cli
 			"   --publish-html <file>     HTML output" . PHP_EOL .
 			"   --publish-xml  <file>     XML output" . PHP_EOL .
 			"   --publish-delim <file>    Tab delimited output" . PHP_EOL;
+			"   --publish-overview <file> JSON statistical output" . PHP_EOL;
 
 
 	}
@@ -130,6 +131,11 @@ class PHPADD_Cli
 				case '--publish-delim':
 					require_once "Publisher/Delim.php";
 					$this->addPublisher('Delim', $_SERVER['argv'][++$i]);
+					break;
+					
+				case '--publish-json-overview':
+					require_once "Publisher/Overview.php";
+					$this->addPublisher('Overview', $_SERVER['argv'][++$i]);
 					break;
 
 
