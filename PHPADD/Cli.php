@@ -137,7 +137,7 @@ class PHPADD_Cli
 		}
 		
 		if (count($this->publishers) == 0) {
-			throw new PHPADD_Exception_InvalidArgument('You must specify at least 1 publisher.');
+			throw new PHPADD_Exception_InvalidArgument('You must specify at least one publisher.');
 		}
 		
 		if (!isset($_SERVER['argv'][$i])) {
