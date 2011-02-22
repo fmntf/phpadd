@@ -22,6 +22,7 @@
  */
 
 require_once 'Publisher/Abstract.php';
+require_once 'Exception/InvalidArgument.php';
 require_once 'Detector.php';
 require_once 'Stats.php';
 
@@ -70,7 +71,7 @@ class PHPADD_Cli
 				$publisher->publish($mess);
 			}
 			
-		} catch (Exception $e) {
+		} catch (PHPADD_Exception_InvalidArgument $e) {
 			echo $e->getMessage() . PHP_EOL;
 			echo $this->usage();
 			exit(1);
@@ -110,7 +111,7 @@ class PHPADD_Cli
 				case '--bootstrap':
 					$this->bootstrap = $_SERVER['argv'][++$i];
 					if (!is_file($this->bootstrap)) {
-						throw new InvalidArgumentException('Not a file: ' . $this->bootstrap);
+						throw new PHPADD_Exception_InvalidArgument('Not a file: ' . $this->bootstrap);
 					}
 					break;
 				
@@ -131,21 +132,21 @@ class PHPADD_Cli
 
 
 				default:
-					throw new InvalidArgumentException('Invalid argument: ' . $param);
+					throw new PHPADD_Exception_InvalidArgument('Invalid argument: ' . $param);
 			}
 		}
 		
 		if (count($this->publishers) == 0) {
-			throw new InvalidArgumentException('You must specify at least 1 publisher.');
+			throw new PHPADD_Exception_InvalidArgument('You must specify at least 1 publisher.');
 		}
 		
 		if (!isset($_SERVER['argv'][$i])) {
-			throw new InvalidArgumentException('You must specify source directory.');
+			throw new PHPADD_Exception_InvalidArgument('You must specify source directory.');
 		}
 		
 		$this->path = $_SERVER['argv'][$i];
 		if (!is_dir($this->path)) {
-			throw new InvalidArgumentException('Not a directory: ' . $this->path);
+			throw new PHPADD_Exception_InvalidArgument('Not a directory: ' . $this->path);
 		}
 	}
 
