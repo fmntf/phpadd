@@ -73,6 +73,7 @@ class PHPADD_Cli
 		} catch (Exception $e) {
 			echo $e->getMessage() . PHP_EOL;
 			echo $this->usage();
+			exit(1);
 		}
 	}
 	
@@ -90,14 +91,10 @@ class PHPADD_Cli
 			"   --publish-html <file>     HTML output" . PHP_EOL .
 			"   --publish-xml  <file>     XML output" . PHP_EOL .
 			"   --publish-delim <file>    Tab delimited output" . PHP_EOL;
-
-
 	}
-	
+
 	private function parseParams()
 	{
-		
-		
 		for ($i = 1; $i < $_SERVER['argc'] -1; $i++) {
 			$param = $_SERVER['argv'][$i];
 			
