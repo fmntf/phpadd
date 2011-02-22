@@ -1,4 +1,3 @@
-#!/usr/bin/env php
 <?php
 /**
  * phpadd - abandoned docblocks detector
@@ -22,11 +21,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-if (strpos('@php_bin@', '@php_bin') === 0) {
-    set_include_path(dirname(__FILE__) . PATH_SEPARATOR . get_include_path());
+function phpadd_autoload($class)
+{
+	$path = str_replace('_', '/', $class) . '.php';
+	require_once $path;
 }
 
-require_once 'PHPADD/autoload.php';
-
-$cli = new PHPADD_Cli();
-$cli->run();
+spl_autoload_register('phpadd_autoload');

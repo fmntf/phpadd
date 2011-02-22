@@ -1,6 +1,5 @@
 <?php
 
-require_once '../PHPADD/Parser.php';
 require_once 'fixtures/sample.classes';
 require_once 'fixtures/extension.classes';
 

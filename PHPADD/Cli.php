@@ -21,11 +21,6 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-require_once 'Publisher/Abstract.php';
-require_once 'Exception/InvalidArgument.php';
-require_once 'Detector.php';
-require_once 'Stats.php';
-
 class PHPADD_Cli
 {
 	const VERSION = '1.1.0';
@@ -117,17 +112,14 @@ class PHPADD_Cli
 					break;
 				
 				case '--publish-html':
-					require_once "Publisher/Html.php";
 					$this->addPublisher('Html', $_SERVER['argv'][++$i]);
 					break;
 
 				case '--publish-xml':
-					require_once "Publisher/Xml.php";
 					$this->addPublisher('Xml', $_SERVER['argv'][++$i]);
 					break;
 
 				case '--publish-delim':
-					require_once "Publisher/Delim.php";
 					$this->addPublisher('Delim', $_SERVER['argv'][++$i]);
 					break;
 
