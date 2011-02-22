@@ -92,65 +92,13 @@ class PHPADD_Cli
 
 	private function parseParams()
 	{
-		for ($i = 1; $i < $_SERVER['argc'] -1; $i++) {
-			$param = $_SERVER['argv'][$i];
-			
-			switch ($param) {
-				case '--skip-protected':
-					$this->skipProtected = true;
-					break;
-				
-				case '--skip-private':
-					$this->skipPrivate = true;
-					break;
-				
-				case '--bootstrap':
-					$this->bootstrap = $_SERVER['argv'][++$i];
-					if (!is_file($this->bootstrap)) {
-						throw new PHPADD_Exception_InvalidArgument('Not a file: ' . $this->bootstrap);
-					}
-					break;
-				
-				case '--publish-html':
-					$this->addPublisher('Html', $_SERVER['argv'][++$i]);
-					break;
+		$parser = new PHPADD_ParamParser($_SERVER['argv']);
 
-				case '--publish-xml':
-					$this->addPublisher('Xml', $_SERVER['argv'][++$i]);
-					break;
-
-				case '--publish-delim':
-					$this->addPublisher('Delim', $_SERVER['argv'][++$i]);
-					break;
-
-
-				default:
-					throw new PHPADD_Exception_InvalidArgument('Invalid argument: ' . $param);
-			}
-		}
-		
-		if (count($this->publishers) == 0) {
-			throw new PHPADD_Exception_InvalidArgument('You must specify at least one publisher.');
-		}
-		
-		if (!isset($_SERVER['argv'][$i])) {
-			throw new PHPADD_Exception_InvalidArgument('You must specify source directory.');
-		}
-		
-		$this->path = $_SERVER['argv'][$i];
-		if (!is_dir($this->path)) {
-			throw new PHPADD_Exception_InvalidArgument('Not a directory: ' . $this->path);
-		}
-	}
-
-	private function addPublisher($name, $outputFile)
-	{
-		$class = "PHPADD_Publisher_" . $name;
-		if ($outputFile == "-") {
-			$outputFile = "php://stdout";
-		}
-
-		$this->publishers[] = new $class($outputFile);
+		$this->skipProtected = $parser->getSkipProtected();
+		$this->skipPrivate = $parser->getSkipPrivate();
+		$this->bootstrap = $parser->getBootstrap();
+		$this->publishers = $parser->getPublishers();
+		$this->path = $parser->getPath();
 	}
 
 }
