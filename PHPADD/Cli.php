@@ -81,6 +81,7 @@ class PHPADD_Cli
 	private function usage()
 	{
 		return
+			"PHPADD v" . self::VERSION . PHP_EOL .
 			"Usage: phpadd [options] /directory/to/scan" .
 			PHP_EOL . PHP_EOL .
 			"Options:" . PHP_EOL .
