@@ -1,0 +1,21 @@
+<?php
+
+class MalformedBlocks
+{
+	/**
+	 * Some description here
+	 *
+	 * @param $name
+	 * @return string
+	 */
+	public function missingType($name) {}
+
+	/**
+	 * Some description here
+	 *
+	 * @param string
+	 * @return string
+	 */
+	public function missingName($name) {}
+}
+

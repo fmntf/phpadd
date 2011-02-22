@@ -118,26 +118,11 @@ class PHPADD_Parser
 		$excluded = array('int', 'integer', 'float', 'double', 'bool', 'boolean', 'string', 'mixed');
 		$annotations = $this->parseAnnotations($method->getDocComment());
 
-		if (isset($annotations['param'])) {
+		if (isset($annotations['param']))
+		{
 			foreach ($annotations['param'] as $parameter)
 			{
-			    
-				$parameterParts = preg_split("/[\s]+/", $parameter);
-				
-				if (count($parameterParts) < 2) {
-				    // Some automatically generated docblocks may be invalid,
-				    // and only provide a datatype OR a variable name. Determine
-				    // which it is, and output appropriately
-				    if (substr($parameterParts[0], 0, 1) === '$') {
-				        $name = $parameterParts[0];
-				        $type = '';
-				    } else {
-				        $name = '';
-				        $type = $parameterParts[0];
-				    }
-				} else {
-				    list($type, $name) = $parameterParts;
-				}
+				list($type, $name) = $this->getParameterTypeAndName($parameter);
 
 				if (!in_array($type, $excluded)) {
 					$params[] = "$type $name";
@@ -148,6 +133,28 @@ class PHPADD_Parser
 		}
 
 		return $params;
+	}
+
+	private function getParameterTypeAndName($parameter)
+	{
+		$parameterParts = preg_split("/[\s]+/", $parameter);
+
+		if (count($parameterParts) < 2) {
+			// Some automatically generated docblocks may be invalid,
+			// and only provide a datatype OR a variable name. Determine
+			// which it is, and output appropriately
+			if (substr($parameterParts[0], 0, 1) === '$') {
+				$name = $parameterParts[0];
+				$type = '';
+			} else {
+				$name = '';
+				$type = $parameterParts[0];
+			}
+		} else {
+			list($type, $name) = $parameterParts;
+		}
+
+		return array($type, $name);
 	}
 
 	/**
