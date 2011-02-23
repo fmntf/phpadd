@@ -40,17 +40,17 @@ class PHPADD_Stats
 		$outdatedFreq = $this->getFrequency($outdated, $total);
 
 		return array(
-			'files' => $fileNo,
-			'methods' => $total,
+			'files-count' => $fileNo,
+			'methods-count' => $total,
 
-			'regular' => $regular,
-			'regular-f' => $regularFreq,
+			'regular-blocks' => $regular,
+			'regular-blocks-percentage' => $regularFreq,
 
-			'missing' => $missing,
-			'missing-f' => $missingFreq,
+			'missing-blocks' => $missing,
+			'missing-blocks-percentage' => $missingFreq,
 
-			'outdated' => $outdated,
-			'outdated-f' => $outdatedFreq,
+			'outdated-blocks' => $outdated,
+			'outdated-blocks-percentage' => $outdatedFreq,
 		);
 	}
 

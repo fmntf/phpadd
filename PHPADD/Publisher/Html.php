@@ -110,10 +110,10 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 		$stats = $helper->getStats($mess);
 
 		return
-			"<p class='note'>Scanned {$stats['files']} files with {$stats['methods']} methods in their classes. " .
-			"{$stats['regular']} methods ({$stats['regular-f']}%) are regular, " .
-			"{$stats['missing']} methods ({$stats['missing-f']}%) have no docblock, " .
-			"{$stats['outdated']} methods ({$stats['outdated-f']}%) have an outdated docblock.</p>" . PHP_EOL;
+			"<p class='note'>Scanned {$stats['files-count']} files with {$stats['methods-count']} methods in their classes. " .
+			"{$stats['regular-blocks']} methods ({$stats['regular-blocks-percentage']}%) are regular, " .
+			"{$stats['missing-blocks']} methods ({$stats['missing-blocks-percentage']}%) have no docblock, " .
+			"{$stats['outdated-blocks']} methods ({$stats['outdated-blocks-percentage']}%) have an outdated docblock.</p>" . PHP_EOL;
 	}
 
 }
