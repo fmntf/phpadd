@@ -92,7 +92,9 @@ class PHPADD_Cli
 
 	private function parseParams()
 	{
-		$parser = new PHPADD_ParamParser($_SERVER['argv']);
+		$params = $_SERVER['argv'];
+		unset($params[0]);
+		$parser = new PHPADD_ParamParser(array_values($params));
 
 		$this->skipProtected = $parser->getSkipProtected();
 		$this->skipPrivate = $parser->getSkipPrivate();
