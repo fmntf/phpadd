@@ -24,11 +24,6 @@
 
 class PHPADD_Result_Mess_MissingBlock extends PHPADD_Result_Mess_Abstract
 {
-
-	public function getdetail() {
-		return array();
-	}
-	
 	public function toList()
 	{
 		return array('Missing docblock');

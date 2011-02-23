@@ -27,7 +27,7 @@ abstract class PHPADD_Result_Mess_Abstract
 	protected $methodName;
 	protected $detail;
 
-	public function __construct($methodName, array $detail)
+	public function __construct($methodName, array $detail = array())
 	{
 		$this->methodName = $methodName;
 		$this->detail = $detail;
