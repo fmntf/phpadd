@@ -24,42 +24,55 @@
 
 class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 {
-	protected $dom;
-	protected $classElement;
-
-	public function __construct($argument)
+	public function publish(PHPADD_Result_Analysis $mess)
 	{
-		parent::__construct($argument);
-		$this->dom = new DomDocument('1.0');
+		$dom = new DOMDocument('1.0');
+		
+		if (!$this->statsOnly) {
+			$this->addMessToXml($mess, $dom);
+		}
+		$this->addStatsToXml($mess, $dom);
+		
+		$dom->formatOutput = true;
+		$dom->save($this->destination);
+	}
+	
+	private function addStatsToXml(PHPADD_Result_Analysis $mess, DOMDocument $dom)
+	{
+		$helper = new PHPADD_Stats();
+		$stats = $helper->getStats($mess);
+		
+		$element = $this->createXMLElement($dom, 'stats', $stats);
+		$dom->appendChild($element);
 	}
 
-	public function publish(PHPADD_Result_Analysis $mess)
+	private function addMessToXml(PHPADD_Result_Analysis $mess, DOMDocument $dom)
 	{
 		foreach ($mess->getDirtyFiles() as $file) {
 			$attributes = array ("name" => $file->getName());
-			$file_element = $this->createXMLElement('file', $attributes);
+			$file_element = $this->createXMLElement($dom, 'file', $attributes);
 
 			foreach ($file->getClasses() as $class) {
 				$attributes = array ();
 				$attributes['name'] = $class->getName();
 				$attributes['line'] = $class->getStartline();
-				$class_element = $this->createXMLElement('class', $attributes);
+				$class_element = $this->createXMLElement($dom, 'class', $attributes);
 
 				foreach ($class->getMethods() as $method) {
 					$attributes = array ("name" => $class->getName());
-					$method_element = $this->createXMLElement('method', $attributes);
+					$method_element = $this->createXMLElement($dom, 'method', $attributes);
 
 					if ($method instanceof PHPADD_Result_Mess_MissingBlock) {
 						$attributes = array ();
 						$attributes['type'] = 'missing-docblock';
-						$detail = $this->createXMLElement('detail', $attributes);
+						$detail = $this->createXMLElement($dom, 'detail', $attributes);
 						$method_element->appendChild($detail);
 					} else {
 						foreach ($method->getDetail() as $detail) {
 							$attributes = array ();
 							$attributes['type'] = $detail['type'];
 							$attributes['name'] = $detail['name'];
-							$detail = $this->createXMLElement('detail', $attributes);
+							$detail = $this->createXMLElement($dom, 'detail', $attributes);
 							$method_element->appendChild($detail);
 						}
 					}
@@ -68,41 +81,16 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 
 				$file_element->appendChild($class_element);
 			}
-			$this->dom->appendChild($file_element);
+			$dom->appendChild($file_element);
 		}
-
-		$this->dom->formatOutput = true;
-		$this->dom->save($this->destination);
 	}
 
-	protected function processMethods($class, PHPADD_Result_Class $methods)
+	private function createXMLElement(DOMDocument $dom, $name, $attributes)
 	{
-		$issues = array_merge($methods->getMissingBlocks(), $methods->getOutdatedBlocks());
-		foreach ($issues as $method) {
-
-			$attributes = array ("name" => $method->getName());
-			$method_element = $this->createXMLElement('method', $attributes);
-
-			$details_element = $this->dom->createElement('details');
-			foreach ($method->getDetail() as $detail) {
-				$attributes = array ();
-				$attributes['type'] = $detail['type'];
-				$attributes['name'] = $detail['name'];
-				$detail = $this->createXMLElement('detail', $attributes);
-				$details_element->appendChild($detail);
-			}
-
-			$method_element->appendChild($details_element);
-		}
-		return $method_element;
-	}
-
-	protected function createXMLElement($name, $attributes)
-	{
-		$element = $this->dom->createElement($name);
+		$element = $dom->createElement($name);
 		foreach ($attributes as $key => $value) {
-			$attr_element = $this->dom->createAttribute($key);
-			$attr_element->appendChild($this->dom->createTextNode($value));
+			$attr_element = $dom->createAttribute($key);
+			$attr_element->appendChild($dom->createTextNode($value));
 
 			$element->appendChild($attr_element);
 		}
