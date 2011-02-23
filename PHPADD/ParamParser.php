@@ -31,63 +31,79 @@ class PHPADD_ParamParser
 	private $path;
 	private $bootstrap;
 	private $publishers;
+	const PUBLISHER_MATCHER = '/\-\-publish\-(?P<name>\w+)(?P<stats>\-stats)?/';
 
 	public function __construct(array $params)
 	{
-		for ($i = 0; $i < count($params) -1; $i++) {
-			$param = $params[$i];
-
-			switch ($param) {
-				case '--skip-protected':
-					$this->skipProtected = true;
-					break;
-
-				case '--skip-private':
-					$this->skipPrivate = true;
-					break;
-
-				case '--bootstrap':
-					$this->bootstrap = $params[++$i];
-					if (!is_file($this->bootstrap)) {
-						throw new PHPADD_Exception_InvalidArgument('Invalid bootstrap: ' . $this->bootstrap . ' is not a file.');
-					}
-					break;
-
-				case '--publish-html':
-					$this->addPublisher('Html', $params[++$i]);
-					break;
-
-				case '--publish-xml':
-					$this->addPublisher('Xml', $params[++$i]);
-					break;
-
-				case '--publish-delim':
-					$this->addPublisher('Delim', $params[++$i]);
-					break;
-
-
-				default:
-					throw new PHPADD_Exception_InvalidArgument('Invalid argument: ' . $param);
-			}
+		while ($params !== array()) {
+			$params = $this->processParam($params);
 		}
-
+		
 		if (count($this->publishers) == 0) {
 			throw new PHPADD_Exception_InvalidArgument('You must specify at least one publisher.');
 		}
-
-		if (!isset($params[$i])) {
+		if (!$this->path) {
 			throw new PHPADD_Exception_InvalidArgument('You must specify source directory.');
 		}
-
-		$this->path = $params[$i];
-		if (!is_dir($this->path)) {
-			throw new PHPADD_Exception_InvalidArgument('Invalid source directory: ' . $this->path);
+	}
+	
+	private function processParam(array $params)
+	{
+		$param = $params[0];
+		
+		if (count($params)==1) {
+			$this->path = $param;
+			if (!is_dir($this->path)) {
+				throw new PHPADD_Exception_InvalidArgument('Invalid source directory: ' . $this->path);
+			}
+			return array();
 		}
+		
+		$argument = (isset($params[1])) ? $params[1] : null;
+
+		switch ($param) {
+			case '--skip-protected':
+				$this->skipProtected = true;
+				break;
+
+			case '--skip-private':
+				$this->skipPrivate = true;
+				break;
+
+			case '--bootstrap':
+				$this->bootstrap = $argument;
+				unset($params[1]);
+				if (!is_file($this->bootstrap)) {
+					throw new PHPADD_Exception_InvalidArgument('Invalid bootstrap: ' . $this->bootstrap . ' is not a file.');
+				}
+				break;
+				
+			default:
+				if ($this->isPublisher($param)) {
+					unset($params[1]);
+					$this->addPublisher($param, $argument);
+				} else {
+					throw new PHPADD_Exception_InvalidArgument('Invalid argument: ' . $param);
+				}
+		}
+
+		unset($params[0]);
+		return array_values($params);
+	}
+	
+	
+	private function isPublisher($param)
+	{
+		return preg_match(self::PUBLISHER_MATCHER, $param, $matches);
 	}
 
-	private function addPublisher($name, $outputFile)
+	private function addPublisher($switch, $outputFile)
 	{
-		$class = "PHPADD_Publisher_" . $name;
+		preg_match(self::PUBLISHER_MATCHER, $switch, $matches);
+		
+		$type = ucfirst($matches['name']);
+		$class = "PHPADD_Publisher_" . $type;
+		
 		if ($outputFile == "-") {
 			$outputFile = "php://stdout";
 		}
