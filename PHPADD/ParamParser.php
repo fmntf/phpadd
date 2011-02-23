@@ -26,13 +26,36 @@ require_once 'Exception/InvalidArgument.php';
 
 class PHPADD_ParamParser
 {
+	/**
+	 * @var bool
+	 */
 	private $skipProtected = false;
+	
+	/**
+	 * @var bool
+	 */
 	private $skipPrivate = false;
+	
+	/**
+	 * @var string Project to scan path
+	 */
 	private $path;
+	
+	/**
+	 * @var string User-defined bootstrap
+	 */
 	private $bootstrap;
+	
+	/**
+	 * @var array User-requested publishers
+	 */
 	private $publishers;
+	
 	const PUBLISHER_MATCHER = '/\-\-publish\-(?P<name>\w+)(?P<stats>\-stats)?/';
 
+	/**
+	 * @param array $params
+	 */
 	public function __construct(array $params)
 	{
 		while ($params !== array()) {
@@ -46,7 +69,16 @@ class PHPADD_ParamParser
 			throw new PHPADD_Exception_InvalidArgument('You must specify source directory.');
 		}
 	}
-	
+
+	/**
+	 * It looks for valid params in the given array.
+	 * If a valid param is found, it's behaviour is applied
+	 * then the method returns the input array, minus the
+	 * applied parameter.
+	 * 
+	 * @param array $params
+	 * @return array Reduced params array
+	 */
 	private function processParam(array $params)
 	{
 		$param = $params[0];
@@ -91,12 +123,23 @@ class PHPADD_ParamParser
 		return array_values($params);
 	}
 	
-	
+	/**
+	 * Checks if the given param is a (valid) publisher.
+	 * 
+	 * @param string $param Raw param, like --bootstrap or --publish-xml
+	 * @return bool
+	 */
 	private function isPublisher($param)
 	{
 		return preg_match(self::PUBLISHER_MATCHER, $param, $matches) && $this->hasPublisher($matches['name']);
 	}
 	
+	/**
+	 * Checks if the given publisher is valid.
+	 * 
+	 * @param string $type xml, html, ...
+	 * @return bool
+	 */
 	private function hasPublisher($type)
 	{
 		$type = ucfirst($type);
@@ -105,6 +148,12 @@ class PHPADD_ParamParser
 		return @class_exists($class);
 	}
 
+	/**
+	 * Adds a valid publisher into the internal collection
+	 * 
+	 * @param string $switch Raw param, like --publish-xml
+	 * @param string $outputFile Where to save the output
+	 */
 	private function addPublisher($switch, $outputFile)
 	{
 		preg_match(self::PUBLISHER_MATCHER, $switch, $matches);
@@ -121,26 +170,51 @@ class PHPADD_ParamParser
 		$this->publishers[] = new $class($outputFile, $statsOnly);
 	}
 
+	/**
+	 * True if the params contained to skip private methods.
+	 * 
+	 * @return bool
+	 */
 	public function getSkipPrivate()
 	{
 		return $this->skipPrivate;
 	}
 
+	/**
+	 * True if the params contained to skip protected methods.
+	 * 
+	 * @return bool
+	 */
 	public function getSkipProtected()
 	{
 		return $this->skipProtected;
 	}
 
+	/**
+	 * Returns the path of the application to scan.
+	 * 
+	 * @return string
+	 */
 	public function getPath()
 	{
 		return $this->path;
 	}
 
+	/**
+	 * Returns the path of the user-defined boostrap.
+	 * 
+	 * @return string
+	 */
 	public function getBootstrap()
 	{
 		return $this->bootstrap;
 	}
 
+	/**
+	 * Returns a list of user-requested publishers.
+	 * 
+	 * @return array
+	 */
 	public function getPublishers()
 	{
 		return $this->publishers;

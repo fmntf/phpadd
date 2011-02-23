@@ -31,16 +31,25 @@ class PHPADD_Cli
 	private $publishers = array();
 	private $path = null;
 	
+	/**
+	 * Ignores warnings on protected methods
+	 */
 	protected function blocksProtected()
 	{
 		return $this->skipProtected;
 	}
 
+	/**
+	 * Ignores warnings on private methods
+	 */
 	protected function blocksPrivate()
 	{
 		return $this->skipPrivate;
 	}
 
+	/**
+	 * Includes (require_once) the bootstrap, if any.
+	 */
 	private function includeBootstrap()
 	{
 		if ($this->bootstrap !== null) {
@@ -50,7 +59,8 @@ class PHPADD_Cli
 
 	/**
 	 * Parses the command line parms and starts the execution.
-	 * If something is wrong, the 'usage' message is displayed.
+	 * If something of PHPADD is wrong, the 'usage' message is displayed.
+	 * Any other Exception will go up.
 	 */
 	public function run()
 	{
@@ -73,6 +83,9 @@ class PHPADD_Cli
 		}
 	}
 	
+	/**
+	 * Prints usage menu.
+	 */
 	private function usage()
 	{
 		return
@@ -95,6 +108,9 @@ class PHPADD_Cli
 			"instead of the full report (e.g. --publish-html-stats <file>)" . PHP_EOL;
 	}
 
+	/**
+	 * Sets CLI internal state by unpacking argv
+	 */
 	private function parseParams()
 	{
 		$params = $_SERVER['argv'];

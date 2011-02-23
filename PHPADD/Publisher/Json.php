@@ -35,6 +35,12 @@ class PHPADD_Publisher_Json extends PHPADD_Publisher_Abstract
 		file_put_contents($this->destination, $output);
 	}
 
+	/**
+	 * Gets a string with the JSON
+	 * 
+	 * @param PHPADD_Result_Analysis $mess
+	 * @return string
+	 */
 	private function getJson(PHPADD_Result_Analysis $mess)
 	{
 		$report['stats'] = $this->getStats($mess);
@@ -58,6 +64,12 @@ class PHPADD_Publisher_Json extends PHPADD_Publisher_Abstract
 		return json_encode($report);
 	}
 
+	/**
+	 * Gets a serializable array with the statistics.
+	 * 
+	 * @param PHPADD_Result_Analysis $mess
+	 * @return array
+	 */
 	private function getStats(PHPADD_Result_Analysis $mess)
 	{
 		$helper = new PHPADD_Stats();

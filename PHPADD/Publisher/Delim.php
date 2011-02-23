@@ -24,6 +24,11 @@
 
 class PHPADD_Publisher_Delim extends PHPADD_Publisher_Abstract
 {
+	/**
+	 * Generate a TAB delimited output.
+	 * 
+	 * @param PHPADD_Result_Analysis $mess
+	 */
 	public function publish(PHPADD_Result_Analysis $mess)
 	{
 		$output = "";

@@ -28,7 +28,7 @@ class PHPADD_Stats
 	 * Compute stats from mess.
 	 * 
 	 * @param PHPADD_Result_Analysis $mess
-	 * @return array Contains files, methods, regular(-f), missing(-f) and outdated(-f) indexes.
+	 * @return array
 	 */
 	public function getStats(PHPADD_Result_Analysis $mess)
 	{

@@ -24,14 +24,31 @@
 
 abstract class PHPADD_Publisher_Abstract
 {
+	/**
+	 * Where to write the publisher output
+	 * @var string
+	 */
 	protected $destination;
+	
+	/**
+	 * True to generate only stats
+	 * 
+	 * @var bool
+	 */
 	protected $statsOnly;
 	
-	public function __construct($argument, $statsOnly = false)
+	/**
+	 * @param string $destination
+	 * @param bool $statsOnly
+	 */
+	public function __construct($destination, $statsOnly = false)
 	{
-		$this->destination = $argument;
+		$this->destination = $destination;
 		$this->statsOnly = $statsOnly;
 	}
 
+	/**
+	 * @param PHPADD_Result_Analysis $mess
+	 */
 	abstract public function publish(PHPADD_Result_Analysis $mess);	
 }

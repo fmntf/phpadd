@@ -24,8 +24,14 @@
 
 class PHPADD_Detector
 {
+	/**
+	 * @var PHPADD_Filter
+	 */
 	protected $filter;
 
+	/**
+	 * @param PHPADD_Filter $filter
+	 */
 	public function __construct(PHPADD_Filter $filter)
 	{
 		$this->filter = $filter;
@@ -56,6 +62,12 @@ class PHPADD_Detector
 		return $mess;
 	}
 
+	/**
+	 * Analyzes a class.
+	 * 
+	 * @param string $className
+	 * @return PHPADD_Result_Class found mess
+	 */
 	private function analyze($className)
 	{
 		$parser = new PHPADD_Parser($className);

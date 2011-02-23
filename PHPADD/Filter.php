@@ -24,9 +24,20 @@
 
 class PHPADD_Filter
 {
+	/**
+	 * @var bool
+	 */
 	private $scanProtected;
+	
+	/**
+	 * @var bool
+	 */
 	private $scanPrivate;
 	
+	/**
+	 * @param bool $scanProtected
+	 * @param bool $scanPrivate
+	 */
 	public function __construct($scanProtected = true, $scanPrivate = true)
 	{
 		$this->scanProtected = $scanProtected;

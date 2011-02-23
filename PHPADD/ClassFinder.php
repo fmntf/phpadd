@@ -24,8 +24,14 @@
 
 class PHPADD_ClassFinder
 {
+	/**
+	 * @var string
+	 */
 	private $path;
 
+	/**
+	 * @param string $path Directory path
+	 */
 	public function __construct($path)
 	{
 		$this->path = $path;
@@ -52,6 +58,12 @@ class PHPADD_ClassFinder
 		return $classes;
 	}
 
+	/**
+	 * Get the classes inside the given file.
+	 * 
+	 * @param string $fileName File path
+	 * @return array
+	 */
 	private function processFile($fileName)
 	{
 		$classes = array();
@@ -66,6 +78,13 @@ class PHPADD_ClassFinder
 		return $classes;
 	}
 
+	/**
+	 * Get the class name in an array of tokens
+	 * 
+	 * @param array $tokens
+	 * @param int $i Ignore tokens before i (token[i] is T_CLASS)
+	 * @return string class name
+	 */
 	private function getNextClass(array $tokens, $i) {
 		for ($i; $i < count($tokens); $i++) {
 			if ($tokens[$i][0] == T_STRING) {

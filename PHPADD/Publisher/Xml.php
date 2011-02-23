@@ -24,6 +24,11 @@
 
 class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 {
+	/**
+	 * Renders the mess in XML.
+	 *
+	 * @param PHPADD_Result_Analysis $mess
+	 */
 	public function publish(PHPADD_Result_Analysis $mess)
 	{
 		$dom = new DOMDocument('1.0');
@@ -37,6 +42,12 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 		$dom->save($this->destination);
 	}
 	
+	/**
+	 * Generate stats and add them to the given DOM.
+	 * 
+	 * @param PHPADD_Result_Analysis $mess
+	 * @param DOMDocument $dom 
+	 */
 	private function addStatsToXml(PHPADD_Result_Analysis $mess, DOMDocument $dom)
 	{
 		$helper = new PHPADD_Stats();
@@ -46,6 +57,12 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 		$dom->appendChild($element);
 	}
 
+	/**
+	 * Generates the report and adds it to the given DOM.
+	 * 
+	 * @param PHPADD_Result_Analysis $mess
+	 * @param DOMDocument $dom 
+	 */
 	private function addMessToXml(PHPADD_Result_Analysis $mess, DOMDocument $dom)
 	{
 		foreach ($mess->getDirtyFiles() as $file) {
@@ -85,7 +102,15 @@ class PHPADD_Publisher_Xml extends PHPADD_Publisher_Abstract
 		}
 	}
 
-	private function createXMLElement(DOMDocument $dom, $name, $attributes)
+	/**
+	 * Creates an XML element.
+	 * 
+	 * @param DOMDocument $dom
+	 * @param string $name
+	 * @param array $attributes
+	 * @return DOMElement
+	 */
+	private function createXMLElement(DOMDocument $dom, $name, array $attributes)
 	{
 		$element = $dom->createElement($name);
 		foreach ($attributes as $key => $value) {

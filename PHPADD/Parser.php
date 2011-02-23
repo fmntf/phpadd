@@ -24,8 +24,14 @@
 
 class PHPADD_Parser
 {
+	/**
+	 * @var ReflectionClass
+	 */
 	private $reflection;
 
+	/**
+	 * @param string $class
+	 */
 	public function __construct($class)
 	{
 		$this->reflection = new ReflectionClass($class);
