@@ -2,6 +2,7 @@
 
 require_once 'fixtures/sample.classes';
 require_once 'fixtures/extension.classes';
+require_once 'fixtures/malformed.classes';
 
 class ParserTest extends PHPUnit_Framework_TestCase
 {
@@ -158,6 +159,20 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, count($missing));
 		$this->assertEquals(0, count($outdated));
 		$this->assertEquals('b', $missing[0]->getName());
+	}
+
+
+	public function testDoesNotExplodeOnMalformedDocblocks()
+	{
+		$parser = new PHPADD_Parser('MalformedBlocks');
+		$analysis = $parser->analyze('classname', $this->filter);
+
+		// if no notices are generated, this test passes
+	}
+
+	public function testReportsMalformedDocblocks()
+	{
+		$this->markTestIncomplete('we have to decide how to report them');
 	}
 
 }
