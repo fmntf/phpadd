@@ -85,9 +85,14 @@ class PHPADD_Cli
 			"   --bootstrap file    includes `file` before the scan" . PHP_EOL .
 			PHP_EOL .
 			"At least one publisher must be given: ". PHP_EOL .
-			"   --publish-html <file>     HTML output" . PHP_EOL .
-			"   --publish-xml  <file>     XML output" . PHP_EOL .
-			"   --publish-delim <file>    Tab delimited output" . PHP_EOL;
+			"   --publish-html  <file>     HTML output" . PHP_EOL .
+			"   --publish-xml   <file>     XML output" . PHP_EOL .
+			"   --publish-delim <file>     Tab delimited output" . PHP_EOL .
+			"   --publish-jsnon <file>     Tab delimited output" . PHP_EOL .
+			PHP_EOL .
+			"<file> may be a regular file or a dash (-) for stdout." . PHP_EOL .
+			"Appending '-stats' you can generate only general staticts" . PHP_EOL;
+			"instead of the full report (e.g. --publish-html-stats <file>)" . PHP_EOL;
 	}
 
 	private function parseParams()
