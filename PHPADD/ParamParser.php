@@ -94,7 +94,15 @@ class PHPADD_ParamParser
 	
 	private function isPublisher($param)
 	{
-		return preg_match(self::PUBLISHER_MATCHER, $param, $matches);
+		return preg_match(self::PUBLISHER_MATCHER, $param, $matches) && $this->hasPublisher($matches['name']);
+	}
+	
+	private function hasPublisher($type)
+	{
+		$type = ucfirst($type);
+		$class = "PHPADD_Publisher_" . $type;
+		
+		return @class_exists($class);
 	}
 
 	private function addPublisher($switch, $outputFile)

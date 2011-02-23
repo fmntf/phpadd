@@ -120,7 +120,7 @@ class ParamParserTest extends PHPUnit_Framework_TestCase
 	
 	/**
 	 * @expectedException PHPADD_Exception_InvalidArgument
-	 * @xxexpectedExceptionMessage Invalid source directory
+	 * @expectedExceptionMessage Invalid source directory
 	 */
 	public function testChecksIfSourceDirectoryExists()
 	{
@@ -128,6 +128,15 @@ class ParamParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_ParamParser($params);
 	}
 	
+	/**
+	 * @expectedException PHPADD_Exception_InvalidArgument
+	 * @expectedExceptionMessage Invalid argument
+	 */
+	public function testChecksIfTheParserIsInvalid()
+	{
+		$params = array('--publish-dummy', '-', '.');
+		$parser = new PHPADD_ParamParser($params);
+	}
 	
 	private function assertPublisher($publisher, $type, $destination)
 	{
