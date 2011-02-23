@@ -25,10 +25,12 @@
 abstract class PHPADD_Publisher_Abstract
 {
 	protected $destination;
+	protected $statsOnly;
 	
-	public function __construct($argument)
+	public function __construct($argument, $statsOnly = false)
 	{
 		$this->destination = $argument;
+		$this->statsOnly = $statsOnly;
 	}
 
 	abstract public function publish(PHPADD_Result_Analysis $mess);	

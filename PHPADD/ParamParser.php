@@ -115,8 +115,10 @@ class PHPADD_ParamParser
 		if ($outputFile == "-") {
 			$outputFile = "php://stdout";
 		}
+		
+		$statsOnly = isset($matches['stats']);
 
-		$this->publishers[] = new $class($outputFile);
+		$this->publishers[] = new $class($outputFile, $statsOnly);
 	}
 
 	public function getSkipPrivate()

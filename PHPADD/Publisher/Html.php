@@ -39,18 +39,20 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 	{
 		$output = $this->getHeader();
 		$output .= $this->getStats($mess);
+		
+		if (!$this->statsOnly) {
+			foreach ($mess->getDirtyFiles() as $file) {
+				$output .= "\t<h1>".$file->getName()."</h1>" . PHP_EOL;
 
-		foreach ($mess->getDirtyFiles() as $file) {
-			$output .= "\t<h1>".$file->getName()."</h1>" . PHP_EOL;
+				foreach ($file->getClasses() as $class) {
 
-			foreach ($file->getClasses() as $class) {
+					$output .= "\t\t<h2>".$class->getName().":".$class->getStartline()."</h2>" . PHP_EOL;
 
-				$output .= "\t\t<h2>".$class->getName().":".$class->getStartline()."</h2>" . PHP_EOL;
-
-				foreach ($class->getMethods() as $method) {
-					$output .= "\t\t\t<h3>Method: " . $method->getName() . "</h3>\t\t\t<ul>" . PHP_EOL;
-					$output .= "\t\t\t\t<li>" . implode('</li><li>', $method->toList()) . '</li>' . PHP_EOL;
-					$output .= "\t\t\t</ul>\n";
+					foreach ($class->getMethods() as $method) {
+						$output .= "\t\t\t<h3>Method: " . $method->getName() . "</h3>\t\t\t<ul>" . PHP_EOL;
+						$output .= "\t\t\t\t<li>" . implode('</li><li>', $method->toList()) . '</li>' . PHP_EOL;
+						$output .= "\t\t\t</ul>\n";
+					}
 				}
 			}
 		}
