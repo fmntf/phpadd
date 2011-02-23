@@ -23,8 +23,12 @@
 
 function phpadd_autoload($class)
 {
-	$path = str_replace('_', '/', $class) . '.php';
-	require_once $path;
+	$prefix = realpath(__DIR__ . '/../') . '/';
+	$file = str_replace('_', '/', $class) . '.php';
+	
+	if (is_file($prefix . $file)) {
+		require_once $prefix . $file;
+	}
 }
 
 spl_autoload_register('phpadd_autoload');
