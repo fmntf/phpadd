@@ -14,7 +14,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testAnalyzesAllMethods()
 	{
 		$parser = new PHPADD_Parser('Example');
-		$analysis = $parser->analyze('classname', $this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		$this->assertInstanceOf('PHPADD_Result_Class', $analysis);
 
@@ -28,7 +28,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testIgnoresBlankSpaces()
 	{
 		$parser = new PHPADD_Parser('ValidWithSpacesExample');
-		$analysis = $parser->analyze('classname', $this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();
@@ -41,7 +41,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	{
 		$parser = new PHPADD_Parser('Example');
 		$noProtectedFilter = new PHPADD_Filter(false, false);
-		$analysis = $parser->analyze('classname', $noProtectedFilter);
+		$analysis = $parser->analyze($noProtectedFilter);
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();
@@ -54,7 +54,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testDetectsMissingParametersInDocBlocks()
 	{
 		$parser = new PHPADD_Parser('InvalidMissingExample');
-		$analysis = $parser->analyze('classname', $this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();
@@ -71,7 +71,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testDetectsMissingParametersInPhp()
 	{
 		$parser = new PHPADD_Parser('InvalidRemovedExample');
-		$analysis = $parser->analyze('classname', $this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();
@@ -91,7 +91,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testSkipsValidDocBlocks($className)
 	{
 		$parser = new PHPADD_Parser($className);
-		$analysis = $parser->analyze('classname', new PHPADD_Filter(false, false));
+		$analysis = $parser->analyze(new PHPADD_Filter(false, false));
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();
@@ -115,7 +115,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testFindsInvalidDocBlocks($className, $error)
 	{
 		$parser = new PHPADD_Parser($className);
-		$analysis = $parser->analyze('classname', $this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();
@@ -151,7 +151,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testIgnoresMethodsOfParentClasses()
 	{
 		$parser = new PHPADD_Parser('Extension_Extended');
-		$analysis = $parser->analyze('classname', $this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();
@@ -165,7 +165,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testDoesNotExplodeOnMalformedDocblocks()
 	{
 		$parser = new PHPADD_Parser('MalformedBlocks');
-		$analysis = $parser->analyze('classname', $this->filter);
+		$analysis = $parser->analyze($this->filter);
 
 		// if no notices are generated, this test passes
 	}

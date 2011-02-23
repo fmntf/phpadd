@@ -72,6 +72,6 @@ class PHPADD_Detector
 	{
 		$parser = new PHPADD_Parser($className);
 
-		return $parser->analyze($className, $this->filter);
+		return $parser->analyze($this->filter);
 	}
 }
