@@ -49,7 +49,7 @@ class PHPADD_ParamParser
 				case '--bootstrap':
 					$this->bootstrap = $params[++$i];
 					if (!is_file($this->bootstrap)) {
-						throw new PHPADD_Exception_InvalidArgument('Not a file: ' . $this->bootstrap);
+						throw new PHPADD_Exception_InvalidArgument('Invalid bootstrap: ' . $this->bootstrap . ' is not a file.');
 					}
 					break;
 
@@ -81,7 +81,7 @@ class PHPADD_ParamParser
 
 		$this->path = $params[$i];
 		if (!is_dir($this->path)) {
-			throw new PHPADD_Exception_InvalidArgument('Not a directory: ' . $this->path);
+			throw new PHPADD_Exception_InvalidArgument('Invalid source directory: ' . $this->path);
 		}
 	}
 
