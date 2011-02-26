@@ -23,7 +23,7 @@
 
 class PHPADD_Cli
 {
-	const VERSION = '1.1.0';
+	const VERSION = '1.2.0';
 
 	private $skipProtected = false;
 	private $skipPrivate = false;
