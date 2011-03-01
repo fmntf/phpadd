@@ -139,6 +139,40 @@ class ParamParserTest extends PHPUnit_Framework_TestCase
 		$parser = new PHPADD_ParamParser($params);
 	}
 	
+	public function testExcludesSingleElements()
+	{
+		$params = array('--exclude-path', 'fixtures',
+						'--exclude-class', 'ViewModel',
+						'--exclude-method', '__construct',
+						'--publish-xml', '-', '.');
+		$parser = new PHPADD_ParamParser($params);
+
+		$expectedPaths = array('fixtures');
+		$expectedClasses = array('ViewModel');
+		$expectedMethods = array('__construct');
+		
+		$this->assertEquals($expectedPaths, $parser->getExcludedPaths());
+		$this->assertEquals($expectedClasses, $parser->getExcludedClasses());
+		$this->assertEquals($expectedMethods, $parser->getExcludedMethods());
+	}
+	
+	public function testExcludesMultipleElements()
+	{
+		$params = array('--exclude-path', 'fixtures', '--exclude-path', 'jack',
+						'--exclude-class', 'ViewModel', '--exclude-class', 'kate',
+						'--exclude-method', '__construct', '--exclude-method', 'hugo',
+						'--publish-xml', '-', '.');
+		$parser = new PHPADD_ParamParser($params);
+
+		$expectedPaths = array('fixtures', 'jack');
+		$expectedClasses = array('ViewModel', 'kate');
+		$expectedMethods = array('__construct', 'hugo');
+		
+		$this->assertEquals($expectedPaths, $parser->getExcludedPaths());
+		$this->assertEquals($expectedClasses, $parser->getExcludedClasses());
+		$this->assertEquals($expectedMethods, $parser->getExcludedMethods());
+	}
+	
 	private function assertPublisher($publisher, $type, $destination)
 	{
 		$ref = new ReflectionObject($publisher);
