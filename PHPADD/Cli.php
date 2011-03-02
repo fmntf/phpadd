@@ -32,22 +32,6 @@ class PHPADD_Cli
 	private $path = null;
 	
 	/**
-	 * Ignores warnings on protected methods
-	 */
-	protected function blocksProtected()
-	{
-		return $this->skipProtected;
-	}
-
-	/**
-	 * Ignores warnings on private methods
-	 */
-	protected function blocksPrivate()
-	{
-		return $this->skipPrivate;
-	}
-
-	/**
 	 * Includes (require_once) the bootstrap, if any.
 	 */
 	private function includeBootstrap()
@@ -68,7 +52,7 @@ class PHPADD_Cli
 			$this->parseParams();
 			$this->includeBootstrap();
 			
-			$filter = new PHPADD_Filter(!$this->blocksProtected(), !$this->blocksPrivate());
+			$filter = new PHPADD_Filter(!$this->skipProtected, !$this->skipPrivate);
 			$detector = new PHPADD_Detector($filter);
 			
 			$mess = $detector->getMess($this->path);
