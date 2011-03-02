@@ -125,17 +125,17 @@ class PHPADD_ParamParser
 				}
 				break;
 				
-			case '--exclude-path':
+			case '--exclude-paths':
 				$this->excludedPaths[] = $argument;
 				unset($params[1]);
 				break;
 			
-			case '--exclude-class':
+			case '--exclude-classes':
 				$this->excludedClasses[] = $argument;
 				unset($params[1]);
 				break;
 			
-			case '--exclude-method':
+			case '--exclude-methods':
 				$this->excludedMethods[] = $argument;
 				unset($params[1]);
 				break;

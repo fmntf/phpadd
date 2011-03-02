@@ -141,9 +141,9 @@ class ParamParserTest extends PHPUnit_Framework_TestCase
 	
 	public function testExcludesSingleElements()
 	{
-		$params = array('--exclude-path', 'fixtures',
-						'--exclude-class', 'ViewModel',
-						'--exclude-method', '__construct',
+		$params = array('--exclude-paths', 'fixtures',
+						'--exclude-classes', 'ViewModel',
+						'--exclude-methods', '__construct',
 						'--publish-xml', '-', '.');
 		$parser = new PHPADD_ParamParser($params);
 
@@ -158,9 +158,9 @@ class ParamParserTest extends PHPUnit_Framework_TestCase
 	
 	public function testExcludesMultipleElements()
 	{
-		$params = array('--exclude-path', 'fixtures', '--exclude-path', 'jack',
-						'--exclude-class', 'ViewModel', '--exclude-class', 'kate',
-						'--exclude-method', '__construct', '--exclude-method', 'hugo',
+		$params = array('--exclude-paths', 'fixtures', '--exclude-paths', 'jack',
+						'--exclude-classes', 'ViewModel', '--exclude-classes', 'kate',
+						'--exclude-methods', '__construct', '--exclude-methods', 'hugo',
 						'--publish-xml', '-', '.');
 		$parser = new PHPADD_ParamParser($params);
 
