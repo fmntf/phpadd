@@ -28,13 +28,19 @@ class PHPADD_Detector
 	 * @var PHPADD_Filter
 	 */
 	protected $filter;
+	
+	/**
+	 * @var PHPADD_ScanFilter
+	 */
+	protected $scanFilter;
 
 	/**
 	 * @param PHPADD_Filter $filter
 	 */
-	public function __construct(PHPADD_Filter $filter)
+	public function __construct(PHPADD_ScanFilter $scanFilter, PHPADD_Filter $scopeFilter)
 	{
-		$this->filter = $filter;
+		$this->scanFilter = $scanFilter;
+		$this->filter = $scopeFilter;
 	}
 
 	/**

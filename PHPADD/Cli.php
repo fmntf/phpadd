@@ -27,6 +27,9 @@ class PHPADD_Cli
 
 	private $skipProtected = false;
 	private $skipPrivate = false;
+	private $excludedPaths = array();
+	private $excludedClasses = array();
+	private $excludedMethods = array();
 	private $bootstrap = null;
 	private $publishers = array();
 	private $path = null;
@@ -52,8 +55,9 @@ class PHPADD_Cli
 			$this->parseParams();
 			$this->includeBootstrap();
 			
-			$filter = new PHPADD_Filter(!$this->skipProtected, !$this->skipPrivate);
-			$detector = new PHPADD_Detector($filter);
+			$scopeFilter = new PHPADD_Filter(!$this->skipProtected, !$this->skipPrivate);
+			$scanFilter = new PHPADD_ScanFilter($this->excludedPaths, $this->excludedMethods, $this->excludedClasses);
+			$detector = new PHPADD_Detector($scanFilter, $scopeFilter);
 			
 			$mess = $detector->getMess($this->path);
 			foreach ($this->publishers as $publisher) {
@@ -112,6 +116,9 @@ class PHPADD_Cli
 
 		$this->skipProtected = $parser->getSkipProtected();
 		$this->skipPrivate = $parser->getSkipPrivate();
+		$this->excludedPaths = $parser->getExcludedPaths();
+		$this->excludedClasses = $parser->getExcludedClasses();
+		$this->excludedMethods = $parser->getExcludedMethods();
 		$this->bootstrap = $parser->getBootstrap();
 		$this->publishers = $parser->getPublishers();
 		$this->path = $parser->getPath();
