@@ -76,16 +76,25 @@ class PHPADD_Cli
 			"PHPADD v" . self::VERSION . PHP_EOL .
 			"Usage: phpadd [options] /directory/to/scan" .
 			PHP_EOL . PHP_EOL .
-			"Options:" . PHP_EOL .
-			"   --skip-protected    skips the scanning of protected methods" . PHP_EOL .
-			"   --skip-private      skips the scanning of private methods" . PHP_EOL .
-			"   --bootstrap file    includes `file` before the scan" . PHP_EOL .
-			PHP_EOL .
 			"At least one publisher must be given: ". PHP_EOL .
 			"   --publish-html  <file>     HTML output" . PHP_EOL .
 			"   --publish-xml   <file>     XML output" . PHP_EOL .
 			"   --publish-delim <file>     Tab delimited output" . PHP_EOL .
 			"   --publish-jsnon <file>     Tab delimited output" . PHP_EOL .
+			PHP_EOL .
+			"Options:" . PHP_EOL .
+			"   --skip-protected    skips the scanning of protected methods" . PHP_EOL .
+			"   --skip-private      skips the scanning of private methods" . PHP_EOL .
+			"   --bootstrap file    includes `file` before the scan" . PHP_EOL .
+			PHP_EOL .
+			"Additional options: ". PHP_EOL .
+			"   --exclude-paths <regex>    Skips all paths matching <regex>" . PHP_EOL .
+			"   --exclude-classes <regex>  Skips all classes matching <regex>" . PHP_EOL .
+			"   --exclude-methods <regex>  Skips all methods matching <regex>" . PHP_EOL .
+			"Regular expression examples:" . PHP_EOL .
+			"   Foo    matches strings containing Foo" . PHP_EOL .
+			"   ^Bar   matches strings starting with Bar" . PHP_EOL .
+			"   ^Bar$  matches only Bar" . PHP_EOL .
 			PHP_EOL .
 			"<file> may be a regular file or a dash (-) for stdout." . PHP_EOL .
 			"Appending '-stats' you can generate only general staticts" . PHP_EOL;
