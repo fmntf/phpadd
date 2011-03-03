@@ -59,7 +59,9 @@ class PHPADD_ClassFinder
 
 		foreach ($files as $file) {
 			$fileName = $file[0];
-			$classes[$fileName] = $this->processFile($fileName);
+			if (!$this->filter->isFiltered($fileName)) {
+				$classes[$fileName] = $this->processFile($fileName);
+			}
 		}
 
 		return $classes;
