@@ -6,8 +6,8 @@ class ClassFinderTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetsAListOfClassesInADirectory()
 	{
-		$scanFilter = new Tests_NullScanFilter;
-		$classFinder = new PHPADD_ClassFinder(self::PATH, $scanFilter);
+		$nullFilter = new Tests_NullScanFilter;
+		$classFinder = new PHPADD_ClassFinder(self::PATH, $nullFilter, $nullFilter);
 		
 		$expected = array(
 			self::PATH.'foo.php' => array('classfinder_foo'),
@@ -27,8 +27,9 @@ class ClassFinderTest extends PHPUnit_Framework_TestCase
 	
 	public function testSkipsPathsContainingFoo()
 	{
-		$scanFilter = new PHPADD_Filter_Directory(array('foo'));
-		$classFinder = new PHPADD_ClassFinder(self::PATH, $scanFilter);
+		$dirFilter = new PHPADD_Filter_Directory(array('foo'));
+		$nullFilter = new Tests_NullScanFilter;
+		$classFinder = new PHPADD_ClassFinder(self::PATH, $dirFilter, $nullFilter);
 		
 		$expected = array(
 			self::PATH.'bar.php' => array('classfinder_bar'),
@@ -41,8 +42,9 @@ class ClassFinderTest extends PHPUnit_Framework_TestCase
 	
 	public function testSkipsOnlyBarDirectory()
 	{
-		$scanFilter = new PHPADD_Filter_Directory(array('/bar/'));
-		$classFinder = new PHPADD_ClassFinder(self::PATH, $scanFilter);
+		$dirFilter = new PHPADD_Filter_Directory(array('/bar/'));
+		$nullFilter = new Tests_NullScanFilter;
+		$classFinder = new PHPADD_ClassFinder(self::PATH, $dirFilter, $nullFilter);
 		
 		$expected = array(
 			self::PATH.'foo.php' => array('classfinder_foo'),
@@ -52,6 +54,28 @@ class ClassFinderTest extends PHPUnit_Framework_TestCase
 			self::PATH.'foo/double.php' => array('classfinder_foo_doubleA', 'classfinder_foo_doubleB'),
 			self::PATH.'foobar/foo.php' => array('classfinder_foobar_foo'),
 			self::PATH.'foobar/double.php' => array('classfinder_foobar_doubleA', 'classfinder_foobar_doubleB'),
+		);
+		
+		$files = $classFinder->getList();
+		$this->assertOnFiles($expected, $files);
+	}
+	
+	public function testSkippesClassesContainingDouble()
+	{
+		$nullFilter = new Tests_NullScanFilter;
+		$classFilter = new PHPADD_Filter_Class(array('doubleA'));
+		$classFinder = new PHPADD_ClassFinder(self::PATH, $nullFilter, $classFilter);
+		
+		$expected = array(
+			self::PATH.'foo.php' => array('classfinder_foo'),
+			self::PATH.'bar.php' => array('classfinder_bar'),
+			self::PATH.'foobar.php' => array('classfinder_foobar'),
+			self::PATH.'foo/foo.php' => array('classfinder_foo_foo'),
+			self::PATH.'foo/double.php' => array('classfinder_foo_doubleB'),
+			self::PATH.'bar/foo.php' => array('classfinder_bar_foo'),
+			self::PATH.'bar/double.php' => array('classfinder_bar_doubleB'),
+			self::PATH.'foobar/foo.php' => array('classfinder_foobar_foo'),
+			self::PATH.'foobar/double.php' => array('classfinder_foobar_doubleB'),
 		);
 		
 		$files = $classFinder->getList();

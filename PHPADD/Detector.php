@@ -51,9 +51,12 @@ class PHPADD_Detector
 	 */
 	public function getMess($path)
 	{
+		$directoryFilter = $this->filterFactory->getDirectoryFilter();
+		$classFilter = $this->filterFactory->getClassFilter();
+		
 		$mess = new PHPADD_Result_Analysis();
 
-		$finder = new PHPADD_ClassFinder($path, $this->filterFactory->getDirectoryFilter());
+		$finder = new PHPADD_ClassFinder($path, $directoryFilter, $classFilter);
 		foreach ($finder->getList() as $file => $classes) {
 			$result = new PHPADD_Result_File($file);
 
