@@ -40,6 +40,7 @@ class PHPADD_Filter_Directory implements PHPADD_Filterable
 	public function isFiltered($directory)
 	{
 		foreach ($this->paths as $path) {
+			$path = str_replace("/", "\/", $path);
 			if (preg_match("/$path/", $directory)) {
 				return true;
 			}
