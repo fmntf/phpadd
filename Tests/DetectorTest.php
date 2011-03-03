@@ -106,6 +106,19 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(1, count($detail));
 		$this->assertEquals($expectedDetail, $detail[0]);
 	}
+	
+	public function testSkippesClasses()
+	{
+		$scanFilter = new PHPADD_FilterFactory(array(/*path*/), array('Invalid'), array());
+		$scopeFilter = new PHPADD_Filter(true, true);
+		$detector = new Unmasked_Detector($scanFilter, $scopeFilter);
+		
+		$mess = $detector->getMess(__DIR__ . '/fixtures/dirty');
+		$files = $mess->getDirtyFiles();
+		$classes = $files[0]->getClasses();
+		
+		$this->assertEquals(1, count($classes));
+	}
 }
 
 class Unmasked_Detector extends PHPADD_Detector
