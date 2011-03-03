@@ -30,18 +30,18 @@ class PHPADD_ClassFinder
 	private $path;
 	
 	/**
-	 * @var PHPADD_ScanFilter
+	 * @var PHPADD_Filterable
 	 */
-	private $scanFilter;
+	private $filter;
 
 	/**
 	 * @param string $path Directory path
-	 * @param PHPADD_ScanFilter $scanFilter
+	 * @param PHPADD_Filterable $filter
 	 */
-	public function __construct($path, PHPADD_ScanFilter $scanFilter)
+	public function __construct($path, PHPADD_Filterable $filter)
 	{
 		$this->path = $path;
-		$this->scanFilter = $scanFilter;
+		$this->filter = $filter;
 	}
 
 	/**

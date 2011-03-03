@@ -6,7 +6,7 @@ class ClassFinderTest extends PHPUnit_Framework_TestCase
 	
 	public function testGetsAListOfClassesInADirectory()
 	{
-		$scanFilter = new PHPADD_ScanFilter(array(), array(), array()); // @todo use NullScanFilter
+		$scanFilter = new Tests_NullScanFilter;
 		$classFinder = new PHPADD_ClassFinder(self::PATH, $scanFilter);
 		
 		$files = $classFinder->getList();

@@ -30,16 +30,16 @@ class PHPADD_Detector
 	protected $filter;
 	
 	/**
-	 * @var PHPADD_ScanFilter
+	 * @var PHPADD_FilterFactory
 	 */
-	protected $scanFilter;
+	protected $filterFactory;
 
 	/**
 	 * @param PHPADD_Filter $filter
 	 */
-	public function __construct(PHPADD_ScanFilter $scanFilter, PHPADD_Filter $scopeFilter)
+	public function __construct(PHPADD_FilterFactory $filterFactory, PHPADD_Filter $scopeFilter)
 	{
-		$this->scanFilter = $scanFilter;
+		$this->filterFactory = $filterFactory;
 		$this->filter = $scopeFilter;
 	}
 
@@ -53,7 +53,7 @@ class PHPADD_Detector
 	{
 		$mess = new PHPADD_Result_Analysis();
 
-		$finder = new PHPADD_ClassFinder($path);
+		$finder = new PHPADD_ClassFinder($path, $this->filterFactory->getDirectoryFilter());
 		foreach ($finder->getList() as $file => $classes) {
 			$result = new PHPADD_Result_File($file);
 

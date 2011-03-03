@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_ScanFilter
+class PHPADD_FilterFactory
 {
 	private $paths;
 	private $classes;
@@ -36,54 +36,32 @@ class PHPADD_ScanFilter
 	}
 	
 	/**
-	 * Returns true if the given directory has to be scanned.
+	 * Builds a directory filter
 	 * 
-	 * @param string $directory
-	 * @return bool
+	 * @return PHPADD_Filter_Directory
 	 */
-	public function keepsDirectory($directory)
+	public function getDirectoryFilter()
 	{
-		return $this->keeps($this->paths, $directory);
+		return new PHPADD_Filter_Directory($this->paths);
 	}
 	
 	/**
-	 * Returns true if the given class has to be scanned.
+	 * Builds a class filter
 	 * 
-	 * @param string $class
-	 * @return bool
+	 * @return PHPADD_Filter_Class
 	 */
-	public function keepsClass($class)
+	public function getClassFilter()
 	{
-		return $this->keeps($this->classes, $class);
+		return new PHPADD_Filter_Class($this->classes);
 	}
 	
 	/**
-	 * Returns true if the given method has to be scanned.
+	 * Builds a method filter
 	 * 
-	 * @param string $class
-	 * @return bool
+	 * @return PHPADD_Filter_Method
 	 */
-	public function keepsMethod($method)
+	public function getMethodFilter()
 	{
-		return $this->keeps($this->methods, $method);
-	}
-	
-	/**
-	 * Returns true if $test has to be scanned, starting from an
-	 * array of banning regular expressions. 
-	 * 
-	 * @param array $matchers banning regular expressions
-	 * @param string $test
-	 * @return bool
-	 */
-	private function keeps($matchers, $test)
-	{
-		foreach ($matchers as $matcher) {
-			if (preg_match("/$matcher/", $test)) {
-				return false;
-			}
-		}
-		
-		return true;
+		return new PHPADD_Filter_Method($this->methods);
 	}
 }

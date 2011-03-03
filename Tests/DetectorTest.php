@@ -4,7 +4,7 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$scanFilter = new PHPADD_ScanFilter(array(), array(), array());
+		$scanFilter = new PHPADD_FilterFactory(array(), array(), array());
 		$scopeFilter = new PHPADD_Filter(true, true);
 		$this->detector = new Unmasked_Detector($scanFilter, $scopeFilter);
 	}
