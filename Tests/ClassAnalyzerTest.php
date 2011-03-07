@@ -192,11 +192,16 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		}
 	}
 	
+	public function testAnalyzesInheritdoc()
+	{
+		$this->markTestIncomplete();
+	}
+	
 	private function assertMethodNotContains($method, $name)
 	{
 		if (strstr($method->getName(), $name)) {
 			$this->fail('We found the method '.$method->getName().' that was not supposed to be scanned.');
 		}
 	}
-
+	
 }
