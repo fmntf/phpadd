@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Parser
+class PHPADD_ClassAnalyzer
 {
 	/**
 	 * @var ReflectionClass

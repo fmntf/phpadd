@@ -13,7 +13,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testAnalyzesAllMethods()
 	{
-		$parser = new PHPADD_Parser('Example');
+		$parser = new PHPADD_ClassAnalyzer('Example');
 		$analysis = $parser->analyze($this->filter);
 
 		$this->assertInstanceOf('PHPADD_Result_Class', $analysis);
@@ -27,7 +27,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testIgnoresBlankSpaces()
 	{
-		$parser = new PHPADD_Parser('ValidWithSpacesExample');
+		$parser = new PHPADD_ClassAnalyzer('ValidWithSpacesExample');
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -39,7 +39,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testAnalyzesOnlyPublicMethods()
 	{
-		$parser = new PHPADD_Parser('Example');
+		$parser = new PHPADD_ClassAnalyzer('Example');
 		$noProtectedFilter = new PHPADD_Filter(false, false);
 		$analysis = $parser->analyze($noProtectedFilter);
 
@@ -53,7 +53,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testDetectsMissingParametersInDocBlocks()
 	{
-		$parser = new PHPADD_Parser('InvalidMissingExample');
+		$parser = new PHPADD_ClassAnalyzer('InvalidMissingExample');
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -70,7 +70,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testDetectsMissingParametersInPhp()
 	{
-		$parser = new PHPADD_Parser('InvalidRemovedExample');
+		$parser = new PHPADD_ClassAnalyzer('InvalidRemovedExample');
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -90,7 +90,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testSkipsValidDocBlocks($className)
 	{
-		$parser = new PHPADD_Parser($className);
+		$parser = new PHPADD_ClassAnalyzer($className);
 		$analysis = $parser->analyze(new PHPADD_Filter(false, false));
 
 		$missing = $analysis->getMissingBlocks();
@@ -114,7 +114,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testFindsInvalidDocBlocks($className, $error)
 	{
-		$parser = new PHPADD_Parser($className);
+		$parser = new PHPADD_ClassAnalyzer($className);
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -150,7 +150,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testIgnoresMethodsOfParentClasses()
 	{
-		$parser = new PHPADD_Parser('Extension_Extended');
+		$parser = new PHPADD_ClassAnalyzer('Extension_Extended');
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -164,7 +164,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testDoesNotExplodeOnMalformedDocblocks()
 	{
-		$parser = new PHPADD_Parser('MalformedBlocks');
+		$parser = new PHPADD_ClassAnalyzer('MalformedBlocks');
 		$analysis = $parser->analyze($this->filter);
 
 		// if no notices are generated, this test passes
