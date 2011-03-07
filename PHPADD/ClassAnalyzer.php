@@ -49,9 +49,8 @@ class PHPADD_ClassAnalyzer
 
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 			/* @var $method ReflectionMethod */
-
-			if ($this->reflection->name !== $method->getDeclaringClass()->name) {
-				// is not in this class
+			
+			if ($this->methodBelongsToParentClass($method)) {
 				continue;
 			}
 
@@ -70,6 +69,11 @@ class PHPADD_ClassAnalyzer
 		return $mess;
 	}
 
+	private function methodBelongsToParentClass(ReflectionMethod $method)
+	{
+		return $this->reflection->name !== $method->getDeclaringClass()->name;
+	}
+	
 	private function createMissing(ReflectionMethod $method)
 	{
 		return new PHPADD_Result_Mess_MissingBlock($method->name);
