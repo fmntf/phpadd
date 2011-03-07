@@ -79,7 +79,7 @@ class PHPADD_Detector
 	 */
 	private function analyze($className)
 	{
-		$parser = new PHPADD_ClassAnalyzer($className);
+		$parser = new PHPADD_ClassAnalyzer($className, $this->filterFactory->getMethodFilter());
 
 		return $parser->analyze($this->filter);
 	}

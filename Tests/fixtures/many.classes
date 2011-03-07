@@ -1,0 +1,26 @@
+<?php
+
+class ClassWithManyMethods
+{
+	/**
+	 * @param string $x
+	 */
+	public function firstValid($x) {}
+	
+	/**
+	 * @param DateTime $y
+	 */
+	public function secondValid(DateTime $y) {}
+	
+	/**
+	 * @param string $y
+	 */
+	public function firstInvalid($x) {}
+	
+	/**
+	 * @param DateTime $y
+	 */
+	public function secondInvalid() {}
+	
+	public function thirdInvalid() {}
+}

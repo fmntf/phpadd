@@ -3,17 +3,19 @@
 require_once 'fixtures/sample.classes';
 require_once 'fixtures/extension.classes';
 require_once 'fixtures/malformed.classes';
+require_once 'fixtures/many.classes';
 
 class ParserTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
+		$this->nullMethodFilter = new Tests_NullScanFilter;
 		$this->filter = new PHPADD_Filter();
 	}
 
 	public function testAnalyzesAllMethods()
 	{
-		$parser = new PHPADD_ClassAnalyzer('Example');
+		$parser = new PHPADD_ClassAnalyzer('Example', $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
 
 		$this->assertInstanceOf('PHPADD_Result_Class', $analysis);
@@ -27,7 +29,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testIgnoresBlankSpaces()
 	{
-		$parser = new PHPADD_ClassAnalyzer('ValidWithSpacesExample');
+		$parser = new PHPADD_ClassAnalyzer('ValidWithSpacesExample', $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -39,7 +41,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testAnalyzesOnlyPublicMethods()
 	{
-		$parser = new PHPADD_ClassAnalyzer('Example');
+		$parser = new PHPADD_ClassAnalyzer('Example', $this->nullMethodFilter);
 		$noProtectedFilter = new PHPADD_Filter(false, false);
 		$analysis = $parser->analyze($noProtectedFilter);
 
@@ -53,7 +55,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testDetectsMissingParametersInDocBlocks()
 	{
-		$parser = new PHPADD_ClassAnalyzer('InvalidMissingExample');
+		$parser = new PHPADD_ClassAnalyzer('InvalidMissingExample', $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -70,7 +72,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testDetectsMissingParametersInPhp()
 	{
-		$parser = new PHPADD_ClassAnalyzer('InvalidRemovedExample');
+		$parser = new PHPADD_ClassAnalyzer('InvalidRemovedExample', $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -90,7 +92,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testSkipsValidDocBlocks($className)
 	{
-		$parser = new PHPADD_ClassAnalyzer($className);
+		$parser = new PHPADD_ClassAnalyzer($className, $this->nullMethodFilter);
 		$analysis = $parser->analyze(new PHPADD_Filter(false, false));
 
 		$missing = $analysis->getMissingBlocks();
@@ -114,7 +116,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testFindsInvalidDocBlocks($className, $error)
 	{
-		$parser = new PHPADD_ClassAnalyzer($className);
+		$parser = new PHPADD_ClassAnalyzer($className, $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -150,7 +152,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 
 	public function testIgnoresMethodsOfParentClasses()
 	{
-		$parser = new PHPADD_ClassAnalyzer('Extension_Extended');
+		$parser = new PHPADD_ClassAnalyzer('Extension_Extended', $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -161,10 +163,9 @@ class ParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals('b', $missing[0]->getName());
 	}
 
-
 	public function testDoesNotExplodeOnMalformedDocblocks()
 	{
-		$parser = new PHPADD_ClassAnalyzer('MalformedBlocks');
+		$parser = new PHPADD_ClassAnalyzer('MalformedBlocks', $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
 
 		// if no notices are generated, this test passes
@@ -173,6 +174,29 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testReportsMalformedDocblocks()
 	{
 		$this->markTestIncomplete('we have to decide how to report them');
+	}
+	
+	public function testSkipsMethodsByName()
+	{
+		$methodFilter = new PHPADD_Filter_Method(array('Invalid$'));
+		$parser = new PHPADD_ClassAnalyzer('ClassWithManyMethods', $methodFilter);
+		$analysis = $parser->analyze($this->filter);
+		
+		$this->assertTrue($analysis->getRegularBlocks() > 0);
+		
+		foreach ($analysis->getMissingBlocks() as $method) {
+			$this->assertMethodNotContains($method, 'Invalid');
+		}
+		foreach ($analysis->getOutdatedBlocks() as $method) {
+			$this->assertMethodNotContains($method, 'Invalid');
+		}
+	}
+	
+	private function assertMethodNotContains($method, $name)
+	{
+		if (strstr($method->getName(), $name)) {
+			$this->fail('We found the method '.$method->getName().' that was not supposed to be scanned.');
+		}
 	}
 
 }

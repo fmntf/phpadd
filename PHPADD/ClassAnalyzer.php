@@ -28,13 +28,19 @@ class PHPADD_ClassAnalyzer
 	 * @var ReflectionClass
 	 */
 	private $reflection;
+	
+	/**
+	 * @var PHPADD_Filterable
+	 */
+	private $methodFilter;
 
 	/**
 	 * @param string $class
 	 */
-	public function __construct($class)
+	public function __construct($class, PHPADD_Filterable $methodFilter)
 	{
 		$this->reflection = new ReflectionClass($class);
+		$this->methodFilter = $methodFilter;
 	}
 
 	/**
@@ -50,7 +56,8 @@ class PHPADD_ClassAnalyzer
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 			/* @var $method ReflectionMethod */
 			
-			if ($this->methodBelongsToParentClass($method)) {
+			if ($this->methodFilter->isFiltered($method->getName()) ||
+				$this->methodBelongsToParentClass($method)) {
 				continue;
 			}
 
