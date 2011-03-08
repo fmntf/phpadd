@@ -4,8 +4,9 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$filter = new PHPADD_Filter(true, true);
-		$this->detector = new Unmasked_Detector($filter);
+		$scanFilter = new PHPADD_Filter_Factory(array(), array(), array());
+		$scopeFilter = new PHPADD_Filter_Visibility(true, true);
+		$this->detector = new Unmasked_Detector($scanFilter, $scopeFilter);
 	}
 
 	public function testDelegatesanalysisToParser()
@@ -104,6 +105,19 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 		$expectedDetail = array('type' => 'unexpected-param', 'name' => '$name');
 		$this->assertEquals(1, count($detail));
 		$this->assertEquals($expectedDetail, $detail[0]);
+	}
+	
+	public function testSkippesClasses()
+	{
+		$scanFilter = new PHPADD_Filter_Factory(array(/*path*/), array('Invalid'), array());
+		$scopeFilter = new PHPADD_Filter_Visibility(true, true);
+		$detector = new Unmasked_Detector($scanFilter, $scopeFilter);
+		
+		$mess = $detector->getMess(__DIR__ . '/fixtures/dirty');
+		$files = $mess->getDirtyFiles();
+		$classes = $files[0]->getClasses();
+		
+		$this->assertEquals(1, count($classes));
 	}
 }
 

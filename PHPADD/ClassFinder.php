@@ -28,13 +28,27 @@ class PHPADD_ClassFinder
 	 * @var string
 	 */
 	private $path;
+	
+	/**
+	 * @var PHPADD_Filterable
+	 */
+	private $directoryFilter;
+	
+	/**
+	 * @var PHPADD_Filterable
+	 */
+	private $classFilter;
 
 	/**
 	 * @param string $path Directory path
+	 * @param PHPADD_Filterable $filter
 	 */
-	public function __construct($path)
-	{
+	public function __construct($path, PHPADD_Filterable $directoryFilter,
+		PHPADD_Filterable $classFilter
+	) {
 		$this->path = $path;
+		$this->directoryFilter = $directoryFilter;
+		$this->classFilter = $classFilter;
 	}
 
 	/**
@@ -52,7 +66,9 @@ class PHPADD_ClassFinder
 
 		foreach ($files as $file) {
 			$fileName = $file[0];
-			$classes[$fileName] = $this->processFile($fileName);
+			if (!$this->directoryFilter->isFiltered($fileName)) {
+				$classes[$fileName] = $this->processFile($fileName);
+			}
 		}
 
 		return $classes;
@@ -71,7 +87,10 @@ class PHPADD_ClassFinder
 		$tokens = token_get_all(file_get_contents($fileName));
 		foreach ($tokens as $i => $token) {
 			if ($token[0] == T_CLASS) {
-				$classes[] = $this->getNextClass($tokens, $i);
+				$className = $this->getClassName($tokens, $i);
+				if (!$this->classFilter->isFiltered($className)) {
+					$classes[] = $className;
+				}
 			}
 		}
 
@@ -85,7 +104,8 @@ class PHPADD_ClassFinder
 	 * @param int $i Ignore tokens before i (token[i] is T_CLASS)
 	 * @return string class name
 	 */
-	private function getNextClass(array $tokens, $i) {
+	private function getClassName(array $tokens, $i)
+	{
 		for ($i; $i < count($tokens); $i++) {
 			if ($tokens[$i][0] == T_STRING) {
 				return $tokens[$i][1];

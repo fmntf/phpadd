@@ -49,7 +49,22 @@ class PHPADD_ParamParser
 	/**
 	 * @var array User-requested publishers
 	 */
-	private $publishers;
+	private $publishers = array();
+	
+	/**
+	 * @var array User-excluded paths
+	 */
+	private $excludedPaths = array();
+	
+	/**
+	 * @var array User-excluded method names
+	 */
+	private $excludedMethods = array();
+	
+	/**
+	 * @var array User-excluded class names
+	 */
+	private $excludedClasses = array();
 	
 	const PUBLISHER_MATCHER = '/\-\-publish\-(?P<name>\w+)(?P<stats>\-stats)?/';
 
@@ -108,6 +123,21 @@ class PHPADD_ParamParser
 				if (!is_file($this->bootstrap)) {
 					throw new PHPADD_Exception_InvalidArgument('Invalid bootstrap: ' . $this->bootstrap . ' is not a file.');
 				}
+				break;
+				
+			case '--exclude-paths':
+				$this->excludedPaths[] = $argument;
+				unset($params[1]);
+				break;
+			
+			case '--exclude-classes':
+				$this->excludedClasses[] = $argument;
+				unset($params[1]);
+				break;
+			
+			case '--exclude-methods':
+				$this->excludedMethods[] = $argument;
+				unset($params[1]);
 				break;
 				
 			default:
@@ -218,5 +248,35 @@ class PHPADD_ParamParser
 	public function getPublishers()
 	{
 		return $this->publishers;
+	}
+	
+	/**
+	 * Returns a list of user excluded paths.
+	 * 
+	 * @return array
+	 */
+	public function getExcludedPaths()
+	{
+		return $this->excludedPaths;
+	}
+	
+	/**
+	 * Returns a list of user excluded class names.
+	 * 
+	 * @return array
+	 */
+	public function getExcludedClasses()
+	{
+		return $this->excludedClasses;
+	}
+	
+	/**
+	 * Returns a list of user excluded method names.
+	 * 
+	 * @return array
+	 */
+	public function getExcludedMethods()
+	{
+		return $this->excludedMethods;
 	}
 }

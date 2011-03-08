@@ -22,36 +22,42 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Parser
+class PHPADD_ClassAnalyzer
 {
 	/**
 	 * @var ReflectionClass
 	 */
 	private $reflection;
+	
+	/**
+	 * @var PHPADD_Filterable
+	 */
+	private $methodFilter;
 
 	/**
 	 * @param string $class
 	 */
-	public function __construct($class)
+	public function __construct($class, PHPADD_Filterable $methodFilter)
 	{
 		$this->reflection = new ReflectionClass($class);
+		$this->methodFilter = $methodFilter;
 	}
 
 	/**
 	 * Analyzes the class with the given filtering level.
 	 *
-	 * @param PHPADD_Filter $filter
+	 * @param PHPADD_Filter_Visibility $filter
 	 * @return PHPADD_Result_Class Found mess
 	 */
-	public function analyze(PHPADD_Filter $filter)
+	public function analyze(PHPADD_Filter_Visibility $filter)
 	{
 		$mess = new PHPADD_Result_Class($this->reflection);
 
 		foreach ($this->reflection->getMethods($filter->getLevel()) as $method) {
 			/* @var $method ReflectionMethod */
-
-			if ($this->reflection->name !== $method->getDeclaringClass()->name) {
-				// is not in this class
+			
+			if ($this->methodFilter->isFiltered($method->getName()) ||
+				$this->methodBelongsToParentClass($method)) {
 				continue;
 			}
 
@@ -70,6 +76,11 @@ class PHPADD_Parser
 		return $mess;
 	}
 
+	private function methodBelongsToParentClass(ReflectionMethod $method)
+	{
+		return $this->reflection->name !== $method->getDeclaringClass()->name;
+	}
+	
 	private function createMissing(ReflectionMethod $method)
 	{
 		return new PHPADD_Result_Mess_MissingBlock($method->name);

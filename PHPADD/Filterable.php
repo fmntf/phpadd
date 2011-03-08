@@ -22,39 +22,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_Filter
+interface PHPADD_Filterable
 {
-	/**
-	 * @var bool
-	 */
-	private $scanProtected;
-	
-	/**
-	 * @var bool
-	 */
-	private $scanPrivate;
-	
-	/**
-	 * @param bool $scanProtected
-	 * @param bool $scanPrivate
-	 */
-	public function __construct($scanProtected = true, $scanPrivate = true)
-	{
-		$this->scanProtected = $scanProtected;
-		$this->scanPrivate = $scanPrivate;
-	}
-
-	/**
-	 * Prepares a mask to access class methods
-	 *
-	 * @return int
-	 */
-	public function getLevel()
-	{
-		$level = ReflectionMethod::IS_PUBLIC;
-		if ($this->scanProtected) $level += ReflectionMethod::IS_PROTECTED;
-		if ($this->scanPrivate) $level += ReflectionMethod::IS_PRIVATE;
-
-		return $level;
-	}
+	public function isFiltered($filterableElement);
 }
