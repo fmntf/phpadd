@@ -56,8 +56,8 @@ class PHPADD_Cli
 			$this->includeBootstrap();
 			
 			$scopeFilter = new PHPADD_Filter(!$this->skipProtected, !$this->skipPrivate);
-			$scanFilter = new PHPADD_ScanFilter($this->excludedPaths, $this->excludedMethods, $this->excludedClasses);
-			$detector = new PHPADD_Detector($scanFilter, $scopeFilter);
+			$filterFactory = new PHPADD_FilterFactory($this->excludedPaths, $this->excludedMethods, $this->excludedClasses);
+			$detector = new PHPADD_Detector($filterFactory, $scopeFilter);
 			
 			$mess = $detector->getMess($this->path);
 			foreach ($this->publishers as $publisher) {
