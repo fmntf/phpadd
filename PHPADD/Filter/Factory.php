@@ -22,7 +22,7 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html  GNU GPL 3.0
  */
 
-class PHPADD_FilterFactory
+class PHPADD_Filter_Factory
 {
 	private $paths;
 	private $classes;

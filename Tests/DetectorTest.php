@@ -4,8 +4,8 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$scanFilter = new PHPADD_FilterFactory(array(), array(), array());
-		$scopeFilter = new PHPADD_Filter(true, true);
+		$scanFilter = new PHPADD_Filter_Factory(array(), array(), array());
+		$scopeFilter = new PHPADD_Filter_Visibility(true, true);
 		$this->detector = new Unmasked_Detector($scanFilter, $scopeFilter);
 	}
 
@@ -109,8 +109,8 @@ class DetectorTest extends PHPUnit_Framework_TestCase
 	
 	public function testSkippesClasses()
 	{
-		$scanFilter = new PHPADD_FilterFactory(array(/*path*/), array('Invalid'), array());
-		$scopeFilter = new PHPADD_Filter(true, true);
+		$scanFilter = new PHPADD_Filter_Factory(array(/*path*/), array('Invalid'), array());
+		$scopeFilter = new PHPADD_Filter_Visibility(true, true);
 		$detector = new Unmasked_Detector($scanFilter, $scopeFilter);
 		
 		$mess = $detector->getMess(__DIR__ . '/fixtures/dirty');

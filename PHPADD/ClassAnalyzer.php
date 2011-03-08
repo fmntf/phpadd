@@ -46,10 +46,10 @@ class PHPADD_ClassAnalyzer
 	/**
 	 * Analyzes the class with the given filtering level.
 	 *
-	 * @param PHPADD_Filter $filter
+	 * @param PHPADD_Filter_Visibility $filter
 	 * @return PHPADD_Result_Class Found mess
 	 */
-	public function analyze(PHPADD_Filter $filter)
+	public function analyze(PHPADD_Filter_Visibility $filter)
 	{
 		$mess = new PHPADD_Result_Class($this->reflection);
 

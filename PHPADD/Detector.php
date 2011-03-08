@@ -25,19 +25,19 @@
 class PHPADD_Detector
 {
 	/**
-	 * @var PHPADD_Filter
+	 * @var PHPADD_Filter_Visibility
 	 */
 	protected $filter;
 	
 	/**
-	 * @var PHPADD_FilterFactory
+	 * @var PHPADD_Filter_Factory
 	 */
 	protected $filterFactory;
 
 	/**
-	 * @param PHPADD_Filter $filter
+	 * @param PHPADD_Filter_Visibility $filter
 	 */
-	public function __construct(PHPADD_FilterFactory $filterFactory, PHPADD_Filter $scopeFilter)
+	public function __construct(PHPADD_Filter_Factory $filterFactory, PHPADD_Filter_Visibility $scopeFilter)
 	{
 		$this->filterFactory = $filterFactory;
 		$this->filter = $scopeFilter;

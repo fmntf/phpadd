@@ -10,7 +10,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->nullMethodFilter = new Tests_NullScanFilter;
-		$this->filter = new PHPADD_Filter();
+		$this->filter = new PHPADD_Filter_Visibility();
 	}
 
 	public function testAnalyzesAllMethods()
@@ -42,7 +42,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testAnalyzesOnlyPublicMethods()
 	{
 		$parser = new PHPADD_ClassAnalyzer('Example', $this->nullMethodFilter);
-		$noProtectedFilter = new PHPADD_Filter(false, false);
+		$noProtectedFilter = new PHPADD_Filter_Visibility(false, false);
 		$analysis = $parser->analyze($noProtectedFilter);
 
 		$missing = $analysis->getMissingBlocks();
@@ -93,7 +93,7 @@ class ParserTest extends PHPUnit_Framework_TestCase
 	public function testSkipsValidDocBlocks($className)
 	{
 		$parser = new PHPADD_ClassAnalyzer($className, $this->nullMethodFilter);
-		$analysis = $parser->analyze(new PHPADD_Filter(false, false));
+		$analysis = $parser->analyze(new PHPADD_Filter_Visibility(false, false));
 
 		$missing = $analysis->getMissingBlocks();
 		$outdated = $analysis->getOutdatedBlocks();

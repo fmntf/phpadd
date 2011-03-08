@@ -1,10 +1,10 @@
 <?php
 
-class FilterFactoryTest extends PHPUnit_Framework_TestCase
+class Filter_FactoryTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->filter = new PHPADD_FilterFactory(
+		$this->filter = new PHPADD_Filter_Factory(
 			array('funnyLlama'), array('fuzzyLLama'), array('llamaLlamaDuck')
 		);
 	}
