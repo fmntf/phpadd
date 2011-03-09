@@ -3,7 +3,7 @@
 class Application_IndexController
 {
 	/**
-	 * No params here!
+	 * This is valid!
 	 */
 	public function indexAction()
 	{
