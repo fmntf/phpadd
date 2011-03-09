@@ -126,6 +126,7 @@ class PHPADD_ParamParser
 				break;
 				
 			case '--exclude-paths':
+				$argument = $this->parsePath($argument);
 				$this->excludedPaths[] = $argument;
 				unset($params[1]);
 				break;
@@ -198,6 +199,20 @@ class PHPADD_ParamParser
 		$statsOnly = isset($matches['stats']);
 
 		$this->publishers[] = new $class($outputFile, $statsOnly);
+	}
+	
+	/**
+	 * Replaces wildcards and dots in the path.
+	 * 
+	 * @param string $argument
+	 * @return string Regexp friendly path
+	 */
+	private function parsePath($argument)
+	{
+		$argument = str_replace('.', '\.', $argument);
+		$argument = str_replace('*', '.*', $argument);
+		
+		return $argument;
 	}
 
 	/**

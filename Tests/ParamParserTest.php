@@ -173,6 +173,16 @@ class ParamParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expectedMethods, $parser->getExcludedMethods());
 	}
 	
+	public function testReplacesDotsAndWildcardsInPaths()
+	{
+		$params = array('--exclude-paths', 'my/*.php', '--publish-xml', '-', '.');
+		$parser = new PHPADD_ParamParser($params);
+
+		$expectedPaths = array('my/.*\.php');
+		
+		$this->assertEquals($expectedPaths, $parser->getExcludedPaths());
+	}
+	
 	private function assertPublisher($publisher, $type, $destination)
 	{
 		$ref = new ReflectionObject($publisher);
