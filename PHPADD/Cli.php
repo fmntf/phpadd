@@ -86,6 +86,10 @@ class PHPADD_Cli
 			"   --publish-delim <file>     Tab delimited output" . PHP_EOL .
 			"   --publish-jsnon <file>     Tab delimited output" . PHP_EOL .
 			PHP_EOL .
+			"<file> may be a regular file or a dash (-) for stdout." . PHP_EOL .
+			"Appending '-stats' you can generate only general statistics" . PHP_EOL . 
+			"instead of the full report (e.g. --publish-html-stats <file>)" . PHP_EOL .
+			PHP_EOL .
 			"Options:" . PHP_EOL .
 			"   --skip-protected    skips the scanning of protected methods" . PHP_EOL .
 			"   --skip-private      skips the scanning of private methods" . PHP_EOL .
@@ -95,14 +99,11 @@ class PHPADD_Cli
 			"   --exclude-paths <regex>    Skips all paths matching <regex>" . PHP_EOL .
 			"   --exclude-classes <regex>  Skips all classes matching <regex>" . PHP_EOL .
 			"   --exclude-methods <regex>  Skips all methods matching <regex>" . PHP_EOL .
-			"Regular expression examples:" . PHP_EOL .
+			PHP_EOL .
+			"Regular expression revise:" . PHP_EOL .
 			"   Foo    matches strings containing Foo" . PHP_EOL .
 			"   ^Bar   matches strings starting with Bar" . PHP_EOL .
-			"   ^Bar$  matches only Bar" . PHP_EOL .
-			PHP_EOL .
-			"<file> may be a regular file or a dash (-) for stdout." . PHP_EOL .
-			"Appending '-stats' you can generate only general staticts" . PHP_EOL;
-			"instead of the full report (e.g. --publish-html-stats <file>)" . PHP_EOL;
+			"   ^Bar$  matches only Bar" . PHP_EOL;
 	}
 
 	/**
