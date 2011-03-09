@@ -1,6 +1,6 @@
 <?php
 
-class CliTest extends PHPUnit_Framework_TestCase
+class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 {
 	const BOOTSTRAP_PATH = '/tmp/phpadd-clitest-bootstrap.php';
 	

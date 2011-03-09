@@ -2,7 +2,7 @@
 
 require_once '../PHPADD/ParamParser.php';
 
-class ParamParserTest extends PHPUnit_Framework_TestCase
+class PHPADD_ParamParserTest extends PHPUnit_Framework_TestCase
 {
 	public function getPublishers()
 	{

@@ -5,7 +5,7 @@ require_once 'fixtures/extension.classes';
 require_once 'fixtures/malformed.classes';
 require_once 'fixtures/many.classes';
 
-class ParserTest extends PHPUnit_Framework_TestCase
+class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{

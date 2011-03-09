@@ -1,6 +1,6 @@
 <?php
 
-class DetectorTest extends PHPUnit_Framework_TestCase
+class PHPADD_DetectorTest extends PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{

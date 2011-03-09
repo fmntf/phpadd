@@ -1,6 +1,6 @@
 <?php
 
-class ClassFinderTest extends PHPUnit_Framework_TestCase
+class PHPADD_ClassFinderTest extends PHPUnit_Framework_TestCase
 {
 	const PATH = 'fixtures/classfinder/';
 	
