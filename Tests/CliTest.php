@@ -132,37 +132,3 @@ class CliTest extends PHPUnit_Framework_TestCase
 		return $expectedFiles;
 	}
 }
-
-
-/*["fixtures/application/controllers/index.php"]=>
-    array(1) {
-      ["Application_IndexController"]=>
-      array(2) {
-        ["doSomething"]=>
-        array(2) {
-          [0]=>
-          string(36) "Missing parameter: - <code>$z</code>"
-          [1]=>
-          string(39) "Unexpected parameter: - <code>$y</code>"
-        }
-      }
-    }
-    ["fixtures/application/models/post.php"]=>
-    array(1) {
-      ["Application_Model_Post"]=>
-      array(5) {
-        ["deleteComments"]=>
-        array(2) {
-          [0]=>
-          string(57) "Missing parameter: - <code>DateTime $olderThanDate</code>"
-          [1]=>
-          string(51) "Unexpected parameter: - <code>$olderThanDate</code>"
-        }
-      }
-    }
-    ["fixtures/application/models/user.php"]=>
-    array(1) {
-      ["Application_Model_User"]=>
-      array(1) {
-      }
-*/
