@@ -56,7 +56,7 @@ class PHPADD_Cli
 			$this->includeBootstrap();
 			
 			$scopeFilter = new PHPADD_Filter_Visibility(!$this->skipProtected, !$this->skipPrivate);
-			$filterFactory = new PHPADD_Filter_Factory($this->excludedPaths, $this->excludedMethods, $this->excludedClasses);
+			$filterFactory = new PHPADD_Filter_Factory($this->excludedPaths, $this->excludedClasses, $this->excludedMethods);
 			$detector = new PHPADD_Detector($filterFactory, $scopeFilter);
 			
 			$mess = $detector->getMess($this->path);

@@ -45,21 +45,54 @@ class CliTest extends PHPUnit_Framework_TestCase
 		));
 	}
 	
-	private function getOutput()
+	public function testSkippesPrivateMethods()
+	{
+		$output = $this->getOutput('--skip-private');
+		
+		$this->assertOnOutdatedBlocks($output['report'], array(
+			'fixtures/application/models/post.php' => array(
+				'Application_Model_Post' => array('deleteComments'),
+			),
+		));
+	}
+	
+	public function testSkipsSetters()
+	{
+		$output = $this->getOutput('--exclude-methods ^set');
+		
+		$this->assertOnStats($output['stats'], 4, 9, 5, 2, 2);
+		
+		$this->assertOnMissingBlocks($output['report'], array(
+			'fixtures/application/controllers/index.php' => array(
+				'Application_IndexController' => array('someAction'),
+			),
+			'fixtures/application/models/post.php' => array(
+				'Application_Model_Post' => array('clearVisitStats'),
+			),
+		));
+	}
+	
+	private function getOutput($switches = '')
 	{
 		$bootstrap = '--bootstrap ' . self::BOOTSTRAP_PATH;
-		$result = exec("php ../phpadd.php --publish-json - $bootstrap fixtures/application");
+		$result = exec("php ../phpadd.php --publish-json - $bootstrap $switches fixtures/application");
 		
-		return json_decode($result, true);
+		$decoded = json_decode($result, true);
+		
+		if (!$decoded) {
+			$this->fail('The command was not successful: ' . $result);
+		}
+		
+		return $decoded;
 	}
 	
 	private function assertOnStats($stats, $noFiles, $noMethods, $regular, $missing, $outdated)
 	{
-		$this->assertEquals($noFiles, $stats['files-count']);
-		$this->assertEquals($noMethods, $stats['methods-count']);
-		$this->assertEquals($regular, $stats['regular-blocks']);
-		$this->assertEquals($missing, $stats['missing-blocks']);
-		$this->assertEquals($outdated, $stats['outdated-blocks']);
+		$this->assertEquals($noFiles, $stats['files-count'], 'Unexpected number of files');
+		$this->assertEquals($noMethods, $stats['methods-count'], 'Unexpected number of methods');
+		$this->assertEquals($regular, $stats['regular-blocks'], 'Unexpected number of regular docblocks');
+		$this->assertEquals($missing, $stats['missing-blocks'], 'Unexpected number of missing docblocks');
+		$this->assertEquals($outdated, $stats['outdated-blocks'], 'Unexpected number of outdateddocblocks');
 	}
 	
 	private function assertOnMissingBlocks(array $report, array $expectedFiles)
