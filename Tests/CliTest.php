@@ -21,14 +21,16 @@ class CliTest extends PHPUnit_Framework_TestCase
 		$this->assertNotNull($output['stats']);
 		$this->assertNotNull($output['report']);
 		
-		$this->assertOnStats($output['stats'], 4, 14, 6, 6, 2);
+		$this->assertOnStats($output['stats'], 4, 16, 6, 8, 2);
 		
 		$this->assertOnMissingBlocks($output['report'], array(
 			'fixtures/application/controllers/index.php' => array(
 				'Application_IndexController' => array('someAction'),
 			),
 			'fixtures/application/models/post.php' => array(
-				'Application_Model_Post' => array('setTitle', 'setText', 'setAuthor', 'clearVisitStats'),
+				'Application_Model_Post' => array(
+					'setTitle', 'setText', 'setAuthor', 'clearVisitStats', '__construct', '__constructor'
+				),
 			),
 			'fixtures/application/models/user.php' => array(
 				'Application_Model_User' => array('setUsername'),
@@ -60,14 +62,44 @@ class CliTest extends PHPUnit_Framework_TestCase
 	{
 		$output = $this->getOutput('--exclude-methods ^set');
 		
-		$this->assertOnStats($output['stats'], 4, 9, 5, 2, 2);
+		$this->assertOnStats($output['stats'], 4, 11, 5, 4, 2);
 		
 		$this->assertOnMissingBlocks($output['report'], array(
 			'fixtures/application/controllers/index.php' => array(
 				'Application_IndexController' => array('someAction'),
 			),
 			'fixtures/application/models/post.php' => array(
-				'Application_Model_Post' => array('clearVisitStats'),
+				'Application_Model_Post' => array('clearVisitStats', '__construct', '__constructor'),
+			),
+		));
+	}
+	
+	public function testSkipsConstructors()
+	{
+		$output = $this->getOutput('--exclude-methods ^__construct$');
+		
+		$this->assertOnStats($output['stats'], 4, 15, 6, 7, 2);
+		
+		$this->assertOnMissingBlocks($output['report'], array(
+			'fixtures/application/controllers/index.php' => array(
+				'Application_IndexController' => array('someAction'),
+			),
+			'fixtures/application/models/post.php' => array(
+				'Application_Model_Post' => array(
+					'setTitle', 'setText', 'setAuthor', 'clearVisitStats', '__constructor'
+				),
+			),
+			'fixtures/application/models/user.php' => array(
+				'Application_Model_User' => array('setUsername'),
+			),
+		));
+		
+		$this->assertOnOutdatedBlocks($output['report'], array(
+			'fixtures/application/controllers/index.php' => array(
+				'Application_IndexController' => array('doSomething'),
+			),
+			'fixtures/application/models/post.php' => array(
+				'Application_Model_Post' => array('deleteComments'),
 			),
 		));
 	}

@@ -6,6 +6,16 @@ class Application_Model_Post
 	private $text;
 	private $author;
 	
+	public function __construct()
+	{
+		$this->posts = array();
+	}
+	
+	// this is fake!
+	private function __constructor()
+	{
+	}
+	
 	public function setTitle($title)
 	{
 	}
