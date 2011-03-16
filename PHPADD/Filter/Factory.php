@@ -24,10 +24,27 @@
 
 class PHPADD_Filter_Factory
 {
+	/**
+	 * @var array
+	 */
 	private $paths;
+	
+	/**
+	 * @var array
+	 */
 	private $classes;
+	
+	/**
+	 * @var array
+	 */
 	private $methods;
 	
+	/**
+	 *
+	 * @param array $paths Regular expressions of paths to exclude
+	 * @param array $classes Regular expressions of class names to exclude
+	 * @param array $methods  Regular expressions of method names to exclude
+	 */
 	public function __construct(array $paths, array $classes, array $methods)
 	{
 		$this->paths = $paths;

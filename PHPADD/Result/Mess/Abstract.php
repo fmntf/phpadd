@@ -24,24 +24,50 @@
 
 abstract class PHPADD_Result_Mess_Abstract
 {
+	/**
+	 * @var string
+	 */
 	protected $methodName;
+	
+	/**
+	 * @var array
+	 */
 	protected $detail;
 
+	/**
+	 * @param string $methodName
+	 * @param array $detail 
+	 */
 	public function __construct($methodName, array $detail = array())
 	{
 		$this->methodName = $methodName;
 		$this->detail = $detail;
 	}
 
+	/**
+	 * Get the method name
+	 * 
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->methodName;
 	}
 
+	/**
+	 * Get the mistakes on this block
+	 * 
+	 * @return array
+	 */
 	public function getDetail()
 	{
 		return $this->detail;
 	}
 
+	/**
+	 * Template method to provide a list of mistakes on the method.
+	 * 
+	 * @return array
+	 */
 	abstract public function toList();
 }

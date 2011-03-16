@@ -24,8 +24,14 @@
 
 class PHPADD_Filter_Method implements PHPADD_Filterable
 {
+	/**
+	 * @var array
+	 */
 	private $methods;
 	
+	/**
+	 * @param array $methods List of regexp of excluded method names
+	 */
 	public function __construct(array $methods)
 	{
 		$this->methods = $methods;
@@ -34,7 +40,7 @@ class PHPADD_Filter_Method implements PHPADD_Filterable
 	/**
 	 * Returns true if the given method has NOT to be scanned.
 	 * 
-	 * @param string $directory
+	 * @param string $method
 	 * @return bool
 	 */
 	public function isFiltered($method)

@@ -24,8 +24,14 @@
 
 class PHPADD_Filter_Class implements PHPADD_Filterable
 {
+	/**
+	 * @var array
+	 */
 	private $classes;
 	
+	/**
+	 * @param array $classes List of regexp of excluded class names
+	 */
 	public function __construct(array $classes)
 	{
 		$this->classes = $classes;

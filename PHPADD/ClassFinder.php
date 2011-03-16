@@ -40,8 +40,9 @@ class PHPADD_ClassFinder
 	private $classFilter;
 
 	/**
-	 * @param string $path Directory path
-	 * @param PHPADD_Filterable $filter
+	 * @param string $path Path of the directory to scan
+	 * @param PHPADD_Filterable $directoryFilter Filter used to exclude directories
+	 * @param PHPADD_Filterable $classFilter Filter used to exclude classes
 	 */
 	public function __construct($path, PHPADD_Filterable $directoryFilter,
 		PHPADD_Filterable $classFilter
@@ -77,7 +78,7 @@ class PHPADD_ClassFinder
 	/**
 	 * Get the classes inside the given file.
 	 * 
-	 * @param string $fileName File path
+	 * @param string $fileName Path of the file to process
 	 * @return array
 	 */
 	private function processFile($fileName)

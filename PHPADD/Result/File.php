@@ -24,28 +24,60 @@
 
 class PHPADD_Result_File
 {
+	/**
+	 * @var array
+	 */
 	protected $classes = array();
+	
+	/**
+	 * @var string
+	 */
 	protected $filename;
 
-	public function __construct($filename) {
+	/**
+	 * @param string $filename
+	 */
+	public function __construct($filename)
+	{
 		$this->filename = $filename;
 	}
 
+	/**
+	 * Get file name
+	 * 
+	 * @return string
+	 */
 	public function getName()
 	{
 		return $this->filename;
 	}
 
+	/**
+	 * Get the number of classes
+	 * 
+	 * @return int
+	 */
 	public function getCount()
 	{
 		return count($this->classes);
 	}
 
+	/**
+	 * Get the classes in this file
+	 * 
+	 * @return array
+	 */
 	public function getClasses()
 	{
 		return $this->classes;
 	}
 	
+	/**
+	 * Adds a class (result) to the file.
+	 * 
+	 * @param string $className
+	 * @param PHPADD_Result_Class $mess 
+	 */
 	public function addClassResult($className, PHPADD_Result_Class $mess)
 	{
 		$this->classes[$className] = $mess;

@@ -36,6 +36,7 @@ class PHPADD_ClassAnalyzer
 
 	/**
 	 * @param string $class
+	 * @param PHPADD_Filterable $methodFilter
 	 */
 	public function __construct($class, PHPADD_Filterable $methodFilter)
 	{
@@ -76,26 +77,58 @@ class PHPADD_ClassAnalyzer
 		return $mess;
 	}
 
+	/**
+	 * Detects if the given method is defined in the parent class or not.
+	 * 
+	 * @param ReflectionMethod $method
+	 * @return bool
+	 */
 	private function methodBelongsToParentClass(ReflectionMethod $method)
 	{
 		return $this->reflection->name !== $method->getDeclaringClass()->name;
 	}
 	
+	/**
+	 * Factory method for "missing docblock".
+	 * 
+	 * @param ReflectionMethod $method
+	 * @return PHPADD_Result_Mess_MissingBlock 
+	 */
 	private function createMissing(ReflectionMethod $method)
 	{
 		return new PHPADD_Result_Mess_MissingBlock($method->name);
 	}
 
-	private function createOutdated(ReflectionMethod $method, $detail)
+	/**
+	 * Factory method for "outdated docblock".
+	 * 
+	 * @param ReflectionMethod $method
+	 * @param array $detail
+	 * @return PHPADD_Result_Mess_OutdatedBlock 
+	 */
+	private function createOutdated(ReflectionMethod $method, array $detail)
 	{
 		return new PHPADD_Result_Mess_OutdatedBlock($method->name, $detail);
 	}
 
+	/**
+	 * Checks if the method is without docblock or not.
+	 * 
+	 * @param ReflectionMethod $method
+	 * @return bool
+	 */
 	private function isDocBlockMissing(ReflectionMethod $method)
 	{
 		return $method->getDocComment() === false;
 	}
 
+	/**
+	 * Gets a list of params found in the PHP source code.
+	 * A parameter may be "$param" or "array $param".
+	 * 
+	 * @param ReflectionMethod $method
+	 * @return array
+	 */
 	private function getPhpParams(ReflectionMethod $method)
 	{
 		$params = array();
@@ -120,6 +153,14 @@ class PHPADD_ClassAnalyzer
 		return $params;
 	}
 
+	/**
+	 * Gets a list of params found in the docblock.
+	 * A parameter may be "$param" or "array $param".
+	 * If the type is primite, it will not be included.
+	 * 
+	 * @param ReflectionMethod $method
+	 * @return array
+	 */
 	private function getDocBlockParams(ReflectionMethod $method)
 	{
 		$params = array();
@@ -144,6 +185,11 @@ class PHPADD_ClassAnalyzer
 		return $params;
 	}
 
+	/**
+	 * Detects param type and name by a string like "string $x" or "$var".
+	 * @param string $parameter
+	 * @return array
+	 */
 	private function getParameterTypeAndName($parameter)
 	{
 		$parameterParts = preg_split("/[\s]+/", $parameter);
@@ -186,20 +232,35 @@ class PHPADD_ClassAnalyzer
 
 		$unexpected = array_values(array_diff($docIssues, $phpIssues));
 		foreach ($unexpected as $param) {
+			var_dump($param);
+			die();
 			$errors[] = $this->createError('unexpected-param', $param);
 		}
 
 		return $errors;
 	}
 
-	private function createError($type, $name)
+	/**
+	 * Factory method for docblock error.
+	 * 
+	 * @param string $type Can be missing-param or unexpected-param
+	 * @param string $param Could be "array $list"
+	 * @return array
+	 */
+	private function createError($type, $param)
 	{
 		return array(
 			'type' => $type,
-			'name' => $name
+			'name' => $param
 		);
 	}
 
+	/**
+	 * Gets a list of annotations from docblock text.
+	 * 
+	 * @param string $docblock
+	 * @return array
+	 */
 	private function parseAnnotations($docblock)
 	{
 		$annotations = array();

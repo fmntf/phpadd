@@ -24,8 +24,14 @@
 
 class PHPADD_Filter_Directory implements PHPADD_Filterable
 {
+	/**
+	 * @var array
+	 */
 	private $paths;
 	
+	/**
+	 * @param array $paths List of regexp of excluded paths
+	 */
 	public function __construct(array $paths)
 	{
 		$this->paths = $paths;

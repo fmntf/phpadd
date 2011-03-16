@@ -24,7 +24,9 @@
 
 class PHPADD_Result_Mess_OutdatedBlock extends PHPADD_Result_Mess_Abstract
 {
-
+	/**
+	 * @override
+	 */
 	public function toList()
 	{
 		$list = array();
@@ -36,6 +38,12 @@ class PHPADD_Result_Mess_OutdatedBlock extends PHPADD_Result_Mess_Abstract
 		return $list;
 	}
 
+	/**
+	 * Associates a printable label to the internal code of error type.
+	 * 
+	 * @param string $symbolic
+	 * @return string
+	 */
 	private function getType($symbolic)
 	{
 		switch ($symbolic) {

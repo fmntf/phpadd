@@ -24,13 +24,26 @@
 
 class PHPADD_Result_Analysis
 {
+	/**
+	 * @var array
+	 */
 	protected $files = array();
 
+	/**
+	 * Adds a file result to the analysis.
+	 * 
+	 * @param PHPADD_Result_File $mess 
+	 */
 	public function addFileResult(PHPADD_Result_File $mess)
 	{
 		$this->files[] = $mess;
 	}
 
+	/**
+	 * Gets the count of scanned files.
+	 * 
+	 * @return int
+	 */
 	public function getCount()
 	{
 		return count($this->files);
@@ -38,6 +51,7 @@ class PHPADD_Result_Analysis
 
 	/**
 	 * Gets all scanned files
+	 * 
 	 * @return array
 	 */
 	public function getFiles()
@@ -47,6 +61,7 @@ class PHPADD_Result_Analysis
 
 	/**
 	 * Gets only scanned files with issues
+	 * 
 	 * @return array
 	 */
 	public function getDirtyFiles()

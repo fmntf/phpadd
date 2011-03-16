@@ -35,7 +35,8 @@ class PHPADD_Detector
 	protected $filterFactory;
 
 	/**
-	 * @param PHPADD_Filter_Visibility $filter
+	 * @param PHPADD_Filter_Factory $filterFactory Used to create directory, class and method filters
+	 * @param PHPADD_Filter_Visibility $scopeFilter Used to prevent the scan of private/protected methods
 	 */
 	public function __construct(PHPADD_Filter_Factory $filterFactory, PHPADD_Filter_Visibility $scopeFilter)
 	{
