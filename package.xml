@@ -16,8 +16,8 @@
 	<date>2011-02-26</date>
 	<time>12:00:00</time>
 	<version>
-		<release>1.2.0</release>
-		<api>1.2.0</api>
+		<release>1.3.0</release>
+		<api>1.3.0</api>
 	</version>
 	<stability>
 		<release>stable</release>
@@ -32,6 +32,13 @@
 			<dir name="PHPADD">
 				<dir name="Exception">
 					<file baseinstalldir="/" name="InvalidArgument.php" role="php" />
+				</dir>
+				<dir name="Filter">
+					<file baseinstalldir="/" name="Class.php" role="php" />
+					<file baseinstalldir="/" name="Directory.php" role="php" />
+					<file baseinstalldir="/" name="Factory.php" role="php" />
+					<file baseinstalldir="/" name="Method.php" role="php" />
+					<file baseinstalldir="/" name="Visibility.php" role="php" />
 				</dir>
 				<dir name="Publisher">
 					<file baseinstalldir="/" name="Abstract.php" role="php" />
@@ -50,12 +57,12 @@
 					<file baseinstalldir="/" name="Class.php" role="php" />
 					<file baseinstalldir="/" name="File.php" role="php" />
 				</dir>
+				<file baseinstalldir="/" name="ClassAnalyzer.php" role="php" />
 				<file baseinstalldir="/" name="ClassFinder.php" role="php" />
 				<file baseinstalldir="/" name="Cli.php" role="php" />
 				<file baseinstalldir="/" name="Detector.php" role="php" />
-				<file baseinstalldir="/" name="Filter.php" role="php" />
+				<file baseinstalldir="/" name="Filterable.php" role="php" />
 				<file baseinstalldir="/" name="ParamParser.php" role="php" />
-				<file baseinstalldir="/" name="Parser.php" role="php" />
 				<file baseinstalldir="/" name="Stats.php" role="php" />
 				<file baseinstalldir="/" name="autoload.php" role="php" />
 			</dir>
