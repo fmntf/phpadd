@@ -232,8 +232,6 @@ class PHPADD_ClassAnalyzer
 
 		$unexpected = array_values(array_diff($docIssues, $phpIssues));
 		foreach ($unexpected as $param) {
-			var_dump($param);
-			die();
 			$errors[] = $this->createError('unexpected-param', $param);
 		}
 
