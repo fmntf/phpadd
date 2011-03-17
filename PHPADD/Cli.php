@@ -78,7 +78,7 @@ class PHPADD_Cli
 	{
 		return
 			"PHPADD v" . self::VERSION . PHP_EOL .
-			"Usage: phpadd [options] /directory/to/scan" .
+			"Usage: phpadd [options] <publisher> /directory/to/scan" .
 			PHP_EOL . PHP_EOL .
 			"At least one publisher must be given: ". PHP_EOL .
 			"   --publish-html  <file>     HTML output" . PHP_EOL .
@@ -95,7 +95,7 @@ class PHPADD_Cli
 			"   --skip-private      skips the scanning of private methods" . PHP_EOL .
 			"   --bootstrap file    includes `file` before the scan" . PHP_EOL .
 			PHP_EOL .
-			"Additional options: ". PHP_EOL .
+			"Filters: ". PHP_EOL .
 			"   --exclude-paths <regex>    Skips all paths matching <regex>" . PHP_EOL .
 			"   --exclude-classes <regex>  Skips all classes matching <regex>" . PHP_EOL .
 			"   --exclude-methods <regex>  Skips all methods matching <regex>" . PHP_EOL .
@@ -103,7 +103,8 @@ class PHPADD_Cli
 			"Regular expression revise:" . PHP_EOL .
 			"   Foo    matches strings containing Foo" . PHP_EOL .
 			"   ^Bar   matches strings starting with Bar" . PHP_EOL .
-			"   ^Bar$  matches only Bar" . PHP_EOL;
+			"   ^Bar$  matches only Bar" . PHP_EOL .
+			"The character `*` is allowed meaning everything in every quanity." . PHP_EOL;
 	}
 
 	/**
