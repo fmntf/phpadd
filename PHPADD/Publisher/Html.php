@@ -47,23 +47,42 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 		$output .= $this->getStats($mess);
 		
 		if (!$this->statsOnly) {
-			foreach ($mess->getDirtyFiles() as $file) {
-				$output .= "\t<h1>".$file->getName()."</h1>" . PHP_EOL;
-
-				foreach ($file->getClasses() as $class) {
-
-					$output .= "\t\t<h2>".$class->getName().":".$class->getStartline()."</h2>" . PHP_EOL;
-
-					foreach ($class->getMethods() as $method) {
-						$output .= "\t\t\t<h3>Method: " . $method->getName() . "</h3>\t\t\t<ul>" . PHP_EOL;
-						$output .= "\t\t\t\t<li>" . implode('</li><li>', $method->toList()) . '</li>' . PHP_EOL;
-						$output .= "\t\t\t</ul>\n";
-					}
-				}
+			$dirtyFiles = $mess->getDirtyFiles();
+			if (count($dirtyFiles == 0)) {
+				$output .= '<p>It seems there are no abandoned docblocks on the scanned files!</p>';
+			} else {
+				$output .= $this->getAbandoned($dirtyFiles);
 			}
 		}
 
 		$output .= $this->getFooter();
+		return $output;
+	}
+	
+	/**
+	 * Get abandoned files - classes - methods.
+	 * 
+	 * @param array $dirtyFiles
+	 * @return string HTML output
+	 */
+	private function getAbandoned(array $dirtyFiles)
+	{
+		$output = '';
+		foreach ($dirtyFiles as $file) {
+			$output .= "\t<h1>".$file->getName()."</h1>" . PHP_EOL;
+
+			foreach ($file->getClasses() as $class) {
+
+				$output .= "\t\t<h2>".$class->getName().":".$class->getStartline()."</h2>" . PHP_EOL;
+
+				foreach ($class->getMethods() as $method) {
+					$output .= "\t\t\t<h3>Method: " . $method->getName() . "</h3>\t\t\t<ul>" . PHP_EOL;
+					$output .= "\t\t\t\t<li>" . implode('</li><li>', $method->toList()) . '</li>' . PHP_EOL;
+					$output .= "\t\t\t</ul>\n";
+				}
+			}
+		}
+		
 		return $output;
 	}
 
