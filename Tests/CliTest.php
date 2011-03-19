@@ -51,7 +51,7 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 		));
 	}
 	
-	public function testSkippesPrivateMethods()
+	public function testSkipsPrivateMethods()
 	{
 		$output = $this->getOutput('--skip-private');
 		

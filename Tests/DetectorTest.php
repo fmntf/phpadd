@@ -107,7 +107,7 @@ class PHPADD_DetectorTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expectedDetail, $detail[0]);
 	}
 	
-	public function testSkippesClasses()
+	public function testSkipsClasses()
 	{
 		$scanFilter = new PHPADD_Filter_Factory(array(/*path*/), array('Invalid'), array());
 		$scopeFilter = new PHPADD_Filter_Visibility(true, true);

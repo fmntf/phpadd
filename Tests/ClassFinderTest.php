@@ -60,7 +60,7 @@ class PHPADD_ClassFinderTest extends PHPUnit_Framework_TestCase
 		$this->assertOnFiles($expected, $files);
 	}
 	
-	public function testSkippesClassesContainingDouble()
+	public function testSkipsClassesContainingDouble()
 	{
 		$nullFilter = new Tests_NullScanFilter;
 		$classFilter = new PHPADD_Filter_Class(array('doubleA'));
