@@ -48,7 +48,7 @@ class PHPADD_Publisher_Html extends PHPADD_Publisher_Abstract
 		
 		if (!$this->statsOnly) {
 			$dirtyFiles = $mess->getDirtyFiles();
-			if (count($dirtyFiles == 0)) {
+			if (count($dirtyFiles) == 0) {
 				$output .= '<p>It seems there are no abandoned docblocks in the scanned files!</p>';
 			} else {
 				$output .= $this->getAbandoned($dirtyFiles);
