@@ -100,11 +100,12 @@ class PHPADD_Cli
 			"   --exclude-classes <regex>  Skips all classes matching <regex>" . PHP_EOL .
 			"   --exclude-methods <regex>  Skips all methods matching <regex>" . PHP_EOL .
 			PHP_EOL .
-			"Regular expression revise:" . PHP_EOL .
-			"   Foo    matches strings containing Foo" . PHP_EOL .
-			"   ^Bar   matches strings starting with Bar" . PHP_EOL .
-			"   ^Bar$  matches only Bar" . PHP_EOL .
-			"The character `*` is allowed meaning everything in every quanity." . PHP_EOL;
+			"Regular expression examples:" . PHP_EOL .
+			"   Foo            matches strings containing Foo" . PHP_EOL .
+			"   ^(g|s)et       matches getters and setters" . PHP_EOL .
+			"   ^__construct$  matches constructors" . PHP_EOL .
+			"The symbol `*` means \"everything in every quantity\"." . PHP_EOL .
+			"In your shell you may need to escape some symbols (e.g: ^\(s\|g\)et )." . PHP_EOL;
 	}
 
 	/**
