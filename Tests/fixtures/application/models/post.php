@@ -45,4 +45,9 @@ class Application_Model_Post
 	public function clearVisitStats()
 	{
 	}
+	
+	// missing invalid
+	public function getAuthor()
+	{
+	}
 }

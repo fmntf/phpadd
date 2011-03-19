@@ -21,7 +21,7 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 		$this->assertNotNull($output['stats']);
 		$this->assertNotNull($output['report']);
 		
-		$this->assertOnStats($output['stats'], 5, 18, 7, 9, 2);
+		$this->assertOnStats($output['stats'], 5, 19, 7, 10, 2);
 		
 		$this->assertOnMissingBlocks($output['report'], array(
 			'fixtures/application/controllers/index.php' => array(
@@ -32,7 +32,8 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 			),
 			'fixtures/application/models/post.php' => array(
 				'Application_Model_Post' => array(
-					'setTitle', 'setText', 'setAuthor', 'clearVisitStats', '__construct', '__constructor'
+					'setTitle', 'setText', 'setAuthor', 'clearVisitStats',
+					'__construct', '__constructor', 'getAuthor'
 				),
 			),
 			'fixtures/application/models/user.php' => array(
@@ -65,26 +66,7 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 	{
 		$output = $this->getOutput('--exclude-methods ^set');
 		
-		$this->assertOnStats($output['stats'], 5, 13, 6, 5, 2);
-		
-		$this->assertOnMissingBlocks($output['report'], array(
-			'fixtures/application/controllers/index.php' => array(
-				'Application_IndexController' => array('someAction'),
-			),
-			'fixtures/application/controllers/author.php' => array(
-				'Application_AuthorController' => array('blame'),
-			),
-			'fixtures/application/models/post.php' => array(
-				'Application_Model_Post' => array('clearVisitStats', '__construct', '__constructor'),
-			),
-		));
-	}
-	
-	public function testSkipsConstructors()
-	{
-		$output = $this->getOutput('--exclude-methods ^__construct$');
-		
-		$this->assertOnStats($output['stats'], 5, 17, 7, 8, 2);
+		$this->assertOnStats($output['stats'], 5, 14, 6, 6, 2);
 		
 		$this->assertOnMissingBlocks($output['report'], array(
 			'fixtures/application/controllers/index.php' => array(
@@ -95,7 +77,50 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 			),
 			'fixtures/application/models/post.php' => array(
 				'Application_Model_Post' => array(
-					'setTitle', 'setText', 'setAuthor', 'clearVisitStats', '__constructor'
+					'clearVisitStats', '__construct', '__constructor', 'getAuthor'
+				),
+			),
+		));
+	}
+	
+	public function testSkipsGettersAndSetters()
+	{
+		$output = $this->getOutput('--exclude-methods ^\(g\|s\)et');
+		
+		$this->assertOnStats($output['stats'], 5, 13, 6, 5, 2);
+		
+		$this->assertOnMissingBlocks($output['report'], array(
+			'fixtures/application/controllers/index.php' => array(
+				'Application_IndexController' => array('someAction'),
+			),
+			'fixtures/application/controllers/author.php' => array(
+				'Application_AuthorController' => array('blame'),
+			),
+			'fixtures/application/models/post.php' => array(
+				'Application_Model_Post' => array(
+					'clearVisitStats', '__construct', '__constructor'
+				),
+			),
+		));
+	}
+	
+	public function testSkipsConstructors()
+	{
+		$output = $this->getOutput('--exclude-methods ^__construct$');
+		
+		$this->assertOnStats($output['stats'], 5, 18, 7, 9, 2);
+		
+		$this->assertOnMissingBlocks($output['report'], array(
+			'fixtures/application/controllers/index.php' => array(
+				'Application_IndexController' => array('someAction'),
+			),
+			'fixtures/application/controllers/author.php' => array(
+				'Application_AuthorController' => array('blame'),
+			),
+			'fixtures/application/models/post.php' => array(
+				'Application_Model_Post' => array(
+					'setTitle', 'setText', 'setAuthor', 'clearVisitStats',
+					'__constructor', 'getAuthor'
 				),
 			),
 			'fixtures/application/models/user.php' => array(
@@ -117,7 +142,7 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 	{
 		$output = $this->getOutput('--exclude-paths application/*/author.php');
 		
-		$this->assertOnStats($output['stats'], 3, 14, 4, 8, 2);
+		$this->assertOnStats($output['stats'], 3, 15, 4, 9, 2);
 		
 		$this->assertOnMissingBlocks($output['report'], array(
 			'fixtures/application/controllers/index.php' => array(
@@ -125,7 +150,8 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 			),
 			'fixtures/application/models/post.php' => array(
 				'Application_Model_Post' => array(
-					'setTitle', 'setText', 'setAuthor', 'clearVisitStats', '__construct', '__constructor'
+					'setTitle', 'setText', 'setAuthor', 'clearVisitStats',
+					'__construct', '__constructor', 'getAuthor'
 				),
 			),
 			'fixtures/application/models/user.php' => array(
@@ -146,7 +172,8 @@ class PHPADD_CliTest extends PHPUnit_Framework_TestCase
 	private function getOutput($switches = '')
 	{
 		$bootstrap = '--bootstrap ' . self::BOOTSTRAP_PATH;
-		$result = exec("php ../phpadd.php --publish-json - $bootstrap $switches fixtures/application");
+		$cmd = "php ../phpadd.php --publish-json - $bootstrap $switches fixtures/application";
+		$result = exec($cmd);
 		
 		$decoded = json_decode($result, true);
 		
