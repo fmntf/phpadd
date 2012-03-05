@@ -1,0 +1,39 @@
+<?php
+
+interface Validable
+{
+	/**
+	 * @param array $what
+	 */
+	public function isValid(array $what);
+}
+
+class Field implements Validable
+{
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isValid(array $what)
+	{
+	}
+}
+
+class AstrValidable
+{
+	/**
+	 * @param array $what
+	 */
+	public function isValid(array $what)
+	{
+	}
+}
+
+class Button extends AstrValidable
+{
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isValid(array $what)
+	{
+	}
+}

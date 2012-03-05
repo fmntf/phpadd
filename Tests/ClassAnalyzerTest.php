@@ -3,6 +3,7 @@
 require_once 'fixtures/sample.classes';
 require_once 'fixtures/extension.classes';
 require_once 'fixtures/malformed.classes';
+require_once 'fixtures/inheritdoc.classes';
 require_once 'fixtures/many.classes';
 
 class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
@@ -66,8 +67,8 @@ class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
 		$detail = $outdated[0]->getDetail();
 
 		$this->assertEquals(1, count($detail));
-		$this->assertEquals('missing-param', $detail[0]['type']);
-		$this->assertEquals('$name', $detail[0]['name']);
+		$this->assertInstanceOf('PHPADD_Result_Mess_MissingParam', $detail[0]);
+		$this->assertEquals('$name', $detail[0]->name);
 	}
 
 	public function testDetectsMissingParametersInPhp()
@@ -83,8 +84,8 @@ class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
 		$detail = $outdated[0]->getDetail();
 
 		$this->assertEquals(1, count($detail));
-		$this->assertEquals('unexpected-param', $detail[0]['type']);
-		$this->assertEquals('$name', $detail[0]['name']);
+		$this->assertInstanceOf('PHPADD_Result_Mess_UnexpectedParam', $detail[0]);
+		$this->assertEquals('$name', $detail[0]->name);
 	}
 
 	/**
@@ -114,7 +115,7 @@ class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider oneChangeClasses
 	 */
-	public function testFindsInvalidDocBlocks($className, $error)
+	public function testFindsInvalidDocBlocks($className)
 	{
 		$parser = new PHPADD_ClassAnalyzer($className, $this->nullMethodFilter);
 		$analysis = $parser->analyze($this->filter);
@@ -124,30 +125,31 @@ class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals(0, count($missing));
 
-		switch ($error) {
-			case 'changed':
-				$this->assertEquals(1, count($outdated));
-				$this->assertEquals(2, count($outdated[0]->getDetail()));
-				break;
-			case 'removed':
-				$this->assertEquals(1, count($outdated));
-				$this->assertEquals(1, count($outdated[0]->getDetail()));
-				break;
-			case 'added':
-				$this->assertEquals(1, count($outdated));
-				$this->assertEquals(1, count($outdated[0]->getDetail()));
-				break;
-		}
+		$this->assertEquals(1, count($outdated));
+		$this->assertEquals(1, count($outdated[0]->getDetail()));
 	}
 
 	public function oneChangeClasses()
 	{
 		return array(
-			array('OneChangeExampleTypeChanged', 'changed'),
-			array('OneChangeExampleNameChanged', 'changed'),
-			array('OneChangeExampleRemovedParameter', 'removed'),
-			array('OneChangeExampleAddedParameter', 'added'),
+			array('OneChangeExampleTypeChanged'),
+			array('OneChangeExampleRemovedParameter'),
+			array('OneChangeExampleAddedParameter'),
 		);
+	}
+	
+	public function testFindsInvalidDocBlocks2()
+	{
+		$parser = new PHPADD_ClassAnalyzer('OneChangeExampleNameChanged', $this->nullMethodFilter);
+		$analysis = $parser->analyze($this->filter);
+
+		$missing = $analysis->getMissingBlocks();
+		$outdated = $analysis->getOutdatedBlocks();
+
+		$this->assertEquals(0, count($missing));
+
+		$this->assertEquals(1, count($outdated));
+		$this->assertEquals(2, count($outdated[0]->getDetail()));
 	}
 
 	public function testIgnoresMethodsOfParentClasses()
@@ -194,7 +196,26 @@ class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
 	
 	public function testAnalyzesInheritdoc()
 	{
-		$this->markTestIncomplete();
+		$parser = new PHPADD_ClassAnalyzer('Field', $this->nullMethodFilter);
+		$analysis = $parser->analyze($this->filter);
+		
+		$missing = $analysis->getMissingBlocks();
+		$outdated = $analysis->getOutdatedBlocks();
+		
+		$this->assertEquals(0, count($missing));
+		$this->assertEquals(0, count($outdated));
+	}
+	
+	public function testAnalyzesInheritdoc2()
+	{
+		$parser = new PHPADD_ClassAnalyzer('Button', $this->nullMethodFilter);
+		$analysis = $parser->analyze($this->filter);
+		
+		$missing = $analysis->getMissingBlocks();
+		$outdated = $analysis->getOutdatedBlocks();
+		
+		$this->assertEquals(0, count($missing));
+		$this->assertEquals(0, count($outdated));
 	}
 	
 	private function assertMethodNotContains($method, $name)

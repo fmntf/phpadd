@@ -65,6 +65,10 @@ class PHPADD_ClassAnalyzer
 			if ($this->isDocBlockMissing($method)) {
 				$mess->addMissing($this->createMissing($method));
 			} else {
+				if ($this->isInheritDoc($method)) {
+					$method = $this->getParentBlock($method);
+				}
+				
 				$errors = $this->validateDocBlock($method);
 				if (count($errors) > 0) {
 					$mess->addOutdated($this->createOutdated($method, $errors));
@@ -75,6 +79,32 @@ class PHPADD_ClassAnalyzer
 		}
 
 		return $mess;
+	}
+	
+	private function isInheritDoc(ReflectionMethod $method)
+	{
+		return strstr($method->getDocComment(), '{@inheritdoc}') !== false;
+	}
+	
+	private function getParentBlock(ReflectionMethod $method)
+	{
+		$interfaces = $method->getDeclaringClass()->getInterfaces();
+		foreach ($interfaces as $interface) {
+			/* @var $interface ReflectionClass */
+			if ($interface->hasMethod($method->getName())) {
+				return new ReflectionMethod(
+					$interface->getName(),
+					$method->getName()
+				);
+			}
+		}
+		
+		$parent = $method->getDeclaringClass()->getParentClass();
+		
+		return new ReflectionMethod(
+			$parent->getName(),
+			$method->getName()
+		);
 	}
 
 	/**
@@ -222,20 +252,11 @@ class PHPADD_ClassAnalyzer
 	{
 		$errors = array();
 
-		$phpIssues = $this->getPhpParams($method);
-		$docIssues = $this->getDocBlockParams($method);
+		$phpParams = $this->getPhpParams($method);
+		$docParams = $this->getDocBlockParams($method);
 
-		$missing = array_values(array_diff($phpIssues, $docIssues));
-		foreach ($missing as $param) {
-			$errors[] = $this->createError('missing-param', $param);
-		}
-
-		$unexpected = array_values(array_diff($docIssues, $phpIssues));
-		foreach ($unexpected as $param) {
-			$errors[] = $this->createError('unexpected-param', $param);
-		}
-
-		return $errors;
+		$diff = new PHPADD_ParamsDiff();
+		return $diff->diff($phpParams, $docParams);
 	}
 
 	/**
