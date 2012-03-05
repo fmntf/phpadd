@@ -87,7 +87,7 @@ class PHPADD_DetectorTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals('invalidMethod', $outdates[0]->getName());
 		$detail = $outdates[0]->getDetail();
-		$expectedDetail = array('type' => 'missing-param', 'name' => '$name');
+		$expectedDetail = new PHPADD_Result_Mess_MissingParam('$name', null);
 		$this->assertEquals(1, count($detail));
 		$this->assertEquals($expectedDetail, $detail[0]);
 	}
@@ -102,7 +102,7 @@ class PHPADD_DetectorTest extends PHPUnit_Framework_TestCase
 
 		$this->assertEquals('invalidMethod', $outdates[0]->getName());
 		$detail = $outdates[0]->getDetail();
-		$expectedDetail = array('type' => 'unexpected-param', 'name' => '$name');
+		$expectedDetail = new PHPADD_Result_Mess_UnexpectedParam('$name', null);
 		$this->assertEquals(1, count($detail));
 		$this->assertEquals($expectedDetail, $detail[0]);
 	}

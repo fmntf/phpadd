@@ -30,7 +30,12 @@ class PHPADD_Result_Mess_UnexpectedParam
 		$this->type = $type;
 	}
 	
-	public function __toString()
+	public function getClass()
+	{
+		return 'Unexpected param';
+	}
+	
+	public function getParam()
 	{
 		if ($this->type) {
 			return $this->type . ' ' . $this->name;

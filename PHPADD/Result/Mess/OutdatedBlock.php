@@ -32,25 +32,9 @@ class PHPADD_Result_Mess_OutdatedBlock extends PHPADD_Result_Mess_Abstract
 		$list = array();
 
 		foreach ($this->getDetail() as $issue) {
-			$list[] =  $this->getType($issue['type']) . ": - <code>{$issue['name']}</code>";
+			$list[] =  $issue->getClass() . ': <code>' . $issue->getParam() . '</code>';
 		}
 
 		return $list;
-	}
-
-	/**
-	 * Associates a printable label to the internal code of error type.
-	 * 
-	 * @param string $symbolic
-	 * @return string
-	 */
-	private function getType($symbolic)
-	{
-		switch ($symbolic) {
-			case 'missing-param':
-				return 'Missing parameter';
-			case 'unexpected-param':
-				return 'Unexpected parameter';
-		}
 	}
 }

@@ -31,10 +31,26 @@ class PHPADD_Result_Mess_OutdatedParam
 		$this->oldType = $oldType;
 	}
 	
-	public function __toString()
+	public function getClass()
 	{
+		return 'Outdated param type';
+	}
+	
+	public function getParam()
+	{
+		$types = array();
+		
+		if ($this->oldType) {
+			$types[] = $this->oldType;
+		}
 		if ($this->type) {
-			return $this->type . ' ' . $this->name;
+			$types[] = $this->type;
+		}
+		
+		$types = implode('/', $types);
+		
+		if ($types) {
+			return $types . ' ' . $this->name;
 		}
 		
 		return $this->name;
