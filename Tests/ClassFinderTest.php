@@ -81,7 +81,21 @@ class PHPADD_ClassFinderTest extends PHPUnit_Framework_TestCase
 		$files = $classFinder->getList();
 		$this->assertOnFiles($expected, $files);
 	}
-	
+
+	public function testManagesNamespaces()
+	{
+		$nullFilter = new Tests_NullScanFilter;
+		$classFinder = new PHPADD_ClassFinder('fixtures/namespaces', $nullFilter, $nullFilter);
+		
+		$expected = array(
+			'fixtures/namespaces/Commerce/Product.php' => array('\My\Commerce\Product'),
+			'fixtures/namespaces/Blog/Post.php' => array('\My\Blog\Post'),
+		);
+		
+		$files = $classFinder->getList();
+		$this->assertOnFiles($expected, $files);
+	}
+
 	private function assertOnFiles(array $expected, array $files)
 	{
 		$this->assertEquals(count($expected), count($files));

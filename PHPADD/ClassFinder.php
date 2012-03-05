@@ -84,13 +84,17 @@ class PHPADD_ClassFinder
 	private function processFile($fileName)
 	{
 		$classes = array();
-
+		$namespace = '';
 		$tokens = token_get_all(file_get_contents($fileName));
+		
 		foreach ($tokens as $i => $token) {
+			if ($token[0] == T_NAMESPACE) {
+				$namespace = $this->getNamespaceName($tokens, $i);
+			}
 			if ($token[0] == T_CLASS) {
 				$className = $this->getClassName($tokens, $i);
 				if (!$this->classFilter->isFiltered($className)) {
-					$classes[] = $className;
+					$classes[] = $namespace.$className;
 				}
 			}
 		}
@@ -110,6 +114,29 @@ class PHPADD_ClassFinder
 		for ($i; $i < count($tokens); $i++) {
 			if ($tokens[$i][0] == T_STRING) {
 				return $tokens[$i][1];
+			}
+		}
+	}
+	
+	private function getNamespaceName(array $tokens, $i)
+	{
+		$ns = '';
+		
+		for ($i; $i < count($tokens); $i++) {
+			
+			if ($tokens[$i] === ';') return $ns . '\\';;
+			
+			switch ($tokens[$i][0]) {
+				case T_STRING:
+					if ($ns === '') {
+						$ns = '\\';
+					}
+					$ns .= $tokens[$i][1];
+					break;
+					
+				case T_NS_SEPARATOR:
+					$ns .= $tokens[$i][1];
+					break;
 			}
 		}
 	}
