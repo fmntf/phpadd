@@ -165,7 +165,7 @@ class PHPADD_ClassAnalyzer
 	{
 		$params = array();
 
-		$excluded = array('int', 'integer', 'float', 'double', 'bool', 'boolean', 'string', 'mixed');
+		$excluded = array('int', 'integer', 'float', 'double', 'bool', 'boolean', 'string', 'mixed', 'object');
 		$annotations = $this->parseAnnotations($method->getDocComment());
 
 		if (isset($annotations['param']))
