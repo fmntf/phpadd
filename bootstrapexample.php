@@ -14,6 +14,7 @@ function autoloader($class)
 	foreach ($bases as $base)
 	{
 		$path = $base . str_replace('_', '/', $class) . '.php';
+		$path = $base . str_replace('\\', '/', $class) . '.php';
 
 		if (is_file($path)) {
 			require_once $path;
