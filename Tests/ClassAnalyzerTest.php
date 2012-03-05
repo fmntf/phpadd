@@ -218,6 +218,18 @@ class PHPADD_ClassAnalyzerTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(0, count($outdated));
 	}
 	
+	public function testHandlesMultipleTypes()
+	{
+		$parser = new PHPADD_ClassAnalyzer('MultipleType', $this->nullMethodFilter);
+		$analysis = $parser->analyze($this->filter);
+		
+		$missing = $analysis->getMissingBlocks();
+		$outdated = $analysis->getOutdatedBlocks();
+		
+		$this->assertEquals(0, count($missing));
+		$this->assertEquals(0, count($outdated));
+	}
+	
 	private function assertMethodNotContains($method, $name)
 	{
 		if (strstr($method->getName(), $name)) {

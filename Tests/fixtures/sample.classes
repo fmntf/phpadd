@@ -132,3 +132,14 @@ class OneChangeExampleAddedParameter
 	 */
 	public function invalidMethod(DateTime $date, stdClass $obj, stdClass $ar, $number, $boolean) {}
 }
+
+class MultipleType
+{
+	/**
+	 * Who needs a functions with such params?!
+	 *
+	 * @param string $par1
+	 * @param int|string $par2
+	 */
+	public function validMethod($par1, $par2) {}
+}

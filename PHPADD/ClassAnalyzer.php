@@ -202,9 +202,19 @@ class PHPADD_ClassAnalyzer
 		{
 			foreach ($annotations['param'] as $parameter)
 			{
-				list($type, $name) = $this->getParameterTypeAndName($parameter);
+				list($blockTypes, $name) = $this->getParameterTypeAndName($parameter);
+				
+				$types = explode('|', $blockTypes);
+				$filtered = array();
+				foreach ($types as $type) {
+					if (!in_array($type, $excluded)) {
+						$filtered[] = "$type";
+					}
+				}
+				
+				$type = implode('|', $filtered);
 
-				if (!in_array($type, $excluded)) {
+				if ($type != '') {
 					$params[] = "$type $name";
 				} else {
 					$params[] = "$name";
